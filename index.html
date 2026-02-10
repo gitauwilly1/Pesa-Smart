@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PesaSmart - Your Path to Financial Confidence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="font-roboto bg-gray-50">
+    
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+            <div class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">PS</span>
+                    </div>
+                    <span class="text-2xl font-bold text-green-600">Pesa<span class="text-green-500">Smart</span></span>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden ml-[16px] md:flex space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-green-600 font-medium transition">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="learn.html" class="text-gray-700 hover:text-green-600 font-medium transition">
+                        <i class="fas fa-book mr-2"></i>Learn
+                    </a>
+                    <a href="practice.html" class="text-gray-700 hover:text-green-600 font-medium transition">
+                        <i class="fas fa-gamepad mr-2"></i>Practice
+                    </a>
+                    <a href="act.html" class="text-gray-700 hover:text-green-600 font-medium transition">
+                        <i class="fas fa-briefcase mr-2"></i>Act
+                    </a>
+                </div>
+
+                <!-- User Actions -->
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-4">
+                        <div class="relative">
+                            <i class="fas fa-bell text-gray-600 text-xl hover:text-green-600 cursor-pointer"></i>
+                            <span class="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs rounded-full flex items-center justify-center">3</span>
+                        </div>
+                        <a href="profile.html" class="flex items-center space-x-2 text-gray-700 hover:text-green-600 transition">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-green-600"></i>
+                            </div>
+                            <span class="font-medium">Ann</span>
+                        </a>
+                    </div>
+                    <a href="login.html" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                        Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden bg-gradient-to-br from-green-50 to-green-50 py-16">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col lg:flex-row items-center justify-between">
+                <div class="lg:w-1/2 mb-10 lg:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+                        From <span class="text-green-600">Knowledge</span> to <span class="text-green-600">Wealth</span>
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-8">
+                        PesaSmart helps everyday Kenyans learn financial basics, practice risk-free, and take real action with investments, insurance, and savings—all in one platform.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="register.html" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold text-center transition hover-card">
+                            Start Free Journey
+                        </a>
+                        <a href="learn.html" class="border-2 border-green-500 text-green-600 hover:bg-green-50 px-6 py-3 rounded-lg font-semibold text-center transition hover-card">
+                            Explore Learning
+                        </a>
+                    </div>
+                    <div class="mt-8 flex items-center space-x-4 text-gray-600">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>No minimum balance</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 relative">
+                    <div class="bg-white rounded-2xl shadow-xl p-6 hover-card">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="fas fa-user-graduate text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Welcome back, Ann!</h3>
+                                <p class="text-gray-600">Your financial journey continues</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-gray-700">Financial Fitness Score</span>
+                                <span class="font-bold text-green-600">4.2/5</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-green-500 h-2.5 rounded-full" style="width: 65%"></div>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1">65% to PesaMaster Certification</p>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                            <div class="bg-green-50 rounded-lg p-3 text-center">
+                                <div class="text-2xl font-bold text-green-700">Ksh 4,200</div>
+                                <div class="text-sm text-gray-600">Saved</div>
+                            </div>
+                            <div class="bg-green-50 rounded-lg p-3 text-center">
+                                <div class="text-2xl font-bold text-green-700">Ksh 12,500</div>
+                                <div class="text-sm text-gray-600">Invested</div>
+                            </div>
+                            <div class="bg-green-50 rounded-lg p-3 text-center">
+                                <div class="text-2xl font-bold text-green-700">2</div>
+                                <div class="text-sm text-gray-600">Active Covers</div>
+                            </div>
+                        </div>
+
+                        <a href="profile.html" class="block text-center bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 rounded-lg transition">
+                            View Full Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Your 3-Step Journey</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 shadow-lg hover-card">
+                    <div class="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mb-6">
+                        1
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Learn</h3>
+                    <p class="text-gray-600 mb-4">
+                        Master financial basics with Kenyan-focused lessons. From budgeting to investing, learn at your own pace.
+                    </p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Simple Swahili/English lessons</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Earn certificates & badges</span>
+                        </li>
+                    </ul>
+                    <a href="learn.html" class="text-green-600 font-semibold flex items-center">
+                        Start Learning <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 shadow-lg hover-card">
+                    <div class="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mb-6">
+                        2
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Practice</h3>
+                    <p class="text-gray-600 mb-4">
+                        Try investing with virtual money. Test insurance claims. Make financial decisions risk-free.
+                    </p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Ksh 1M virtual portfolio</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Compete on leaderboards</span>
+                        </li>
+                    </ul>
+                    <a href="practice.html" class="text-green-600 font-semibold flex items-center">
+                        Try Simulators <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 shadow-lg hover-card">
+                    <div class="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mb-6">
+                        3
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Act</h3>
+                    <p class="text-gray-600 mb-4">
+                        Take real action. Invest from Ksh 100. Get simple insurance. Access better loan rates.
+                    </p>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Fractional stock investments</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Automatic insurance payouts</span>
+                        </li>
+                    </ul>
+                    <a href="act.html" class="text-green-600 font-semibold flex items-center">
+                        Explore Products <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ACTIVE GOALS SECTION -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Your Active Goals</h2>
+                <a href="#" class="text-green-600 font-semibold flex items-center">
+                    Create New Goal <i class="fas fa-plus ml-2"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Goal 1 -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover-card">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-home text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">Buy Land in Kiambu</h3>
+                                <p class="text-gray-600">Target: Dec 2025</p>
+                            </div>
+                        </div>
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                            30%
+                        </span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-600">Ksh 150,000 saved</span>
+                            <span class="font-semibold">Ksh 500,000 target</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-green-500 h-3 rounded-full" style="width: 30%"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-sync-alt mr-1"></i> Auto-saving Ksh 20,000/month
+                        </div>
+                        <button class="text-green-600 hover:text-green-700 font-medium">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Goal 2 -->
+                <div class="bg-white rounded-xl p-6 shadow-lg hover-card">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                                <i class="fas fa-graduation-cap text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg">University Fees</h3>
+                                <p class="text-gray-600">Due August 2024</p>
+                            </div>
+                        </div>
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                            60%
+                        </span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-600">Ksh 30,000 saved</span>
+                            <span class="font-semibold">Ksh 50,000 target</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-green-500 h-3 rounded-full" style="width: 60%"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center">
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-mobile-alt mr-1"></i> Round-ups from M-Pesa
+                        </div>
+                        <button class="text-green-600 hover:text-green-700 font-medium">
+                            Add More
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUICK ACTIONS -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Quick Actions</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="act.html#invest" class="bg-green-50 hover:bg-green-100 rounded-xl p-6 text-center transition hover-card">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">Invest</h3>
+                    <p class="text-gray-600 mb-2">From Ksh 100 min</p>
+                    <span class="text-green-600 font-semibold">Start Now →</span>
+                </a>
+
+                <a href="act.html#insure" class="bg-green-50 hover:bg-green-100 rounded-xl p-6 text-center transition hover-card">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">Insure</h3>
+                    <p class="text-gray-600 mb-2">From Ksh 50/month</p>
+                    <span class="text-green-600 font-semibold">Get Covered →</span>
+                </a>
+
+                <a href="act.html#borrow" class="bg-green-50 hover:bg-green-100 rounded-xl p-6 text-center transition hover-card">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-hand-holding-usd text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">Borrow</h3>
+                    <p class="text-gray-600 mb-2">Better rates for learners</p>
+                    <span class="text-green-600 font-semibold">Compare →</span>
+                </a>
+
+                <a href="#" class="bg-green-50 hover:bg-green-100 rounded-xl p-6 text-center transition hover-card">
+                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-bullseye text-white text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">Save</h3>
+                    <p class="text-gray-600 mb-2">Goal-based savings</p>
+                    <span class="text-green-600 font-semibold">Set Goal →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold">PS</span>
+                        </div>
+                        <span class="text-xl font-bold">Pesa<span class="text-green-400">Smart</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Your path to financial confidence. Learn, practice, and grow your money.
+                    </p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="learn.html" class="text-gray-400 hover:text-white transition">Learn</a></li>
+                        <li><a href="practice.html" class="text-gray-400 hover:text-white transition">Practice</a></li>
+                        <li><a href="act.html" class="text-gray-400 hover:text-white transition">Act</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Terms & Conditions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Risk Disclosure</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+                    <ul class="space-y-2 grid">
+                        <li class="text-gray-400">
+                            <i class="fas fa-phone mr-2 text-green-400"></i>0795 511 314
+                        </li>
+                        <li class="text-gray-400 flex">
+                            <i class="fas fa-envelope mr-2 text-green-400"></i>help@pesasmart.co.ke
+                        </li>
+                        <li class="text-gray-400">
+                            <i class="fas fa-map-marker-alt mr-2 text-green-400"></i>Nairobi, Kenya
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500 text-sm">
+                <p>© 2026 PesaSmart. All rights reserved. PesaSmart is regulated by the Central Bank of Kenya.</p>
+                <p class="mt-2">This is a capstone project for educational purposes only.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
