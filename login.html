@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PesaSmart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="font-roboto bg-gray-50">
+    
+    <!-- Simple Header -->
+    <header class="bg-white shadow">
+        <div class="container mx-auto px-6 py-4">
+            <a href="index.html" class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold">PS</span>
+                </div>
+                <span class="text-xl font-bold text-green-600">Pesa<span class="text-green-500">Smart</span></span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Login Section -->
+    <section class="min-h-screen flex items-center justify-center py-12">
+        <div class="container mx-auto px-6">
+            <div class="max-w-md mx-auto">
+                <!-- Login Card -->
+                <div class="bg-white rounded-2xl shadow-xl p-8">
+                    <div class="text-center mb-8">
+                        <h1 class="text-3xl font-bold text-gray-800">Welcome Back</h1>
+                        <p class="text-gray-600 mt-2">Login to continue your financial journey</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form>
+                        <!-- Phone Number -->
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-medium mb-2" for="phone">
+                                Phone Number
+                            </label>
+                            <div class="flex">
+                                <div class="bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg px-4 py-3">
+                                    <span class="text-gray-700">+254</span>
+                                </div>
+                                <input type="tel" id="phone" 
+                                       class="flex-1 border border-gray-300 rounded-r-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                       placeholder="712 345 678"
+                                       required>
+                            </div>
+                            <p class="text-gray-500 text-sm mt-1">Example: +254 712 345 678</p>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-6">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-gray-700 font-medium" for="password">
+                                    Password
+                                </label>
+                                <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                    Forgot Password?
+                                </a>
+                            </div>
+                            <div class="relative">
+                                <input type="password" id="password" 
+                                       class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                       placeholder="Enter your password"
+                                       required>
+                                <button type="button" class="absolute right-3 top-3 text-gray-500 hover:text-gray-700">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="flex items-center mb-6">
+                            <input type="checkbox" id="remember" class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
+                            <label for="remember" class="ml-2 text-gray-700">
+                                Remember me on this device
+                            </label>
+                        </div>
+
+                        <!-- Login Button -->
+                        <button type="submit" 
+                                class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition duration-300 mb-4">
+                            Log In
+                        </button>
+
+                        <!-- Divider -->
+                        <div class="flex items-center my-6">
+                            <div class="flex-1 border-t border-gray-300"></div>
+                            <span class="px-4 text-gray-500">Or continue with</span>
+                            <div class="flex-1 border-t border-gray-300"></div>
+                        </div>
+
+                        <!-- M-Pesa Login -->
+                        <button type="button" 
+                                class="w-full border-2 border-green-500 text-green-600 hover:bg-green-50 font-semibold py-3 rounded-lg transition duration-300 mb-4 flex items-center justify-center">
+                            <i class="fab fa-whatsapp mr-2 text-green-500"></i>
+                            Login with M-Pesa
+                        </button>
+
+                        <!-- Register Link -->
+                        <div class="text-center mt-6">
+                            <p class="text-gray-600">
+                                New to PesaSmart?
+                                <a href="register.html" class="text-green-600 hover:text-green-700 font-semibold">
+                                    Create an account
+                                </a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Security Notice -->
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div class="flex items-start">
+                        <i class="fas fa-shield-alt text-blue-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-blue-800">Your Security Matters</h4>
+                            <p class="text-blue-600 text-sm mt-1">
+                                We use bank-level encryption and never share your data. 
+                                <a href="#" class="font-medium">Learn more about our security</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold">PS</span>
+                        </div>
+                        <span class="text-xl font-bold">Pesa<span class="text-green-400">Smart</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Your path to financial confidence. Learn, practice, and grow your money.
+                    </p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="learn.html" class="text-gray-400 hover:text-white transition">Learn</a></li>
+                        <li><a href="practice.html" class="text-gray-400 hover:text-white transition">Practice</a></li>
+                        <li><a href="act.html" class="text-gray-400 hover:text-white transition">Act</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Terms & Conditions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Risk Disclosure</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+                    <ul class="space-y-2 grid">
+                        <li class="text-gray-400">
+                            <i class="fas fa-phone mr-2 text-green-400"></i>0795 511 314
+                        </li>
+                        <li class="text-gray-400 flex">
+                            <i class="fas fa-envelope mr-2 text-green-400"></i>help@pesasmart.co.ke
+                        </li>
+                        <li class="text-gray-400">
+                            <i class="fas fa-map-marker-alt mr-2 text-green-400"></i>Nairobi, Kenya
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500 text-sm">
+                <p>© 2026 PesaSmart. All rights reserved. PesaSmart is regulated by the Central Bank of Kenya.</p>
+                <p class="mt-2">This is a capstone project for educational purposes only.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
