@@ -41,7 +41,7 @@ PesaSmart provides a guided financial journey:
 
 ---
 
-## 📱 Key Features
+##  Key Features
 
 - ✅ **M-Pesa integration** - Payments, statements, round-ups
 - ✅ **Fractional investing** - From Ksh 100 minimum
