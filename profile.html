@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PesaSmart - Your Path to Financial Confidence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="font-roboto bg-gray-50">
+
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">PS</span>
+                    </div>
+                    <span class="text-2xl font-bold text-green-600">Pesa<span class="text-green-500">Smart</span></span>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden ml-[16px] md:flex space-x-8">
+                    <a href="index.html" class="text-gray-700 hover:text-green-600 font-medium transition">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="learn.html" class="text-gray-700 hover:text-green-600 font-medium transition">
+                        <i class="fas fa-book mr-2"></i>Learn
+                    </a>
+                    <a href="practice.html" class="text-gray-700 hover:text-green-600 font-medium transition">
+                        <i class="fas fa-gamepad mr-2"></i>Practice
+                    </a>
+                    <a href="act.html" class="text-gray-700 hover:text-green-600 font-medium transition">
+                        <i class="fas fa-briefcase mr-2"></i>Act
+                    </a>
+                </div>
+
+                <!-- User Actions -->
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-4">
+                        <div class="relative">
+                            <i class="fas fa-bell text-gray-600 text-xl hover:text-green-600 cursor-pointer"></i>
+                            <span
+                                class="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs rounded-full flex items-center justify-center">3</span>
+                        </div>
+                        <a href="profile.html"
+                            class="flex items-center space-x-2 text-gray-700 hover:text-green-600 transition">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-green-600"></i>
+                            </div>
+                            <span class="font-medium">Ann</span>
+                        </a>
+                    </div>
+                    <a href="login.html"
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                        Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PROFILE HEADER -->
+    <section class="bg-gradient-to-r from-green-500 to-green-600 py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mr-4 border-4 border-white">
+                        <i class="fas fa-user text-green-600 text-3xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">Ann Muthoni</h1>
+                        <p class="text-green-100">
+                            <i class="fas fa-map-marker-alt mr-1"></i> Nairobi, Kenya • 
+                            <span class="ml-2">
+                                <i class="fas fa-user-graduate mr-1"></i> Student
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="text-white text-sm mb-1">Financial Fitness Score</div>
+                    <div class="text-3xl font-bold text-white">4.2<span class="text-xl">/5</span></div>
+                    <div class="flex items-center justify-center mt-1">
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <i class="far fa-star text-yellow-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <section class="py-8">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <!-- Left Column - Profile Navigation -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+                        <!-- Profile Navigation -->
+                        <nav class="space-y-2 mb-6">
+                            <a href="#overview" class="flex items-center p-3 text-green-600 bg-green-50 rounded-lg font-medium">
+                                <i class="fas fa-chart-bar mr-3"></i>
+                                Overview
+                            </a>
+                            <a href="#achievements" class="flex items-center p-3 text-gray-700 hover:text-green-600 hover:bg-gray-50 rounded-lg font-medium">
+                                <i class="fas fa-trophy mr-3"></i>
+                                Achievements
+                            </a>
+                            <a href="#accounts" class="flex items-center p-3 text-gray-700 hover:text-green-600 hover:bg-gray-50 rounded-lg font-medium">
+                                <i class="fas fa-wallet mr-3"></i>
+                                Connected Accounts
+                            </a>
+                            <a href="#goals" class="flex items-center p-3 text-gray-700 hover:text-green-600 hover:bg-gray-50 rounded-lg font-medium">
+                                <i class="fas fa-bullseye mr-3"></i>
+                                My Goals
+                            </a>
+                            <a href="#documents" class="flex items-center p-3 text-gray-700 hover:text-green-600 hover:bg-gray-50 rounded-lg font-medium">
+                                <i class="fas fa-file-alt mr-3"></i>
+                                Documents
+                            </a>
+                            <a href="#security" class="flex items-center p-3 text-gray-700 hover:text-green-600 hover:bg-gray-50 rounded-lg font-medium">
+                                <i class="fas fa-shield-alt mr-3"></i>
+                                Security
+                            </a>
+                            <a href="#settings" class="flex items-center p-3 text-gray-700 hover:text-green-600 hover:bg-gray-50 rounded-lg font-medium">
+                                <i class="fas fa-cog mr-3"></i>
+                                Settings
+                            </a>
+                        </nav>
+
+                        <!-- Quick Stats -->
+                        <div class="border-t pt-6">
+                            <h3 class="font-bold text-gray-800 mb-3">Quick Stats</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Member Since</span>
+                                    <span class="font-medium">Jan 2024</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Learning Hours</span>
+                                    <span class="font-medium">24 hrs</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Total Invested</span>
+                                    <span class="font-medium">Ksh 12,500</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Active Goals</span>
+                                    <span class="font-medium">3</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Referral -->
+                        <div class="mt-6 p-4 bg-gradient-to-br from-green-500 to-green-600 rounded-lg text-white">
+                            <h4 class="font-bold mb-2">Invite Friends</h4>
+                            <p class="text-green-100 text-sm mb-3">Earn Ksh 100 when friends complete Module 1</p>
+                            <div class="bg-white bg-opacity-20 rounded p-2 mb-3">
+                                <p class="text-sm">Your Code: <span class="font-mono font-bold">ANN123</span></p>
+                            </div>
+                            <button class="bg-white text-green-600 hover:bg-gray-100 w-full py-2 rounded font-medium transition">
+                                Share Invite
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Content -->
+                <div class="lg:col-span-3 space-y-8">
+                    <!-- Overview Section -->
+                    <div id="overview" class="bg-white rounded-xl shadow-lg p-6 hover-card">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800">Overview</h2>
+                            <a href="#" class="text-green-600 hover:text-green-700 font-medium">
+                                <i class="fas fa-download mr-1"></i> Export Report
+                            </a>
+                        </div>
+
+                        <!-- Lifetime Stats -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                            <div class="bg-green-50 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-graduation-cap text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 text-sm">Modules</p>
+                                        <p class="text-xl font-bold text-gray-800">3/8</p>
+                                    </div>
+                                </div>
+                                <p class="text-gray-600 text-xs">Completed</p>
+                            </div>
+
+                            <div class="bg-green-50 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-chart-line text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 text-sm">Portfolio</p>
+                                        <p class="text-xl font-bold text-gray-800">+5.3%</p>
+                                    </div>
+                                </div>
+                                <p class="text-gray-600 text-xs">This month</p>
+                            </div>
+
+                            <div class="bg-green-50 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-shield-alt text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 text-sm">Insurance</p>
+                                        <p class="text-xl font-bold text-gray-800">2</p>
+                                    </div>
+                                </div>
+                                <p class="text-gray-600 text-xs">Active policies</p>
+                            </div>
+
+                            <div class="bg-purple-50 rounded-lg p-4">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-trophy text-purple-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 text-sm">Badges</p>
+                                        <p class="text-xl font-bold text-gray-800">8</p>
+                                    </div>
+                                </div>
+                                <p class="text-gray-600 text-xs">Earned</p>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-4">Recent Activity</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-check-circle text-green-600"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-gray-800">Completed "Budgeting 101" module</p>
+                                        <p class="text-gray-600 text-sm">Earned Budget Master badge</p>
+                                    </div>
+                                    <span class="text-gray-500 text-sm">2 hours ago</span>
+                                </div>
+
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-chart-line text-blue-600"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-gray-800">Invested Ksh 500 in Safaricom</p>
+                                        <p class="text-gray-600 text-sm">Bought 34.5 fractional shares</p>
+                                    </div>
+                                    <span class="text-gray-500 text-sm">1 day ago</span>
+                                </div>
+
+                                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-trophy text-purple-600"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-gray-800">Moved to #15 on Practice Leaderboard</p>
+                                        <p class="text-gray-600 text-sm">+3 positions this week</p>
+                                    </div>
+                                    <span class="text-gray-500 text-sm">2 days ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Achievements Section -->
+                    <div id="achievements" class="bg-white rounded-xl shadow-lg p-6 hover-card">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6"> Achievements</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                            <!-- Bronze Badge -->
+                            <div class="border-2 border-yellow-500 rounded-lg p-4 text-center">
+                                <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-medal text-yellow-600 text-2xl"></i>
+                                </div>
+                                <h3 class="font-bold text-gray-800 mb-1">Bronze Path</h3>
+                                <p class="text-gray-600 text-sm mb-2">Completed Money Basics</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 30%"></div>
+                                </div>
+                                <p class="text-yellow-600 text-sm font-medium">30% Complete</p>
+                            </div>
+
+                            <!-- Budget Master -->
+                            <div class="border border-gray-200 rounded-lg p-4 text-center bg-gradient-to-br from-blue-50 to-white">
+                                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-chart-pie text-blue-600 text-2xl"></i>
+                                </div>
+                                <h3 class="font-bold text-gray-800 mb-1">Budget Master</h3>
+                                <p class="text-gray-600 text-sm mb-2">Created 6-month budget</p>
+                                <div class="flex justify-center text-yellow-400 mb-2">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p class="text-green-600 text-sm font-medium">Earned: Yesterday</p>
+                            </div>
+
+                            <!-- Investment Novice -->
+                            <div class="border border-gray-200 rounded-lg p-4 text-center">
+                                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-seedling text-green-600 text-2xl"></i>
+                                </div>
+                                <h3 class="font-bold text-gray-800 mb-1">Investment Novice</h3>
+                                <p class="text-gray-600 text-sm mb-2">First investment made</p>
+                                <div class="flex justify-center text-yellow-400 mb-2">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p class="text-gray-600 text-sm">5 days ago</p>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <a href="#" class="text-green-600 hover:text-green-700 font-medium">
+                                View All 8 Badges & Certificates →
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Connected Accounts Section -->
+                    <div id="accounts" class="bg-white rounded-xl shadow-lg p-6 hover-card">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800">Connected Accounts</h2>
+                            <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                                <i class="fas fa-plus mr-1"></i> Add Account
+                            </button>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- M-Pesa -->
+                            <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
+                                        <i class="fab fa-whatsapp text-green-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-gray-800">M-Pesa</h3>
+                                        <p class="text-gray-600 text-sm">+254 712 345 678</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                                         Connected
+                                    </span>
+                                    <button class="text-gray-500 hover:text-gray-700">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- CDS Account -->
+                            <div class="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                                        <i class="fas fa-landmark text-blue-600 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-gray-800">CDS Account</h3>
+                                        <p class="text-gray-600 text-sm">Central Depository</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">
+                                         Partial
+                                    </span>
+                                    <button class="text-blue-600 hover:text-blue-700 font-medium">
+                                        Complete Setup
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Bank Account -->
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4">
+                                        <i class="fas fa-university text-gray-500 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-gray-800">Bank Account</h3>
+                                        <p class="text-gray-600 text-sm">Not connected</p>
+                                    </div>
+                                </div>
+                                <button class="text-green-600 hover:text-green-700 font-medium">
+                                    Connect Bank
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-bold text-gray-800 mb-2">Data Privacy</h4>
+                            <p class="text-gray-600 text-sm">
+                                Your financial data is encrypted and never shared with third parties. 
+                                <a href="#" class="text-green-600 font-medium">Learn more</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- My Goals Section -->
+                    <div id="goals" class="bg-white rounded-xl shadow-lg p-6 hover-card">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-bold text-gray-800">My Financial Goals</h2>
+                            <a href="#" class="text-green-600 hover:text-green-700 font-medium">
+                                <i class="fas fa-plus mr-1"></i> New Goal
+                            </a>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Goal 1 -->
+                            <div class="border-2 border-green-200 rounded-xl p-5 bg-gradient-to-br from-green-50 to-white">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-home text-green-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-lg text-gray-800">Buy Land</h3>
+                                            <p class="text-gray-600 text-sm">Target: Dec 2026</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                                        30%
+                                    </span>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-600">Ksh 150,000 saved</span>
+                                        <span class="font-semibold">Ksh 500,000 target</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                        <div class="bg-green-500 h-3 rounded-full" style="width: 30%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between items-center">
+                                    <div class="text-sm text-gray-600">
+                                        <i class="fas fa-sync-alt mr-1"></i> Auto-saving Ksh 20,000/month
+                                    </div>
+                                    <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                        Details
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Goal 2 -->
+                            <div class="border-2 border-green-200 rounded-xl p-5 bg-gradient-to-br from-green-50 to-white">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-graduation-cap text-green-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-lg text-gray-800">University Fees</h3>
+                                            <p class="text-gray-600 text-sm">Due August 2026</p>
+                                        </div>
+                                    </div>
+                                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                                        60%
+                                    </span>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-600">Ksh 30,000 saved</span>
+                                        <span class="font-semibold">Ksh 50,000 target</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                        <div class="bg-green-500 h-3 rounded-full" style="width: 60%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between items-center">
+                                    <div class="text-sm text-gray-600">
+                                        <i class="fas fa-mobile-alt mr-1"></i> M-Pesa round-ups
+                                    </div>
+                                    <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                        Add More
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Completed Goal -->
+                        <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-check text-gray-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">Motorcycle for Business</h4>
+                                        <p class="text-gray-600 text-sm">Achieved: March 2024 • Ksh 80,000</p>
+                                    </div>
+                                </div>
+                                <span class="text-gray-500">Income increased 40%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documents Section -->
+                    <div id="documents" class="bg-white rounded-xl shadow-lg p-6 hover-card">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6"> Documents & Certificates</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-file-contract text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-gray-800">PesaSmart Bronze Certified</h3>
+                                        <p class="text-gray-600 text-sm">Issued: 15 Mar 2024</p>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                        <i class="fas fa-eye mr-1"></i> View
+                                    </a>
+                                    <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                        <i class="fas fa-download mr-1"></i> Download
+                                    </a>
+                                    <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                        <i class="fas fa-share-alt mr-1"></i> Share
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center mb-3">
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-chart-line text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-gray-800">Investment Basics (CMA)</h3>
+                                        <p class="text-gray-600 text-sm">Capital Markets Authority</p>
+                                    </div>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                        <i class="fas fa-eye mr-1"></i> View
+                                    </a>
+                                    <a href="#" class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                        <i class="fas fa-download mr-1"></i> Download
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <a href="#" class="text-green-600 hover:text-green-700 font-medium">
+                                View All Documents & Statements →
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Security Section -->
+                    <div id="security" class="bg-white rounded-xl shadow-lg p-6 hover-card">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6"> Security & Privacy</h2>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-check-circle text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium text-gray-800">Two-Factor Authentication</h3>
+                                        <p class="text-gray-600 text-sm">Protect your account with 2FA</p>
+                                    </div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-green-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-mobile-alt text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium text-gray-800">SMS Notifications</h3>
+                                        <p class="text-gray-600 text-sm">Receive security alerts</p>
+                                    </div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-blue-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-history text-purple-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium text-gray-800">Login History</h3>
+                                        <p class="text-gray-600 text-sm">Recent account activity</p>
+                                    </div>
+                                </div>
+                                <a href="#" class="text-green-600 hover:text-green-700 font-medium">
+                                    View History
+                                </a>
+                            </div>
+
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-download text-red-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-medium text-gray-800">Download My Data</h3>
+                                        <p class="text-gray-600 text-sm">Get a copy of your personal data</p>
+                                    </div>
+                                </div>
+                                <a href="#" class="text-green-600 hover:text-green-700 font-medium">
+                                    Request Data
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <h4 class="font-bold text-yellow-800 mb-2"> Security Tips</h4>
+                            <ul class="text-yellow-700 text-sm space-y-1">
+                                <li>• Never share your PIN or password with anyone</li>
+                                <li>• Log out after each session, especially on shared devices</li>
+                                <li>• Use a strong, unique password for your account</li>
+                                <li>• Report suspicious activity immediately</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Settings Section -->
+                    <div id="settings" class="bg-white rounded-xl shadow-lg p-6 hover-card">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6"> Account Settings</h2>
+                        
+                        <div class="space-y-6">
+                            <!-- Personal Information -->
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-800 mb-4">Personal Information</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-gray-700 font-medium mb-2">First Name</label>
+                                        <input type="text" value="Ann" class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-50" readonly>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 font-medium mb-2">Last Name</label>
+                                        <input type="text" value="Muthoni" class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-50" readonly>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 font-medium mb-2">Email</label>
+                                        <input type="email" value="ann.muthoni@email.com" class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-50" readonly>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 font-medium mb-2">Phone</label>
+                                        <input type="tel" value="+254 712 345 678" class="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-50" readonly>
+                                    </div>
+                                </div>
+                                <div class="mt-4">
+                                    <button class="text-green-600 hover:text-green-700 font-medium">
+                                        <i class="fas fa-edit mr-1"></i> Edit Personal Information
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Notification Preferences -->
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-800 mb-4">Notification Preferences</h3>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium text-gray-800">Learning Reminders</p>
+                                            <p class="text-gray-600 text-sm">Daily progress updates</p>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" class="sr-only peer" checked>
+                                            <div class="w-11 h-6 bg-green-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                        </label>
+                                    </div>
+
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium text-gray-800">Investment Alerts</p>
+                                            <p class="text-gray-600 text-sm">Price changes and news</p>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" class="sr-only peer" checked>
+                                            <div class="w-11 h-6 bg-green-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                        </label>
+                                    </div>
+
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium text-gray-800">Marketing Communications</p>
+                                            <p class="text-gray-600 text-sm">Product updates and offers</p>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Danger Zone -->
+                            <div class="border-2 border-red-200 rounded-lg p-4 bg-red-50">
+                                <h3 class="text-lg font-bold text-red-800 mb-3">⚠️ Danger Zone</h3>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium text-gray-800">Deactivate Account</p>
+                                            <p class="text-gray-600 text-sm">Temporarily disable your account</p>
+                                        </div>
+                                        <button class="border border-red-500 text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg font-medium transition">
+                                            Deactivate
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-medium text-gray-800">Delete Account Permanently</p>
+                                            <p class="text-gray-600 text-sm">This action cannot be undone</p>
+                                        </div>
+                                        <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                                            Delete Account
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Save Changes -->
+                            <div class="flex justify-end">
+                                <button class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold transition">
+                                    Save All Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div
+                            class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold">PS</span>
+                        </div>
+                        <span class="text-xl font-bold">Pesa<span class="text-green-400">Smart</span></span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">
+                        Your path to financial confidence. Learn, practice, and grow your money.
+                    </p>
+                    <div class="flex space-x-3">
+                        <a href="#"
+                            class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#"
+                            class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#"
+                            class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="learn.html" class="text-gray-400 hover:text-white transition">Learn</a></li>
+                        <li><a href="practice.html" class="text-gray-400 hover:text-white transition">Practice</a></li>
+                        <li><a href="act.html" class="text-gray-400 hover:text-white transition">Act</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Terms & Conditions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Risk Disclosure</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+                    <ul class="space-y-2 grid">
+                        <li class="text-gray-400">
+                            <i class="fas fa-phone mr-2 text-green-400"></i>0795 511 314
+                        </li>
+                        <li class="text-gray-400 flex">
+                            <i class="fas fa-envelope mr-2 text-green-400"></i>help@pesasmart.co.ke
+                        </li>
+                        <li class="text-gray-400">
+                            <i class="fas fa-map-marker-alt mr-2 text-green-400"></i>Nairobi, Kenya
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500 text-sm">
+                <p>© 2026 PesaSmart. All rights reserved. PesaSmart is regulated by the Central Bank of Kenya.</p>
+                <p class="mt-2">This is a capstone project for educational purposes only.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

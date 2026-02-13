@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - PesaSmart</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
 </head>
+
 <body class="font-roboto bg-gray-50">
-    
+
     <!-- Simple Header -->
     <header class="bg-white shadow">
         <div class="container mx-auto px-6 py-4">
             <a href="index.html" class="flex items-center space-x-2">
-                <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
+                <div
+                    class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
                     <span class="text-white font-bold">PS</span>
                 </div>
                 <span class="text-xl font-bold text-green-600">Pesa<span class="text-accent-500">Smart</span></span>
@@ -29,7 +31,9 @@
             <div class="max-w-3xl mx-auto mb-8">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center">
-                        <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-semibold">1</div>
+                        <div
+                            class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-semibold">
+                            1</div>
                         <div class="ml-2">
                             <p class="text-sm text-gray-600">Step 1</p>
                             <p class="font-medium text-gray-800">Basic Info</p>
@@ -37,7 +41,9 @@
                     </div>
                     <div class="h-1 w-16 bg-gray-300"></div>
                     <div class="flex items-center">
-                        <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-semibold">2</div>
+                        <div
+                            class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-semibold">
+                            2</div>
                         <div class="ml-2">
                             <p class="text-sm text-gray-600">Step 2</p>
                             <p class="font-medium text-gray-800">Financial Profile</p>
@@ -45,7 +51,9 @@
                     </div>
                     <div class="h-1 w-16 bg-gray-300"></div>
                     <div class="flex items-center">
-                        <div class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-semibold">3</div>
+                        <div
+                            class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-semibold">
+                            3</div>
                         <div class="ml-2">
                             <p class="text-sm text-gray-600">Step 3</p>
                             <p class="font-medium text-gray-800">Get Started</p>
@@ -55,36 +63,39 @@
             </div>
 
             <!-- Registration Form -->
-            <div class="max-w-2xl mx-auto">
-                <div class="bg-white rounded-2xl shadow-xl p-8">
-                    <div class="text-center mb-8">
-                        <h1 class="text-3xl font-bold text-gray-800">Join PesaSmart</h1>
-                        <p class="text-gray-600 mt-2">Start your journey to financial confidence</p>
-                    </div>
+            <form>
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white rounded-2xl shadow-xl p-8">
+                        <div class="text-center mb-8">
+                            <h1 class="text-3xl font-bold text-gray-800">Join PesaSmart</h1>
+                            <p class="text-gray-600 mt-2">Start your journey to financial confidence</p>
+                        </div>
 
-                    <!-- Step 1: Basic Information -->
-                    <div id="step1">
-                        <h2 class="text-xl font-bold text-gray-800 mb-6">Basic Information</h2>
-                        
-                        <form>
+                        <!-- Hidden Step Controls -->
+                        <input type="radio" name="step" id="step-1" class="hidden peer/step1" checked>
+                        <input type="radio" name="step" id="step-2" class="hidden peer/step2">
+                        <input type="radio" name="step" id="step-3" class="hidden peer/step3">
+
+                        <!-- Step 1: Basic Information -->
+                        <div id="step-1" class="hidden peer-checked/step1:block">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6">Basic Information</h2>
+
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
                                     <label class="block text-gray-700 font-medium mb-2" for="firstName">
                                         First Name
                                     </label>
-                                    <input type="text" id="firstName" 
-                                           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                                           placeholder="Ann"
-                                           required>
+                                    <input type="text" id="firstName"
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                        placeholder="Ann" required>
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 font-medium mb-2" for="lastName">
                                         Last Name
                                     </label>
-                                    <input type="text" id="lastName" 
-                                           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                                           placeholder="Muthoni"
-                                           required>
+                                    <input type="text" id="lastName"
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                        placeholder="Muthoni" required>
                                 </div>
                             </div>
 
@@ -96,10 +107,9 @@
                                     <div class="bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg px-4 py-3">
                                         <span class="text-gray-700">+254</span>
                                     </div>
-                                    <input type="tel" id="phone" 
-                                           class="flex-1 border border-gray-300 rounded-r-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                                           placeholder="712 345 678"
-                                           required>
+                                    <input type="tel" id="phone"
+                                        class="flex-1 border border-gray-300 rounded-r-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                        placeholder="712 345 678" required>
                                 </div>
                                 <p class="text-gray-500 text-sm mt-1">Used for login and M-Pesa transactions</p>
                             </div>
@@ -108,9 +118,9 @@
                                 <label class="block text-gray-700 font-medium mb-2" for="email">
                                     Email Address (Optional)
                                 </label>
-                                <input type="email" id="email" 
-                                       class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                                       placeholder="email@example.com">
+                                <input type="email" id="email"
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                    placeholder="email@example.com">
                                 <p class="text-gray-500 text-sm mt-1">For receipts and statements</p>
                             </div>
 
@@ -119,11 +129,11 @@
                                     Create Password
                                 </label>
                                 <div class="relative">
-                                    <input type="password" id="password" 
-                                           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                                           placeholder="At least 8 characters"
-                                           required>
-                                    <button type="button" class="absolute right-3 top-3 text-gray-500 hover:text-gray-700">
+                                    <input type="password" id="password"
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                        placeholder="At least 8 characters" required>
+                                    <button type="button"
+                                        class="absolute right-3 top-3 text-gray-500 hover:text-gray-700">
                                         <i class="far fa-eye"></i>
                                     </button>
                                 </div>
@@ -143,215 +153,262 @@
                                 <label class="block text-gray-700 font-medium mb-2" for="confirmPassword">
                                     Confirm Password
                                 </label>
-                                <input type="password" id="confirmPassword" 
-                                       class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                                       placeholder="Re-enter your password"
-                                       required>
+                                <div class="relative">
+                                    <input type="password" id="confirmPassword"
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                    placeholder="Re-enter your password" required>
+                                    <button type="button"
+                                        class="absolute right-3 top-3 text-gray-500 hover:text-gray-700">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </div>
                             </div>
 
-                            <div class="mb-6">
-                                <div class="flex items-start">
-                                    <input type="checkbox" id="terms" class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500 mt-1" required>
-                                    <label for="terms" class="ml-2 text-gray-700">
-                                        I agree to PesaSmart's 
-                                        <a href="#" class="text-green-600 hover:text-green-700 font-medium">Terms & Conditions</a> 
-                                        and 
-                                        <a href="#" class="text-green-600 hover:text-green-700 font-medium">Privacy Policy</a>
+                            <div class="flex justify-end">
+                                <label for="step-2"
+                                    class="cursor-pointer bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold">
+                                    Next
+                                </label>
+                            </div>
+
+                        </div>
+                        <!-- Step 2: Financial Profile -->
+                        <div id="step-2" class="hidden peer-checked/step2:block">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6">Tell Us About You</h2>
+                            <p class="text-gray-600 mb-6">Helps us personalize your experience</p>
+
+                            <form>
+                                <div class="mb-6">
+                                    <label class="block text-gray-700 font-medium mb-3">
+                                        I am a:
                                     </label>
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
-
-                    <!-- Step 2: Financial Profile -->
-                    <div id="step2" >
-                        <h2 class="text-xl font-bold text-gray-800 mb-6">Tell Us About You</h2>
-                        <p class="text-gray-600 mb-6">Helps us personalize your experience</p>
-
-                        <form>
-                            <div class="mb-6">
-                                <label class="block text-gray-700 font-medium mb-3">
-                                    I am a:
-                                </label>
-                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                    <button type="button" class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
-                                        <i class="fas fa-user-graduate text-2xl mb-2 text-gray-600"></i>
-                                        <p class="font-medium">Student</p>
-                                    </button>
-                                    <button type="button" class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
-                                        <i class="fas fa-briefcase text-2xl mb-2 text-gray-600"></i>
-                                        <p class="font-medium">Employed</p>
-                                    </button>
-                                    <button type="button" class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
-                                        <i class="fas fa-store text-2xl mb-2 text-gray-600"></i>
-                                        <p class="font-medium">Business Owner</p>
-                                    </button>
-                                    <button type="button" class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
-                                        <i class="fas fa-tractor text-2xl mb-2 text-gray-600"></i>
-                                        <p class="font-medium">Farmer</p>
-                                    </button>
-                                    <button type="button" class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
-                                        <i class="fas fa-tools text-2xl mb-2 text-gray-600"></i>
-                                        <p class="font-medium">Jua Kali Artisan</p>
-                                    </button>
-                                    <button type="button" class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
-                                        <i class="fas fa-ellipsis-h text-2xl mb-2 text-gray-600"></i>
-                                        <p class="font-medium">Other</p>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="mb-6">
-                                <label class="block text-gray-700 font-medium mb-3">
-                                    Monthly Income Range:
-                                </label>
-                                <select class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200">
-                                    <option value="">Select income range</option>
-                                    <option value="1">Less than Ksh 10,000</option>
-                                    <option value="2">Ksh 10,000 - 30,000</option>
-                                    <option value="3">Ksh 30,000 - 70,000</option>
-                                    <option value="4">Ksh 70,000 - 150,000</option>
-                                    <option value="5">Above Ksh 150,000</option>
-                                </select>
-                            </div>
-
-                            <div class="mb-8">
-                                <label class="block text-gray-700 font-medium mb-3">
-                                    My Main Goal:
-                                </label>
-                                <div class="space-y-2">
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="goal1" class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
-                                        <label for="goal1" class="ml-2 text-gray-700">Save for emergency fund</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="goal2" class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
-                                        <label for="goal2" class="ml-2 text-gray-700">Learn to invest</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="goal3" class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
-                                        <label for="goal3" class="ml-2 text-gray-700">Get insurance coverage</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="goal4" class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
-                                        <label for="goal4" class="ml-2 text-gray-700">Plan for school fees</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="goal5" class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
-                                        <label for="goal5" class="ml-2 text-gray-700">Start or grow a business</label>
+                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                        <button type="button"
+                                            class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
+                                            <i class="fas fa-user-graduate text-2xl mb-2 text-gray-600"></i>
+                                            <p class="font-medium">Student</p>
+                                        </button>
+                                        <button type="button"
+                                            class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
+                                            <i class="fas fa-briefcase text-2xl mb-2 text-gray-600"></i>
+                                            <p class="font-medium">Employed</p>
+                                        </button>
+                                        <button type="button"
+                                            class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
+                                            <i class="fas fa-store text-2xl mb-2 text-gray-600"></i>
+                                            <p class="font-medium">Business Owner</p>
+                                        </button>
+                                        <button type="button"
+                                            class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
+                                            <i class="fas fa-tractor text-2xl mb-2 text-gray-600"></i>
+                                            <p class="font-medium">Farmer</p>
+                                        </button>
+                                        <button type="button"
+                                            class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
+                                            <i class="fas fa-tools text-2xl mb-2 text-gray-600"></i>
+                                            <p class="font-medium">Jua Kali Artisan</p>
+                                        </button>
+                                        <button type="button"
+                                            class="profile-btn border-2 border-gray-300 hover:border-green-500 hover:bg-green-50 rounded-lg p-4 text-center transition">
+                                            <i class="fas fa-ellipsis-h text-2xl mb-2 text-gray-600"></i>
+                                            <p class="font-medium">Other</p>
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
 
-                        </form>
-                    </div>
+                                <div class="mb-6">
+                                    <label class="block text-gray-700 font-medium mb-3">
+                                        Monthly Income Range:
+                                    </label>
+                                    <select
+                                        class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200">
+                                        <option value="">Select income range</option>
+                                        <option value="1">Less than Ksh 10,000</option>
+                                        <option value="2">Ksh 10,000 - 30,000</option>
+                                        <option value="3">Ksh 30,000 - 70,000</option>
+                                        <option value="4">Ksh 70,000 - 150,000</option>
+                                        <option value="5">Above Ksh 150,000</option>
+                                    </select>
+                                </div>
 
-                    <!-- Step 3: Get Started (Hidden initially) -->
-                    <div id="step3" >
-                        <div class="text-center mb-8">
-                            <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-trophy text-white text-3xl"></i>
-                            </div>
-                            <h2 class="text-2xl font-bold text-gray-800 mb-2">You're All Set!</h2>
-                            <p class="text-gray-600">Your financial journey begins now</p>
+                                <div class="mb-8">
+                                    <label class="block text-gray-700 font-medium mb-3">
+                                        My Main Goal:
+                                    </label>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="goal1"
+                                                class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
+                                            <label for="goal1" class="ml-2 text-gray-700">Save for emergency
+                                                fund</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="goal2"
+                                                class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
+                                            <label for="goal2" class="ml-2 text-gray-700">Learn to invest</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="goal3"
+                                                class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
+                                            <label for="goal3" class="ml-2 text-gray-700">Get insurance coverage</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="goal4"
+                                                class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
+                                            <label for="goal4" class="ml-2 text-gray-700">Plan for school fees</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="goal5"
+                                                class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500">
+                                            <label for="goal5" class="ml-2 text-gray-700">Start or grow a
+                                                business</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between">
+                <label for="step-1"
+                    class="cursor-pointer border px-6 py-3 rounded-lg font-semibold">
+                    Back
+                </label>
+
+                <label for="step-3"
+                    class="cursor-pointer bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold">
+                    Next
+                </label>
+            </div>
+                            </form>
                         </div>
 
-                        <div class="space-y-6 mb-8">
-                            <!-- Welcome Benefits -->
-                            <div class="bg-green-50 rounded-xl p-5">
-                                <h3 class="font-bold text-green-800 mb-3"> Welcome Benefits</h3>
-                                <div class="space-y-3">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                                        <div>
-                                            <p class="font-medium text-gray-800">Ksh 50 in virtual money</p>
-                                            <p class="text-gray-600 text-sm">For practicing in our simulators</p>
+                        <!-- Step 3: Get Started  -->
+                        <div id="step-3" class="hidden peer-checked/step3:block">
+                            <div class="text-center mb-8">
+                                <div
+                                    class="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-trophy text-white text-3xl"></i>
+                                </div>
+                                <h2 class="text-2xl font-bold text-gray-800 mb-2">You're All Set!</h2>
+                                <p class="text-gray-600">Your financial journey begins now</p>
+                            </div>
+
+                            <div class="space-y-6 mb-8">
+                                <!-- Welcome Benefits -->
+                                <div class="bg-green-50 rounded-xl p-5">
+                                    <h3 class="font-bold text-green-800 mb-3"> Welcome Benefits</h3>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                            <div>
+                                                <p class="font-medium text-gray-800">Ksh 50 in virtual money</p>
+                                                <p class="text-gray-600 text-sm">For practicing in our simulators</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                                        <div>
-                                            <p class="font-medium text-gray-800">Free access to all learning modules</p>
-                                            <p class="text-gray-600 text-sm">Start with "Money Basics"</p>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                            <div>
+                                                <p class="font-medium text-gray-800">Free access to all learning modules
+                                                </p>
+                                                <p class="text-gray-600 text-sm">Start with "Money Basics"</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                                        <div>
-                                            <p class="font-medium text-gray-800">Personalized recommendations</p>
-                                            <p class="text-gray-600 text-sm">Based on your profile and goals</p>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                            <div>
+                                                <p class="font-medium text-gray-800">Personalized recommendations</p>
+                                                <p class="text-gray-600 text-sm">Based on your profile and goals</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Quick Start -->
-                            <div class="bg-green-50 rounded-xl p-5">
-                                <h3 class="font-bold text-green-800 mb-3"> Quick Start</h3>
-                                <div class="space-y-3">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                                                <span class="text-green-600 font-bold">1</span>
+                                <!-- Quick Start -->
+                                <div class="bg-green-50 rounded-xl p-5">
+                                    <h3 class="font-bold text-green-800 mb-3"> Quick Start</h3>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div
+                                                    class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                                    <span class="text-green-600 font-bold">1</span>
+                                                </div>
+                                                <span class="font-medium text-gray-800">Take financial assessment</span>
                                             </div>
-                                            <span class="font-medium text-gray-800">Take financial assessment</span>
+                                            <span class="text-gray-500 text-sm">5 mins</span>
                                         </div>
-                                        <span class="text-gray-500 text-sm">5 mins</span>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                                                <span class="text-green-600 font-bold">2</span>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div
+                                                    class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                                    <span class="text-green-600 font-bold">2</span>
+                                                </div>
+                                                <span class="font-medium text-gray-800">Set your first financial
+                                                    goal</span>
                                             </div>
-                                            <span class="font-medium text-gray-800">Set your first financial goal</span>
+                                            <span class="text-gray-500 text-sm">3 mins</span>
                                         </div>
-                                        <span class="text-gray-500 text-sm">3 mins</span>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                                                <span class="text-green-600 font-bold">3</span>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div
+                                                    class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                                    <span class="text-green-600 font-bold">3</span>
+                                                </div>
+                                                <span class="font-medium text-gray-800">Earn your first badge</span>
                                             </div>
-                                            <span class="font-medium text-gray-800">Earn your first badge</span>
+                                            <span class="text-gray-500 text-sm">15 mins</span>
                                         </div>
-                                        <span class="text-gray-500 text-sm">15 mins</span>
                                     </div>
                                 </div>
+
+                                <div class="mb-6">
+                                    <div class="flex items-start">
+                                        <input type="checkbox" id="terms"
+                                            class="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500 mt-1"
+                                            required>
+                                        <label for="terms" class="ml-2 text-gray-700">
+                                            I agree to PesaSmart's
+                                            <a href="#" class="text-green-600 hover:text-green-700 font-medium">Terms &
+                                                Conditions</a>
+                                            and
+                                            <a href="#" class="text-green-600 hover:text-green-700 font-medium">Privacy
+                                                Policy</a>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between">
+                <label for="step-2"
+                    class="cursor-pointer border px-6 py-3 rounded-lg font-semibold">
+                    Back
+                </label>
+
+                <button type="submit"
+                    class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold">
+                    Finish
+                </button>
+            </div>
                             </div>
-
-                        <div class="text-center">
-                            <button type="button"
-                                    class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-4 rounded-lg text-lg transition mb-4">
-                                Start My Financial Journey
-                            </button>
-                            <p class="text-gray-600 text-sm">
-                                By continuing, you agree to receive updates and tips via SMS/WhatsApp
-                            </p>
                         </div>
-                    </div>
-                </div>
+            </form>
 
-                <!-- Already have account -->
-                <div class="text-center mt-6">
-                    <p class="text-gray-600">
-                        Already have an account?
-                        <a href="login.html" class="text-green-600 hover:text-green-700 font-semibold">
-                            Log in here
-                        </a>
-                    </p>
-                </div>
+            <!-- Already have account -->
+            <div class="text-center mt-6">
+                <p class="text-gray-600">
+                    Already have an account?
+                    <a href="login.html" class="text-green-600 hover:text-green-700 font-semibold">
+                        Log in here
+                    </a>
+                </p>
+            </div>
 
-                <!-- Security Notice -->
-                <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <div class="flex items-start">
-                        <i class="fas fa-shield-alt text-blue-500 mt-1 mr-3"></i>
-                        <div>
-                            <h4 class="font-semibold text-blue-800">Secure & Regulated</h4>
-                            <p class="text-blue-600 text-sm mt-1">
-                                PesaSmart is regulated by the Central Bank of Kenya. Your data is protected with bank-level encryption.
-                            </p>
-                        </div>
+            <!-- Security Notice -->
+            <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div class="flex items-start">
+                    <i class="fas fa-shield-alt text-blue-500 mt-1 mr-3"></i>
+                    <div>
+                        <h4 class="font-semibold text-blue-800">Secure & Regulated</h4>
+                        <p class="text-blue-600 text-sm mt-1">
+                            PesaSmart is regulated by the Central Bank of Kenya. Your data is protected with
+                            bank-level encryption.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -364,7 +421,8 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
                     <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
+                        <div
+                            class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center">
                             <span class="text-white font-bold">PS</span>
                         </div>
                         <span class="text-xl font-bold">Pesa<span class="text-green-400">Smart</span></span>
@@ -373,13 +431,16 @@
                         Your path to financial confidence. Learn, practice, and grow your money.
                     </p>
                     <div class="flex space-x-3">
-                        <a href="#" class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                        <a href="#"
+                            class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                        <a href="#"
+                            class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
+                        <a href="#"
+                            class="w-8 h-8 bg-gray-700 hover:bg-green-600 rounded-full flex items-center justify-center transition">
                             <i class="fab fa-instagram"></i>
                         </a>
                     </div>
@@ -428,4 +489,5 @@
     </footer>
 
 </body>
+
 </html>
