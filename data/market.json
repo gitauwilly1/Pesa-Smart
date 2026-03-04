@@ -1,0 +1,119 @@
+{
+  "stocks": [
+    {
+      "symbol": "SCOM",
+      "name": "Safaricom PLC",
+      "price": 14.50,
+      "change": 0.35,
+      "changePercent": 2.47,
+      "volume": 2540000,
+      "dayHigh": 14.55,
+      "dayLow": 14.15,
+      "yearHigh": 15.80,
+      "yearLow": 12.90,
+      "pe": 12.5,
+      "dividend": 0.45,
+      "marketCap": "580B",
+      "sector": "Telecom"
+    },
+    {
+      "symbol": "EQTY",
+      "name": "Equity Bank",
+      "price": 38.20,
+      "change": -0.42,
+      "changePercent": -1.09,
+      "volume": 1820000,
+      "dayHigh": 38.85,
+      "dayLow": 38.10,
+      "yearHigh": 42.30,
+      "yearLow": 35.60,
+      "pe": 8.2,
+      "dividend": 1.20,
+      "marketCap": "145B",
+      "sector": "Banking"
+    },
+    {
+      "symbol": "KCB",
+      "name": "KCB Group",
+      "price": 42.50,
+      "change": 0.28,
+      "changePercent": 0.66,
+      "volume": 1250000,
+      "dayHigh": 42.80,
+      "dayLow": 42.20,
+      "yearHigh": 45.90,
+      "yearLow": 39.80,
+      "pe": 7.5,
+      "dividend": 1.75,
+      "marketCap": "136B",
+      "sector": "Banking"
+    },
+    {
+      "symbol": "EABL",
+      "name": "EABL",
+      "price": 145.00,
+      "change": 2.30,
+      "changePercent": 1.61,
+      "volume": 820000,
+      "dayHigh": 145.50,
+      "dayLow": 142.50,
+      "yearHigh": 158.00,
+      "yearLow": 138.00,
+      "pe": 14.2,
+      "dividend": 3.50,
+      "marketCap": "115B",
+      "sector": "Manufacturing"
+    },
+    {
+      "symbol": "COOP",
+      "name": "Co-op Bank",
+      "price": 12.75,
+      "change": 0.10,
+      "changePercent": 0.79,
+      "volume": 980000,
+      "dayHigh": 12.90,
+      "dayLow": 12.60,
+      "yearHigh": 14.20,
+      "yearLow": 11.80,
+      "pe": 6.8,
+      "dividend": 0.50,
+      "marketCap": "75B",
+      "sector": "Banking"
+    },
+    {
+      "symbol": "BAT",
+      "name": "BAT Kenya",
+      "price": 345.00,
+      "change": -1.50,
+      "changePercent": -0.43,
+      "volume": 45000,
+      "dayHigh": 348.00,
+      "dayLow": 344.00,
+      "yearHigh": 380.00,
+      "yearLow": 320.00,
+      "pe": 11.3,
+      "dividend": 18.50,
+      "marketCap": "34.5B",
+      "sector": "Manufacturing"
+    }
+  ],
+  "indices": [
+    {
+      "name": "NSE 20 Share Index",
+      "value": 1824.56,
+      "change": 12.34,
+      "changePercent": 0.68
+    },
+    {
+      "name": "NSE All Share Index",
+      "value": 145.78,
+      "change": 1.23,
+      "changePercent": 0.85
+    }
+  ],
+  "marketStatus": {
+    "open": true,
+    "nextOpen": "2026-03-21T09:00:00+03:00",
+    "nextClose": "2026-03-21T15:00:00+03:00"
+  }
+}
