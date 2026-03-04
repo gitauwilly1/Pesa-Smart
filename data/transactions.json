@@ -12,7 +12,7 @@
       "status": "completed",
       "paymentMethod": "mpesa",
       "mpesaCode": "MGX1234ABC",
-      "date": "2024-03-15T10:23:45Z",
+      "date": "2026-03-15T10:23:45Z",
       "notes": "First investment"
     },
     {
@@ -23,7 +23,7 @@
       "productName": "Safaricom PLC",
       "amount": 155.17,
       "status": "completed",
-      "date": "2024-03-10T00:00:00Z",
+      "date": "2026-03-10T00:00:00Z",
       "notes": "Quarterly dividend"
     },
     {
@@ -36,8 +36,8 @@
       "units": 100,
       "status": "completed",
       "paymentMethod": "bank",
-      "reference": "TRF20240315001",
-      "date": "2024-03-14T14:30:00Z"
+      "reference": "TRF20260315001",
+      "date": "2026-03-14T14:30:00Z"
     },
     {
       "id": "TXN004",
@@ -49,8 +49,8 @@
       "status": "completed",
       "paymentMethod": "mpesa",
       "mpesaCode": "MGX5678DEF",
-      "date": "2024-03-12T09:15:00Z",
-      "validUntil": "2024-04-12T00:00:00Z"
+      "date": "2026-03-12T09:15:00Z",
+      "validUntil": "2026-04-12T00:00:00Z"
     },
     {
       "id": "TXN005",
@@ -62,7 +62,7 @@
       "status": "completed",
       "paymentMethod": "mpesa",
       "mpesaCode": "MGX9012GHI",
-      "date": "2024-03-13T16:45:00Z"
+      "date": "2026-03-13T16:45:00Z"
     },
     {
       "id": "TXN006",
@@ -72,7 +72,7 @@
       "status": "completed",
       "paymentMethod": "mpesa",
       "mpesaCode": "MGX3456JKL",
-      "date": "2024-03-11T11:20:00Z",
+      "date": "2026-03-11T11:20:00Z",
       "notes": "Emergency withdrawal"
     }
   ]
