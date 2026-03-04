@@ -1,0 +1,74 @@
+{
+  "categories": [
+    {
+      "id": "student",
+      "name": "Student",
+      "icon": "🎓",
+      "typicalIncome": "0-10000",
+      "commonGoals": ["School fees", "First investment", "Emergency fund"]
+    },
+    {
+      "id": "employed",
+      "name": "Employed (Formal)",
+      "icon": "💼",
+      "typicalIncome": "30000-150000",
+      "commonGoals": ["Retirement", "Home ownership", "Children's education"]
+    },
+    {
+      "id": "mamaMboga",
+      "name": "Mama Mboga / Small Trader",
+      "icon": "🥬",
+      "typicalIncome": "5000-30000",
+      "commonGoals": ["Business capital", "Daily savings", "School fees"]
+    },
+    {
+      "id": "juaKali",
+      "name": "Jua Kali Artisan",
+      "icon": "🔧",
+      "typicalIncome": "10000-50000",
+      "commonGoals": ["Tools/Equipment", "Workshop rent", "Materials"]
+    },
+    {
+      "id": "farmer",
+      "name": "Farmer",
+      "icon": "🌽",
+      "typicalIncome": "Seasonal",
+      "commonGoals": ["Farm inputs", "Crop insurance", "Irrigation"]
+    },
+    {
+      "id": "bodaboda",
+      "name": "Boda Boda Rider",
+      "icon": "🏍️",
+      "typicalIncome": "10000-40000",
+      "commonGoals": ["Motorcycle", "Insurance", "Fuel capital"]
+    },
+    {
+      "id": "professional",
+      "name": "Professional (Doctor/Lawyer/etc)",
+      "icon": "👔",
+      "typicalIncome": "100000-500000",
+      "commonGoals": ["High-end investments", "Property", "Retirement"]
+    },
+    {
+      "id": "business",
+      "name": "Business Owner",
+      "icon": "🏪",
+      "typicalIncome": "50000-500000+",
+      "commonGoals": ["Expansion", "Inventory", "Business premises"]
+    },
+    {
+      "id": "retired",
+      "name": "Retired",
+      "icon": "👴",
+      "typicalIncome": "Pension",
+      "commonGoals": ["Healthcare", "Passive income", "Legacy planning"]
+    },
+    {
+      "id": "unemployed",
+      "name": "Currently Unemployed",
+      "icon": "🤝",
+      "typicalIncome": "0-5000",
+      "commonGoals": ["Emergency fund", "Skills training", "Job search"]
+    }
+  ]
+}
