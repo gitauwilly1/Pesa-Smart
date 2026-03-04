@@ -1,0 +1,662 @@
+{
+    "counties": [
+        {
+            "code": "001",
+            "name": "Mombasa",
+            "capital": "Mombasa City",
+            "region": "Coast",
+            "constituencies": [
+                "Changamwe",
+                "Jomvu",
+                "Kisauni",
+                "Likoni",
+                "Mvita",
+                "Nyali"
+            ]
+        },
+        {
+            "code": "002",
+            "name": "Kwale",
+            "capital": "Kwale",
+            "region": "Coast",
+            "constituencies": [
+                "Msambweni",
+                "Lunga Lunga",
+                "Matuga",
+                "Kinango"
+            ]
+        },
+        {
+            "code": "003",
+            "name": "Kilifi",
+            "capital": "Kilifi",
+            "region": "Coast",
+            "constituencies": [
+                "Kilifi North",
+                "Kilifi South",
+                "Kaloleni",
+                "Rabai",
+                "Ganze",
+                "Malindi",
+                "Magarini"
+            ]
+        },
+        {
+            "code": "004",
+            "name": "Tana River",
+            "capital": "Hola",
+            "region": "Coast",
+            "constituencies": [
+                "Garsen",
+                "Galole",
+                "Bura"
+            ]
+        },
+        {
+            "code": "005",
+            "name": "Lamu",
+            "capital": "Lamu",
+            "region": "Coast",
+            "constituencies": [
+                "Lamu East",
+                "Lamu West"
+            ]
+        },
+        {
+            "code": "006",
+            "name": "Taita Taveta",
+            "capital": "Voi",
+            "region": "Coast",
+            "constituencies": [
+                "Taveta",
+                "Wundanyi",
+                "Mwatate",
+                "Voi"
+            ]
+        },
+        {
+            "code": "007",
+            "name": "Garissa",
+            "capital": "Garissa",
+            "region": "North Eastern",
+            "constituencies": [
+                "Garissa Township",
+                "Balambala",
+                "Lagdera",
+                "Dadaab",
+                "Fafi",
+                "Ijara"
+            ]
+        },
+        {
+            "code": "008",
+            "name": "Wajir",
+            "capital": "Wajir",
+            "region": "North Eastern",
+            "constituencies": [
+                "Wajir North",
+                "Wajir East",
+                "Wajir South",
+                "Wajir West",
+                "Tarbaj",
+                "Eldas"
+            ]
+        },
+        {
+            "code": "009",
+            "name": "Mandera",
+            "capital": "Mandera",
+            "region": "North Eastern",
+            "constituencies": [
+                "Mandera West",
+                "Mandera North",
+                "Mandera South",
+                "Mandera East",
+                "Lafey"
+            ]
+        },
+        {
+            "code": "010",
+            "name": "Marsabit",
+            "capital": "Marsabit",
+            "region": "Eastern",
+            "constituencies": [
+                "Moyale",
+                "North Horr",
+                "Saku",
+                "Laisamis"
+            ]
+        },
+        {
+            "code": "011",
+            "name": "Isiolo",
+            "capital": "Isiolo",
+            "region": "Eastern",
+            "constituencies": [
+                "Isiolo North",
+                "Isiolo South"
+            ]
+        },
+        {
+            "code": "012",
+            "name": "Meru",
+            "capital": "Meru",
+            "region": "Eastern",
+            "constituencies": [
+                "Buuri",
+                "Igembe North",
+                "Igembe South",
+                "Imenti North",
+                "Imenti South",
+                "Tigania East",
+                "Tigania West"
+            ]
+        },
+        {
+            "code": "013",
+            "name": "Tharaka Nithi",
+            "capital": "Kathwana",
+            "region": "Eastern",
+            "constituencies": [
+                "Tharaka",
+                "Chuka/Igambang'ombe",
+                "Maara"
+            ]
+        },
+        {
+            "code": "014",
+            "name": "Embu",
+            "capital": "Embu",
+            "region": "Eastern",
+            "constituencies": [
+                "Manyatta",
+                "Runyenjes",
+                "Mbeere North",
+                "Mbeere South"
+            ]
+        },
+        {
+            "code": "015",
+            "name": "Kitui",
+            "capital": "Kitui",
+            "region": "Eastern",
+            "constituencies": [
+                "Kitui West",
+                "Kitui Central",
+                "Kitui Rural",
+                "Kitui South",
+                "Mwingi North",
+                "Mwingi Central",
+                "Mwingi South"
+            ]
+        },
+        {
+            "code": "016",
+            "name": "Machakos",
+            "capital": "Machakos",
+            "region": "Eastern",
+            "constituencies": [
+                "Masinga",
+                "Yatta",
+                "Kangundo",
+                "Matungulu",
+                "Kathiani",
+                "Mavoko",
+                "Machakos Town",
+                "Mwala"
+            ]
+        },
+        {
+            "code": "017",
+            "name": "Makueni",
+            "capital": "Wote",
+            "region": "Eastern",
+            "constituencies": [
+                "Mbooni",
+                "Kilome",
+                "Kaiti",
+                "Makueni",
+                "Kibwezi West",
+                "Kibwezi East"
+            ]
+        },
+        {
+            "code": "018",
+            "name": "Nyandarua",
+            "capital": "Ol Kalou",
+            "region": "Central",
+            "constituencies": [
+                "Kinangop",
+                "Kipipiri",
+                "Ol Kalou",
+                "Ol Jorok",
+                "Ndaragwa"
+            ]
+        },
+        {
+            "code": "019",
+            "name": "Nyeri",
+            "capital": "Nyeri",
+            "region": "Central",
+            "constituencies": [
+                "Tetu",
+                "Kieni",
+                "Mathira",
+                "Othaya",
+                "Mukurwe-ini",
+                "Nyeri Town"
+            ]
+        },
+        {
+            "code": "020",
+            "name": "Kirinyaga",
+            "capital": "Kerugoya/Kutus",
+            "region": "Central",
+            "constituencies": [
+                "Mwea",
+                "Gichugu",
+                "Ndia",
+                "Kirinyaga Central"
+            ]
+        },
+        {
+            "code": "021",
+            "name": "Murang'a",
+            "capital": "Murang'a",
+            "region": "Central",
+            "constituencies": [
+                "Kangema",
+                "Mathioya",
+                "Kiharu",
+                "Kigumo",
+                "Maragwa",
+                "Kandara",
+                "Gatanga"
+            ]
+        },
+        {
+            "code": "022",
+            "name": "Kiambu",
+            "capital": "Kiambu",
+            "region": "Central",
+            "constituencies": [
+                "Gatundu North",
+                "Gatundu South",
+                "Juja",
+                "Thika Town",
+                "Ruiru",
+                "Githunguri",
+                "Kiambu",
+                "Kikuyu",
+                "Limuru",
+                "Lari"
+            ]
+        },
+        {
+            "code": "023",
+            "name": "Turkana",
+            "capital": "Lodwar",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Turkana North",
+                "Turkana West",
+                "Turkana Central",
+                "Loima",
+                "Turkana South",
+                "Turkana East"
+            ]
+        },
+        {
+            "code": "024",
+            "name": "West Pokot",
+            "capital": "Kapenguria",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Kapenguria",
+                "Sigor",
+                "Kacheliba",
+                "Pokot South"
+            ]
+        },
+        {
+            "code": "025",
+            "name": "Samburu",
+            "capital": "Maralal",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Samburu West",
+                "Samburu North",
+                "Samburu East"
+            ]
+        },
+        {
+            "code": "026",
+            "name": "Trans Nzoia",
+            "capital": "Kitale",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Kiminini",
+                "Saboti",
+                "Kwanza",
+                "Endebess"
+            ]
+        },
+        {
+            "code": "027",
+            "name": "Uasin Gishu",
+            "capital": "Eldoret",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Soy",
+                "Turbo",
+                "Moiben",
+                "Ainabkoi",
+                "Kapseret",
+                "Kesses"
+            ]
+        },
+        {
+            "code": "028",
+            "name": "Elgeyo Marakwet",
+            "capital": "Iten",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Marakwet East",
+                "Marakwet West",
+                "Keiyo North",
+                "Keiyo South"
+            ]
+        },
+        {
+            "code": "029",
+            "name": "Nandi",
+            "capital": "Kapsabet",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Tinderet",
+                "Aldai",
+                "Nandi Hills",
+                "Chesumei",
+                "Emgwen",
+                "Mosop"
+            ]
+        },
+        {
+            "code": "030",
+            "name": "Baringo",
+            "capital": "Kabarnet",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Baringo North",
+                "Baringo Central",
+                "Baringo South",
+                "Mogotio",
+                "Eldama Ravine"
+            ]
+        },
+        {
+            "code": "031",
+            "name": "Laikipia",
+            "capital": "Rumuruti",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Laikipia West",
+                "Laikipia East",
+                "Laikipia North"
+            ]
+        },
+        {
+            "code": "032",
+            "name": "Nakuru",
+            "capital": "Nakuru",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Molo",
+                "Njoro",
+                "Naivasha",
+                "Gilgil",
+                "Kuresoi South",
+                "Kuresoi North",
+                "Subukia",
+                "Rongai",
+                "Bahati",
+                "Nakuru Town West",
+                "Nakuru Town East"
+            ]
+        },
+        {
+            "code": "033",
+            "name": "Narok",
+            "capital": "Narok",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Kilgoris",
+                "Emurua Dikirr",
+                "Narok North",
+                "Narok East",
+                "Narok South",
+                "Narok West"
+            ]
+        },
+        {
+            "code": "034",
+            "name": "Kajiado",
+            "capital": "Kajiado",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Kajiado North",
+                "Kajiado Central",
+                "Kajiado East",
+                "Kajiado West",
+                "Kajiado South"
+            ]
+        },
+        {
+            "code": "035",
+            "name": "Kericho",
+            "capital": "Kericho",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Ainamoi",
+                "Belgut",
+                "Bureti",
+                "Kipkelion East",
+                "Kipkelion West",
+                "Soin/Sigowet"
+            ]
+        },
+        {
+            "code": "036",
+            "name": "Bomet",
+            "capital": "Bomet",
+            "region": "Rift Valley",
+            "constituencies": [
+                "Sotik",
+                "Chepalungu",
+                "Bomet East",
+                "Bomet Central",
+                "Konoin"
+            ]
+        },
+        {
+            "code": "037",
+            "name": "Kakamega",
+            "capital": "Kakamega",
+            "region": "Western",
+            "constituencies": [
+                "Lugari",
+                "Likuyani",
+                "Malava",
+                "Lurambi",
+                "Navakholo",
+                "Mumias West",
+                "Mumias East",
+                "Matungu",
+                "Butere",
+                "Khwisero",
+                "Shinyalu",
+                "Ikolomani"
+            ]
+        },
+        {
+            "code": "038",
+            "name": "Vihiga",
+            "capital": "Vihiga",
+            "region": "Western",
+            "constituencies": [
+                "Vihiga",
+                "Sabatia",
+                "Hamisi",
+                "Luanda",
+                "Emuhaya"
+            ]
+        },
+        {
+            "code": "039",
+            "name": "Bungoma",
+            "capital": "Bungoma",
+            "region": "Western",
+            "constituencies": [
+                "Mt. Elgon",
+                "Sirisia",
+                "Kabuchai",
+                "Bumula",
+                "Kanduyi",
+                "Webuye East",
+                "Webuye West",
+                "Kimilili",
+                "Tongaren"
+            ]
+        },
+        {
+            "code": "040",
+            "name": "Busia",
+            "capital": "Busia",
+            "region": "Western",
+            "constituencies": [
+                "Teso North",
+                "Teso South",
+                "Nambale",
+                "Matayos",
+                "Butula",
+                "Funyula",
+                "Budalangi"
+            ]
+        },
+        {
+            "code": "041",
+            "name": "Siaya",
+            "capital": "Siaya",
+            "region": "Nyanza",
+            "constituencies": [
+                "Ugenya",
+                "Ugunja",
+                "Alego Usonga",
+                "Gem",
+                "Bondo",
+                "Rarieda"
+            ]
+        },
+        {
+            "code": "042",
+            "name": "Kisumu",
+            "capital": "Kisumu",
+            "region": "Nyanza",
+            "constituencies": [
+                "Kisumu East",
+                "Kisumu West",
+                "Kisumu Central",
+                "Seme",
+                "Nyando",
+                "Muhoroni",
+                "Nyakach"
+            ]
+        },
+        {
+            "code": "043",
+            "name": "Homa Bay",
+            "capital": "Homa Bay",
+            "region": "Nyanza",
+            "constituencies": [
+                "Rangwe",
+                "Homa Bay Town",
+                "Ndhiwa",
+                "Mbita",
+                "Suba",
+                "Kasipul",
+                "Karachuonyo"
+            ]
+        },
+        {
+            "code": "044",
+            "name": "Migori",
+            "capital": "Migori",
+            "region": "Nyanza",
+            "constituencies": [
+                "Rongo",
+                "Awendo",
+                "Suna East",
+                "Suna West",
+                "Uriri",
+                "Nyatike",
+                "Kuria East",
+                "Kuria West"
+            ]
+        },
+        {
+            "code": "045",
+            "name": "Kisii",
+            "capital": "Kisii",
+            "region": "Nyanza",
+            "constituencies": [
+                "Kitutu Chache North",
+                "Kitutu Chache South",
+                "Nyaribari Masaba",
+                "Nyaribari Chache",
+                "Bomachoge Borabu",
+                "Bomachoge Chache",
+                "South Mugirango",
+                "North Mugirango",
+                "Bonchari",
+                "Bobasi"
+            ]
+        },
+        {
+            "code": "046",
+            "name": "Nyamira",
+            "capital": "Nyamira",
+            "region": "Nyanza",
+            "constituencies": [
+                "Kitutu Masaba",
+                "West Mugirango",
+                "North Mugirango",
+                "Borabu"
+            ]
+        },
+        {
+            "code": "047",
+            "name": "Nairobi",
+            "capital": "Nairobi City",
+            "region": "Nairobi",
+            "constituencies": [
+                "Westlands",
+                "Dagoretti North",
+                "Dagoretti South",
+                "Lang'ata",
+                "Kibra",
+                "Roysambu",
+                "Kasarani",
+                "Ruaraka",
+                "Embakasi South",
+                "Embakasi North",
+                "Embakasi Central",
+                "Embakasi East",
+                "Embakasi West",
+                "Makadara",
+                "Kamukunji",
+                "Starehe",
+                "Mathare"
+            ]
+        }
+    ]
+}
