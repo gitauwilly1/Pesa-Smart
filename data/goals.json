@@ -1,0 +1,150 @@
+{
+  "goals": [
+    {
+      "id": "GL001",
+      "userId": "USR001",
+      "name": "Buy Land in Kiambu",
+      "category": "investment",
+      "targetAmount": 500000,
+      "savedAmount": 150000,
+      "deadline": "2025-12-31",
+      "startDate": "2026-01-01",
+      "priority": "high",
+      "autoSave": {
+        "enabled": true,
+        "frequency": "monthly",
+        "amount": 20000,
+        "source": "mpesa",
+        "nextDate": "2026-04-01"
+      },
+      "contributions": [
+        {
+          "date": "2026-01-01",
+          "amount": 20000,
+          "type": "initial"
+        },
+        {
+          "date": "2026-02-01",
+          "amount": 20000,
+          "type": "auto"
+        },
+        {
+          "date": "2026-03-01",
+          "amount": 20000,
+          "type": "auto"
+        },
+        {
+          "date": "2026-03-15",
+          "amount": 90000,
+          "type": "manual",
+          "notes": "Harambee contribution"
+        }
+      ],
+      "status": "active",
+      "progress": 30
+    },
+    {
+      "id": "GL002",
+      "userId": "USR001",
+      "name": "University Fees",
+      "category": "education",
+      "targetAmount": 50000,
+      "savedAmount": 30000,
+      "deadline": "2026-08-15",
+      "startDate": "2026-01-15",
+      "priority": "urgent",
+      "autoSave": {
+        "enabled": true,
+        "frequency": "weekly",
+        "amount": 2500,
+        "source": "mpesa",
+        "nextDate": "2026-03-22"
+      },
+      "contributions": [
+        {
+          "date": "2026-01-15",
+          "amount": 5000,
+          "type": "initial"
+        },
+        {
+          "date": "2026-01-22",
+          "amount": 2500,
+          "type": "auto"
+        },
+        {
+          "date": "2026-01-29",
+          "amount": 2500,
+          "type": "auto"
+        }
+      ],
+      "status": "active",
+      "progress": 60
+    },
+    {
+      "id": "GL003",
+      "userId": "USR002",
+      "name": "Welding Machine",
+      "category": "business",
+      "targetAmount": 80000,
+      "savedAmount": 80000,
+      "deadline": "2026-03-01",
+      "startDate": "2026-01-01",
+      "priority": "medium",
+      "autoSave": {
+        "enabled": false
+      },
+      "contributions": [
+        {
+          "date": "2026-01-01",
+          "amount": 20000,
+          "type": "initial"
+        },
+        {
+          "date": "2026-01-15",
+          "amount": 30000,
+          "type": "manual"
+        },
+        {
+          "date": "2026-02-01",
+          "amount": 30000,
+          "type": "manual"
+        }
+      ],
+      "status": "completed",
+      "completedDate": "2026-03-01",
+      "progress": 100
+    },
+    {
+      "id": "GL004",
+      "userId": "USR003",
+      "name": "Emergency Fund",
+      "category": "savings",
+      "targetAmount": 30000,
+      "savedAmount": 12500,
+      "deadline": "2026-12-31",
+      "startDate": "2026-02-01",
+      "priority": "medium",
+      "autoSave": {
+        "enabled": true,
+        "frequency": "daily",
+        "amount": 100,
+        "source": "mpesa",
+        "nextDate": "2026-03-21"
+      },
+      "contributions": [
+        {
+          "date": "2026-02-01",
+          "amount": 5000,
+          "type": "initial"
+        },
+        {
+          "date": "2026-02-15",
+          "amount": 5000,
+          "type": "manual"
+        }
+      ],
+      "status": "active",
+      "progress": 42
+    }
+  ]
+}
