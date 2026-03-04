@@ -1,0 +1,79 @@
+{
+  "transactions": [
+    {
+      "id": "TXN001",
+      "userId": "USR001",
+      "type": "investment",
+      "productId": "PRD001",
+      "productName": "Safaricom PLC",
+      "amount": 5000,
+      "shares": 344.83,
+      "price": 14.50,
+      "status": "completed",
+      "paymentMethod": "mpesa",
+      "mpesaCode": "MGX1234ABC",
+      "date": "2024-03-15T10:23:45Z",
+      "notes": "First investment"
+    },
+    {
+      "id": "TXN002",
+      "userId": "USR001",
+      "type": "dividend",
+      "productId": "PRD001",
+      "productName": "Safaricom PLC",
+      "amount": 155.17,
+      "status": "completed",
+      "date": "2024-03-10T00:00:00Z",
+      "notes": "Quarterly dividend"
+    },
+    {
+      "id": "TXN003",
+      "userId": "USR002",
+      "type": "investment",
+      "productId": "PRD003",
+      "productName": "Treasury Bond",
+      "amount": 10000,
+      "units": 100,
+      "status": "completed",
+      "paymentMethod": "bank",
+      "reference": "TRF20240315001",
+      "date": "2024-03-14T14:30:00Z"
+    },
+    {
+      "id": "TXN004",
+      "userId": "USR002",
+      "type": "insurance",
+      "productId": "INS001",
+      "productName": "Rainfall Insurance",
+      "amount": 200,
+      "status": "completed",
+      "paymentMethod": "mpesa",
+      "mpesaCode": "MGX5678DEF",
+      "date": "2024-03-12T09:15:00Z",
+      "validUntil": "2024-04-12T00:00:00Z"
+    },
+    {
+      "id": "TXN005",
+      "userId": "USR003",
+      "type": "savings",
+      "goalId": "GL001",
+      "goalName": "School Fees",
+      "amount": 500,
+      "status": "completed",
+      "paymentMethod": "mpesa",
+      "mpesaCode": "MGX9012GHI",
+      "date": "2024-03-13T16:45:00Z"
+    },
+    {
+      "id": "TXN006",
+      "userId": "USR003",
+      "type": "withdrawal",
+      "amount": 2000,
+      "status": "completed",
+      "paymentMethod": "mpesa",
+      "mpesaCode": "MGX3456JKL",
+      "date": "2024-03-11T11:20:00Z",
+      "notes": "Emergency withdrawal"
+    }
+  ]
+}
