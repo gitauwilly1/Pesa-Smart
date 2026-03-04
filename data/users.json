@@ -1,0 +1,81 @@
+{
+  "users": [
+    {
+      "id": "USR001",
+      "firstName": "Ann",
+      "lastName": "Muthoni",
+      "phone": "+254712345678",
+      "email": "ann.muthoni@email.com",
+      "password": "hashed_password_123",
+      "profile": {
+        "occupation": "student",
+        "incomeRange": "10000-30000",
+        "dateOfBirth": "1999-05-15",
+        "county": "Nairobi",
+        "constituency": "Dagoretti",
+        "gender": "female"
+      },
+      "financialScore": 4.2,
+      "preferences": {
+        "language": "en",
+        "notifications": true,
+        "darkMode": false
+      },
+      "kycStatus": "verified",
+      "createdAt": "2026-01-15T08:30:00Z",
+      "lastLogin": "2026-03-20T14:22:00Z"
+    },
+    {
+      "id": "USR002",
+      "firstName": "John",
+      "lastName": "Kamau",
+      "phone": "+254723456789",
+      "email": "john.kamau@email.com",
+      "password": "hashed_password_456",
+      "profile": {
+        "occupation": "juaKali",
+        "incomeRange": "30000-70000",
+        "dateOfBirth": "1985-10-20",
+        "county": "Kiambu",
+        "constituency": "Juja",
+        "gender": "male",
+        "businessType": "welding"
+      },
+      "financialScore": 3.5,
+      "preferences": {
+        "language": "sw",
+        "notifications": true,
+        "darkMode": true
+      },
+      "kycStatus": "pending",
+      "createdAt": "2026-02-01T10:15:00Z",
+      "lastLogin": "2026-03-19T09:45:00Z"
+    },
+    {
+      "id": "USR003",
+      "firstName": "Mary",
+      "lastName": "Wanjiku",
+      "phone": "+254734567890",
+      "email": "mary.wanjiku@email.com",
+      "password": "hashed_password_789",
+      "profile": {
+        "occupation": "mamaMboga",
+        "incomeRange": "5000-10000",
+        "dateOfBirth": "1978-03-08",
+        "county": "Nakuru",
+        "constituency": "Nakuru Town",
+        "gender": "female",
+        "businessType": "vegetable vendor"
+      },
+      "financialScore": 2.8,
+      "preferences": {
+        "language": "sw",
+        "notifications": false,
+        "darkMode": false
+      },
+      "kycStatus": "verified",
+      "createdAt": "2026-02-15T16:20:00Z",
+      "lastLogin": "2026-03-18T11:30:00Z"
+    }
+  ]
+}
