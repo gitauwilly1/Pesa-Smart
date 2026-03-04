@@ -1,0 +1,104 @@
+{
+  "products": [
+    {
+      "id": "INS001",
+      "name": "Rainfall Insurance",
+      "category": "parametric",
+      "description": "Automatic payout when rainfall exceeds threshold",
+      "premium": 200,
+      "coverage": 20000,
+      "duration": "30 days",
+      "trigger": {
+        "type": "rainfall",
+        "threshold": 50,
+        "unit": "mm",
+        "period": "24h"
+      },
+      "eligibleLocations": ["Nairobi", "Kiambu", "Nakuru", "Uasin Gishu"],
+      "features": [
+        "No claims process",
+        "Automatic M-Pesa payout",
+        "Covers crop damage"
+      ],
+      "requirements": ["Valid ID", "Farm location"],
+      "status": "active"
+    },
+    {
+      "id": "INS002",
+      "name": "BodaBoda Safety",
+      "category": "parametric",
+      "description": "Accident detection and automatic payout",
+      "premium": 150,
+      "coverage": 50000,
+      "duration": "30 days",
+      "trigger": {
+        "type": "accident_detection",
+        "threshold": "impact",
+        "method": "phone_sensors"
+      },
+      "features": [
+        "Automatic emergency contacts",
+        "Hospital cash advance",
+        "No paperwork"
+      ],
+      "requirements": ["Smartphone", "Valid license"],
+      "status": "active"
+    },
+    {
+      "id": "INS003",
+      "name": "Health Cash",
+      "category": "health",
+      "description": "Daily hospital cash benefit",
+      "premium": 300,
+      "coverage": 5000,
+      "duration": "30 days",
+      "benefits": {
+        "hospitalization": 5000,
+        "outpatient": 1000,
+        "maternity": 10000
+      },
+      "waitingPeriod": 14,
+      "features": [
+        "Cash paid within 24 hours",
+        "No receipt required",
+        "Family coverage available"
+      ],
+      "requirements": ["Valid ID"],
+      "status": "active"
+    },
+    {
+      "id": "INS004",
+      "name": "Phone Insurance",
+      "category": "asset",
+      "description": "Protect your smartphone against damage and theft",
+      "premium": 100,
+      "coverage": 15000,
+      "duration": "30 days",
+      "coveredEvents": ["Screen damage", "Theft", "Liquid damage"],
+      "excess": 1000,
+      "features": [
+        "Repair within 48 hours",
+        "Loan phone while repairing",
+        "Covers all networks"
+      ],
+      "requirements": ["Phone IMEI number", "Purchase receipt"],
+      "status": "active"
+    }
+  ],
+  "claims": [
+    {
+      "id": "CLM001",
+      "userId": "USR003",
+      "productId": "INS001",
+      "productName": "Rainfall Insurance",
+      "incidentDate": "2026-03-10",
+      "claimDate": "2026-03-11",
+      "location": "Nakuru",
+      "rainfall": 65,
+      "payout": 20000,
+      "status": "paid",
+      "paidDate": "2026-03-11",
+      "mpesaCode": "MGX7890MNO"
+    }
+  ]
+}
