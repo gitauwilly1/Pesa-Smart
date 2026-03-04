@@ -1,5 +1,9 @@
 # PesaSmart 
 
+## Contributors
+ Gitau William
+ ---
+
 ## Your Path to Financial Confidence
 
 PesaSmart is a comprehensive fintech education platform designed specifically for the Kenyan market. It bridges the gap between financial literacy and real financial action through a three-phase journey: **Learn → Practice → Act**.
@@ -43,12 +47,12 @@ PesaSmart provides a guided financial journey:
 
 ##  Key Features
 
-- ✅ **M-Pesa integration** - Payments, statements, round-ups
-- ✅ **Fractional investing** - From Ksh 100 minimum
-- ✅ **Parametric insurance** - Automatic claim payouts
-- ✅ **Gamified learning** - Badges, certificates, leaderboards
-- ✅ **Goal-based savings** - Visual progress tracking
-- ✅ **Community features** - Chama management, group learning
+-  **M-Pesa integration** - Payments, statements, round-ups
+-  **Fractional investing** - From Ksh 100 minimum
+-  **Parametric insurance** - Automatic claim payouts
+-  **Gamified learning** - Badges, certificates, leaderboards
+-  **Goal-based savings** - Visual progress tracking
+-  **Community features** - Chama management, group learning
 
 
 ---
@@ -63,3 +67,26 @@ PesaSmart provides a guided financial journey:
 
 ---
 
+## Installation & Setup
+To deploy this project locally, follow these steps:
+
+1.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/gitauwilly1/Pesa-Smart.git](https://github.com/gitauwilly1/Pesa-Smart.git)
+    ```
+2.  **Execution:** Open `index.html` in any modern web browser (Chrome, Firefox, Safari, or Edge). 
+
+---
+
+## Known Bugs
+There are no known bugs 
+
+---
+
+## License
+* **License:** MIT License.
+
+---
+
+## Support and Information
+**email** gitauwilly254@gmail.com
