@@ -1,0 +1,160 @@
+{
+  "products": [
+    {
+      "id": "PRD001",
+      "name": "Safaricom PLC",
+      "symbol": "SCOM",
+      "category": "stock",
+      "type": "equity",
+      "description": "Kenya's largest telecommunications company",
+      "price": 14.50,
+      "priceChange": 0.35,
+      "priceChangePercent": 2.47,
+      "minInvestment": 100,
+      "maxInvestment": 1000000,
+      "expectedReturn": {
+        "min": 8,
+        "max": 12,
+        "unit": "percent"
+      },
+      "risk": "medium",
+      "sector": "Telecommunications",
+      "dividendYield": 3.2,
+      "volume": 2500000,
+      "marketCap": "580B",
+      "features": [
+        "Fractional shares available",
+        "Quarterly dividends",
+        "Highly liquid"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "PRD002",
+      "name": "Equity Bank",
+      "symbol": "EQTY",
+      "category": "stock",
+      "type": "equity",
+      "description": "Leading financial services provider",
+      "price": 38.20,
+      "priceChange": -0.42,
+      "priceChangePercent": -1.09,
+      "minInvestment": 100,
+      "maxInvestment": 1000000,
+      "expectedReturn": {
+        "min": 7,
+        "max": 10,
+        "unit": "percent"
+      },
+      "risk": "medium",
+      "sector": "Banking",
+      "dividendYield": 2.8,
+      "volume": 1800000,
+      "marketCap": "145B",
+      "features": [
+        "Fractional shares",
+        "Bi-annual dividends",
+        "Banking sector exposure"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "PRD003",
+      "name": "Treasury Bond",
+      "symbol": "TB01/2024",
+      "category": "bond",
+      "type": "government",
+      "description": "Government of Kenya infrastructure bond",
+      "price": 100.00,
+      "minInvestment": 500,
+      "maxInvestment": 5000000,
+      "expectedReturn": {
+        "fixed": 12.5,
+        "unit": "percent"
+      },
+      "risk": "low",
+      "maturityDate": "2026-12-15",
+      "interestPayment": "semi-annual",
+      "issuer": "Central Bank of Kenya",
+      "features": [
+        "Government guaranteed",
+        "Tax-free interest",
+        "Fixed returns"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "PRD004",
+      "name": "KCB Group",
+      "symbol": "KCB",
+      "category": "stock",
+      "type": "equity",
+      "description": "Kenya's oldest commercial bank",
+      "price": 42.50,
+      "priceChange": 0.28,
+      "priceChangePercent": 0.66,
+      "minInvestment": 100,
+      "maxInvestment": 1000000,
+      "expectedReturn": {
+        "min": 6,
+        "max": 9,
+        "unit": "percent"
+      },
+      "risk": "medium",
+      "sector": "Banking",
+      "dividendYield": 4.1,
+      "volume": 1200000,
+      "marketCap": "136B",
+      "status": "active"
+    },
+    {
+      "id": "PRD005",
+      "name": "EABL",
+      "symbol": "EABL",
+      "category": "stock",
+      "type": "equity",
+      "description": "East African Breweries Limited",
+      "price": 145.00,
+      "priceChange": 2.30,
+      "priceChangePercent": 1.61,
+      "minInvestment": 200,
+      "maxInvestment": 1000000,
+      "expectedReturn": {
+        "min": 10,
+        "max": 15,
+        "unit": "percent"
+      },
+      "risk": "high",
+      "sector": "Manufacturing",
+      "dividendYield": 2.5,
+      "volume": 800000,
+      "marketCap": "115B",
+      "status": "active"
+    },
+    {
+      "id": "PRD006",
+      "name": "Money Market Fund",
+      "symbol": "MMF01",
+      "category": "mutual_fund",
+      "type": "money_market",
+      "description": "Low-risk pooled investment in government securities",
+      "price": 100.00,
+      "minInvestment": 100,
+      "maxInvestment": 5000000,
+      "expectedReturn": {
+        "variable": 9.5,
+        "unit": "percent"
+      },
+      "risk": "low",
+      "liquidity": "daily",
+      "managementFee": 1.5,
+      "issuer": "Various Fund Managers",
+      "features": [
+        "Daily withdrawals",
+        "Capital preservation",
+        "Regular income"
+      ],
+      "status": "active"
+    }
+  ]
+}
