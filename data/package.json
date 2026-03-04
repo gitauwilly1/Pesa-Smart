@@ -1,21 +1,5 @@
 {
-  "name": "pesa-smart",
-  "version": "1.0.0",
-  "description": "Gitau William\r  ---",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gitauwilly1/Pesa-Smart.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/gitauwilly1/Pesa-Smart/issues"
-  },
-  "homepage": "https://github.com/gitauwilly1/Pesa-Smart#readme"
+  "devDependencies": {
+    "json-server": "^1.0.0-beta.12"
+  }
 }
