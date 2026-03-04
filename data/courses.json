@@ -1,0 +1,300 @@
+{
+  "courses": {
+    "bronze": [
+      {
+        "id": "MOD001",
+        "title": "Budgeting 101",
+        "description": "Learn how to create and stick to a budget",
+        "duration": 20,
+        "level": "beginner",
+        "order": 1,
+        "content": [
+          {
+            "type": "video",
+            "title": "Why Budget?",
+            "url": "https://youtube.com/pesasmart/budgeting-intro",
+            "duration": 5
+          },
+          {
+            "type": "text",
+            "title": "The 50-30-20 Rule",
+            "content": "Allocate 50% to needs, 30% to wants, 20% to savings..."
+          },
+          {
+            "type": "interactive",
+            "title": "Build Your First Budget",
+            "template": "budget-calculator"
+          },
+          {
+            "type": "quiz",
+            "questions": [
+              {
+                "id": "q1",
+                "question": "What is the 50-30-20 rule?",
+                "options": [
+                  "50% needs, 30% wants, 20% savings",
+                  "50% savings, 30% needs, 20% wants",
+                  "50% wants, 30% savings, 20% needs"
+                ],
+                "correct": 0,
+                "explanation": "The 50-30-20 rule helps balance essential spending, discretionary spending, and savings."
+              },
+              {
+                "id": "q2",
+                "question": "If you earn Ksh 30,000 monthly, how much should go to savings?",
+                "options": [
+                  "Ksh 3,000",
+                  "Ksh 6,000",
+                  "Ksh 9,000"
+                ],
+                "correct": 1,
+                "explanation": "20% of Ksh 30,000 is Ksh 6,000"
+              }
+            ]
+          }
+        ],
+        "badge": {
+          "id": "BDG001",
+          "name": "Budget Master",
+          "icon": "budget-master",
+          "description": "Completed Budgeting 101"
+        },
+        "prerequisites": []
+      },
+      {
+        "id": "MOD002",
+        "title": "Understanding Debt",
+        "description": "Good debt vs bad debt, and how to manage loans",
+        "duration": 25,
+        "level": "beginner",
+        "order": 2,
+        "content": [
+          {
+            "type": "video",
+            "title": "Types of Debt",
+            "url": "https://youtube.com/pesasmart/debt-types",
+            "duration": 7
+          },
+          {
+            "type": "text",
+            "title": "Avoiding Debt Traps",
+            "content": "Predatory lenders in Kenya charge up to 30% monthly..."
+          },
+          {
+            "type": "calculator",
+            "title": "Loan Repayment Calculator",
+            "template": "loan-calculator"
+          },
+          {
+            "type": "quiz",
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Which is typically good debt?",
+                "options": [
+                  "Education loan",
+                  "Payday loan",
+                  "Shylock loan"
+                ],
+                "correct": 0,
+                "explanation": "Education loans invest in your future earning potential"
+              }
+            ]
+          }
+        ],
+        "badge": {
+          "id": "BDG002",
+          "name": "Debt Free Mindset",
+          "icon": "debt-free",
+          "description": "Completed Understanding Debt"
+        },
+        "prerequisites": ["MOD001"]
+      },
+      {
+        "id": "MOD003",
+        "title": "Saving First Steps",
+        "description": "Build your emergency fund and start saving",
+        "duration": 15,
+        "level": "beginner",
+        "order": 3,
+        "content": [
+          {
+            "type": "video",
+            "title": "Why Save?",
+            "url": "https://youtube.com/pesasmart/saving-importance",
+            "duration": 4
+          },
+          {
+            "type": "text",
+            "title": "The Emergency Fund",
+            "content": "Aim for 3-6 months of expenses in an accessible account..."
+          },
+          {
+            "type": "interactive",
+            "title": "Savings Goal Calculator",
+            "template": "goal-calculator"
+          }
+        ],
+        "badge": {
+          "id": "BDG003",
+          "name": "Savings Starter",
+          "icon": "savings",
+          "description": "Started your savings journey"
+        },
+        "prerequisites": ["MOD001"]
+      }
+    ],
+    "silver": [
+      {
+        "id": "MOD004",
+        "title": "Introduction to Investing",
+        "description": "Learn about different investment options in Kenya",
+        "duration": 30,
+        "level": "intermediate",
+        "order": 1,
+        "content": [
+          {
+            "type": "video",
+            "title": "Investment Options",
+            "url": "https://youtube.com/pesasmart/investment-options",
+            "duration": 8
+          },
+          {
+            "type": "text",
+            "title": "Stocks, Bonds, and Mutual Funds",
+            "content": "Understanding the Kenyan investment landscape..."
+          },
+          {
+            "type": "comparison",
+            "title": "Investment Comparison Tool",
+            "template": "investment-comparison"
+          }
+        ],
+        "badge": {
+          "id": "BDG004",
+          "name": "Investment Novice",
+          "icon": "investor",
+          "description": "Completed Introduction to Investing"
+        },
+        "prerequisites": ["MOD001", "MOD002", "MOD003"]
+      },
+      {
+        "id": "MOD005",
+        "title": "Beating Inflation",
+        "description": "Make your money grow faster than rising prices",
+        "duration": 20,
+        "level": "intermediate",
+        "order": 2,
+        "content": [
+          {
+            "type": "video",
+            "title": "What is Inflation?",
+            "url": "https://youtube.com/pesasmart/inflation",
+            "duration": 5
+          },
+          {
+            "type": "interactive",
+            "title": "Inflation Calculator",
+            "template": "inflation-calculator"
+          },
+          {
+            "type": "quiz",
+            "questions": [
+              {
+                "id": "q1",
+                "question": "If inflation is 7% and your savings earn 3%, what happens?",
+                "options": [
+                  "You're gaining 4%",
+                  "You're losing 4% buying power",
+                  "You're breaking even"
+                ],
+                "correct": 1,
+                "explanation": "Your money loses purchasing power when returns are below inflation"
+              }
+            ]
+          }
+        ],
+        "badge": {
+          "id": "BDG005",
+          "name": "Inflation Fighter",
+          "icon": "inflation",
+          "description": "Completed Beating Inflation"
+        },
+        "prerequisites": ["MOD004"]
+      }
+    ],
+    "gold": [
+      {
+        "id": "MOD006",
+        "title": "Insurance Basics",
+        "description": "Protect yourself and your assets",
+        "duration": 25,
+        "level": "advanced",
+        "order": 1,
+        "content": [
+          {
+            "type": "video",
+            "title": "Types of Insurance",
+            "url": "https://youtube.com/pesasmart/insurance-types",
+            "duration": 6
+          },
+          {
+            "type": "text",
+            "title": "Parametric Insurance",
+            "content": "How automatic payouts work with weather and GPS triggers..."
+          },
+          {
+            "type": "interactive",
+            "title": "Insurance Needs Calculator",
+            "template": "insurance-calculator"
+          }
+        ],
+        "badge": {
+          "id": "BDG006",
+          "name": "Insurance Savvy",
+          "icon": "insurance",
+          "description": "Completed Insurance Basics"
+        },
+        "prerequisites": ["MOD001", "MOD004"]
+      }
+    ]
+  },
+  "badges": {
+    "BDG001": {
+      "name": "Budget Master",
+      "icon": "🏆",
+      "description": "Created your first budget",
+      "points": 100
+    },
+    "BDG002": {
+      "name": "Debt Free Mindset",
+      "icon": "🔓",
+      "description": "Understood debt management",
+      "points": 150
+    },
+    "BDG003": {
+      "name": "Savings Starter",
+      "icon": "💰",
+      "description": "Started your savings journey",
+      "points": 100
+    },
+    "BDG004": {
+      "name": "Investment Novice",
+      "icon": "📈",
+      "description": "Made your first investment",
+      "points": 200
+    },
+    "BDG005": {
+      "name": "Inflation Fighter",
+      "icon": "⚡",
+      "description": "Learned to beat inflation",
+      "points": 150
+    },
+    "BDG006": {
+      "name": "Insurance Savvy",
+      "icon": "🛡️",
+      "description": "Understood insurance products",
+      "points": 150
+    }
+  }
+}
