@@ -89,4 +89,4 @@ There are no known bugs
 ---
 
 ## Support and Information
-**email** gitauwilly254@gmail.com
+**Email:** gitauwilly254@gmail.com
