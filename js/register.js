@@ -1,4 +1,3 @@
-// 1. Firebase Configuration (Replace with your actual config)
 const firebaseConfig = {
     apiKey: "AIzaSyBezb4LCxqZgLXe6wm4CPhtY1f6zHqsetk",
     authDomain: "pesa-smart1.firebaseapp.com",
@@ -9,7 +8,6 @@ const firebaseConfig = {
     measurementId: "G-8DR3QZZ5MB"
 };
 
-// Initialize Firebase if not already initialized
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -17,7 +15,7 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// 2. State Management for Step 2 Selections
+//State Management for Step 2 Selections
 let selectedOccupation = "";
 const profileButtons = document.querySelectorAll('.profile-btn');
 
@@ -34,7 +32,7 @@ profileButtons.forEach(btn => {
     });
 });
 
-// 3. Password Toggle Logic
+//Password Toggle Logic
 document.querySelectorAll('button[type="button"]').forEach(btn => {
     btn.addEventListener('click', function() {
         const input = this.parentElement.querySelector('input');
@@ -49,7 +47,7 @@ document.querySelectorAll('button[type="button"]').forEach(btn => {
     });
 });
 
-// 4. Form Submission
+//Form Submission
 const registrationForm = document.getElementById('registrationForm');
 
 registrationForm.addEventListener('submit', async (e) => {
