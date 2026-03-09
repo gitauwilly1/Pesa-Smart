@@ -9,8 +9,8 @@ const firebaseConfig = {
     projectId: "pesa-smart1",
     storageBucket: "pesa-smart1.firebasestorage.app",
     messagingSenderId: "631129633560",
-    appId: "1:631129633560:web:dfc2c58d3c3071d1cca46d",
-    measurementId: "G-X8V3ZL4S41"
+    appId: "1:631129633560:web:4386e12f80bc49afcca46d",
+    measurementId: "G-8DR3QZZ5MB"
 };
 
 // Initialize Firebase
