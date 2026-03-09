@@ -18,8 +18,7 @@
             "financialScore": 4.2,
             "preferences": {
                 "language": "en",
-                "notifications": true,
-                "darkMode": false
+                "notifications": true
             },
             "kycStatus": "verified",
             "createdAt": "2026-01-15T08:30:00Z",
@@ -44,8 +43,7 @@
             "financialScore": 3.5,
             "preferences": {
                 "language": "sw",
-                "notifications": true,
-                "darkMode": true
+                "notifications": true
             },
             "kycStatus": "pending",
             "createdAt": "2026-02-01T10:15:00Z",
@@ -70,8 +68,7 @@
             "financialScore": 2.8,
             "preferences": {
                 "language": "sw",
-                "notifications": false,
-                "darkMode": false
+                "notifications": false
             },
             "kycStatus": "verified",
             "createdAt": "2026-02-15T16:20:00Z",

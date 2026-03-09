@@ -67,7 +67,7 @@
             </div>
 
             <!-- Registration Form -->
-            <form>
+            <form id="registrationForm">
                 <div class="max-w-2xl mx-auto">
                     <div class="bg-white rounded-2xl shadow-xl p-8">
                         <div class="text-center mb-8">
@@ -91,7 +91,7 @@
                                     </label>
                                     <input type="text" id="firstName"
                                         class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                                        placeholder="Ann" required>
+                                        placeholder="John" required>
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 font-medium mb-2" for="lastName">
@@ -99,13 +99,23 @@
                                     </label>
                                     <input type="text" id="lastName"
                                         class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                                        placeholder="Muthoni" required>
+                                        placeholder="Doe" required>
                                 </div>
                             </div>
 
                             <div class="mb-6">
+                                <label class="block text-gray-700 font-medium mb-2" for="email">
+                                    Email Address
+                                </label>
+                                <input type="email" id="email"
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                    placeholder="johndoe@gmail.com.com" required>
+                                <p class="text-gray-500 text-sm mt-1">Used for login </p>
+                            </div>
+
+                            <div class="mb-6">
                                 <label class="block text-gray-700 font-medium mb-2" for="phone">
-                                    Phone Number
+                                    Phone Number(Optional)
                                 </label>
                                 <div class="flex">
                                     <div class="bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg px-4 py-3">
@@ -115,17 +125,7 @@
                                         class="flex-1 border border-gray-300 rounded-r-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
                                         placeholder="712 345 678" required>
                                 </div>
-                                <p class="text-gray-500 text-sm mt-1">Used for login and M-Pesa transactions</p>
-                            </div>
-
-                            <div class="mb-6">
-                                <label class="block text-gray-700 font-medium mb-2" for="email">
-                                    Email Address (Optional)
-                                </label>
-                                <input type="email" id="email"
-                                    class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                                    placeholder="email@example.com">
-                                <p class="text-gray-500 text-sm mt-1">For receipts and statements</p>
+                                <p class="text-gray-500 text-sm mt-1">Used for M-Pesa transactions receipts and statements</p>
                             </div>
 
                             <div class="mb-6">
