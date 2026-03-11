@@ -42,6 +42,7 @@
         isLoading: false,
 
         initialize() {
+            console.log(' AppState initializing...');
             this.checkExistingSession();
             this.loadInviteCodes();
         },
@@ -52,9 +53,11 @@
                 try {
                     const sessionData = JSON.parse(session);
                     if (sessionData.expires && sessionData.expires > Date.now()) {
+                        console.log(' Existing session found, redirecting to index');
                         window.location.href = 'index.html';
                     }
                 } catch (e) {
+                    console.warn('Failed to parse session:', e);
                     localStorage.removeItem(STORAGE_KEYS.SESSION);
                 }
             }
@@ -71,6 +74,7 @@
                         }
                     });
                 }
+                console.log(' Invite codes loaded');
             } catch (e) {
                 console.warn('Failed to load invite codes:', e);
             }
@@ -83,6 +87,7 @@
 
     const UI = {
         showLoading() {
+            console.log(' Showing loading state');
             AppState.isLoading = true;
             const submitBtn = document.querySelector('button[type="submit"]');
             if (submitBtn) {
@@ -92,6 +97,7 @@
         },
 
         hideLoading() {
+            console.log(' Hiding loading state');
             AppState.isLoading = false;
             const submitBtn = document.querySelector('button[type="submit"]');
             if (submitBtn) {
@@ -101,6 +107,7 @@
         },
 
         showNotification(message, type = 'info', duration = 3000) {
+            console.log(` Notification [${type}]: ${message}`);
             const toast = document.createElement('div');
             toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-2xl z-50 animate-slide-in ${
                 type === 'success' ? 'bg-green-500' :
@@ -118,15 +125,19 @@
         },
 
         showStep(step) {
-            // Update the radio buttons to match the desired step
+            console.log(` Showing step ${step}`);
             const stepRadio = document.getElementById(`step-${step}`);
             if (stepRadio) {
                 stepRadio.checked = true;
+                AppState.currentStep = step;
+                console.log(` Step ${step} displayed`);
+            } else {
+                console.error(` Step radio for step ${step} not found`);
             }
-            AppState.currentStep = step;
         },
 
         setupPasswordToggles() {
+            console.log('🔑 Setting up password toggles');
             document.querySelectorAll('.relative button').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -142,7 +153,9 @@
         },
 
         setupProfileButtons() {
+            console.log('Setting up profile buttons');
             const profileBtns = document.querySelectorAll('.profile-btn');
+            console.log(`Found ${profileBtns.length} profile buttons`);
             
             profileBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -156,24 +169,28 @@
                     
                     const occupationText = this.querySelector('p')?.textContent?.trim() || '';
                     AppState.formData.occupation = occupationText;
+                    console.log(' Occupation selected:', occupationText);
                     
-                    this.clearFieldError('occupation-group');
+                    UI.clearFieldError('occupation-group');
                 });
             });
         },
 
         setupIncomeSelect() {
+            console.log('Setting up income select');
             const incomeSelect = document.querySelector('select');
             if (incomeSelect) {
                 incomeSelect.addEventListener('change', () => {
                     const selectedOption = incomeSelect.options[incomeSelect.selectedIndex];
                     AppState.formData.incomeRange = selectedOption ? selectedOption.text : '';
-                    this.clearFieldError('income-group');
+                    console.log(' Income selected:', AppState.formData.incomeRange);
+                    UI.clearFieldError('income-group');
                 });
             }
         },
 
         setupGoalCheckboxes() {
+            console.log('Setting up goal checkboxes');
             const goalCheckboxes = [
                 document.getElementById('goal1'),
                 document.getElementById('goal2'),
@@ -187,10 +204,12 @@
                     checkbox.addEventListener('change', () => {
                         AppState.formData.goals = goalCheckboxes
                             .filter(cb => cb && cb.checked)
-                            .map(cb => this.getGoalText(cb.id));
+                            .map(cb => UI.getGoalText(cb.id));
+                        
+                        console.log(' Goals selected:', AppState.formData.goals);
                         
                         if (AppState.formData.goals.length > 0) {
-                            this.clearFieldError('goals-group');
+                            UI.clearFieldError('goals-group');
                         }
                     });
                 }
@@ -209,6 +228,7 @@
         },
 
         setupRealTimeValidation() {
+            console.log(' Setting up real-time validation');
             const emailInput = document.getElementById('email');
             const phoneInput = document.getElementById('phone');
             const passwordInput = document.getElementById('password');
@@ -216,12 +236,12 @@
 
             if (emailInput) {
                 emailInput.addEventListener('input', () => {
-                    const isValid = this.validateEmail(emailInput.value);
-                    this.updateFieldValidation(emailInput, isValid);
+                    const isValid = UI.validateEmail(emailInput.value);
+                    UI.updateFieldValidation(emailInput, isValid);
                     if (isValid) {
-                        this.showFieldValid(emailInput, 'Valid email');
+                        UI.showFieldValid(emailInput, 'Valid email');
                     } else if (emailInput.value.length > 0) {
-                        this.showFieldError(emailInput, 'Please enter a valid email');
+                        UI.showFieldError(emailInput, 'Please enter a valid email');
                     }
                 });
             }
@@ -232,27 +252,27 @@
                     if (value.length > 9) value = value.slice(0, 9);
                     phoneInput.value = value;
                     
-                    const isValid = this.validatePhone(value);
-                    this.updateFieldValidation(phoneInput, isValid);
+                    const isValid = UI.validatePhone(value);
+                    UI.updateFieldValidation(phoneInput, isValid);
                     if (isValid) {
-                        this.showFieldValid(phoneInput, 'Valid Kenyan number');
+                        UI.showFieldValid(phoneInput, 'Valid Kenyan number');
                     } else if (value.length > 0) {
-                        this.showFieldError(phoneInput, 'Enter 9 digits after +254');
+                        UI.showFieldError(phoneInput, 'Enter 9 digits after +254');
                     }
                 });
             }
 
             if (passwordInput) {
                 passwordInput.addEventListener('input', () => {
-                    this.updatePasswordStrength(passwordInput.value);
+                    UI.updatePasswordStrength(passwordInput.value);
                     if (confirmInput?.value) {
-                        this.checkPasswordMatch();
+                        UI.checkPasswordMatch();
                     }
                 });
             }
 
             if (confirmInput) {
-                confirmInput.addEventListener('input', this.checkPasswordMatch.bind(this));
+                confirmInput.addEventListener('input', UI.checkPasswordMatch.bind(UI));
             }
         },
 
@@ -264,11 +284,11 @@
             if (confirm.length === 0) return;
             
             if (password === confirm) {
-                this.updateFieldValidation(confirmInput, true);
-                this.showFieldValid(confirmInput, 'Passwords match');
+                UI.updateFieldValidation(confirmInput, true);
+                UI.showFieldValid(confirmInput, 'Passwords match');
             } else {
-                this.updateFieldValidation(confirmInput, false);
-                this.showFieldError(confirmInput, 'Passwords do not match');
+                UI.updateFieldValidation(confirmInput, false);
+                UI.showFieldError(confirmInput, 'Passwords do not match');
             }
         },
 
@@ -398,7 +418,7 @@
         },
 
         updatePasswordStrength(password) {
-            const result = this.validatePassword(password);
+            const result = UI.validatePassword(password);
             const container = document.getElementById('password').closest('.mb-6');
             if (!container) return;
             
@@ -452,6 +472,7 @@
         },
 
         validateStep1() {
+            console.log('🔍 Validating step 1');
             const firstName = document.getElementById('firstName');
             const lastName = document.getElementById('lastName');
             const email = document.getElementById('email');
@@ -462,57 +483,59 @@
             let isValid = true;
             
             if (!firstName.value.trim()) {
-                this.showFieldError(firstName, 'Please enter your first name');
+                UI.showFieldError(firstName, 'Please enter your first name');
                 isValid = false;
             } else {
                 AppState.formData.firstName = firstName.value.trim();
-                this.clearFieldError(firstName.id);
+                UI.clearFieldError(firstName.id);
             }
             
             if (!lastName.value.trim()) {
-                this.showFieldError(lastName, 'Please enter your last name');
+                UI.showFieldError(lastName, 'Please enter your last name');
                 isValid = false;
             } else {
                 AppState.formData.lastName = lastName.value.trim();
-                this.clearFieldError(lastName.id);
+                UI.clearFieldError(lastName.id);
             }
             
-            if (!this.validateEmail(email.value)) {
-                this.showFieldError(email, 'Please enter a valid email');
+            if (!UI.validateEmail(email.value)) {
+                UI.showFieldError(email, 'Please enter a valid email');
                 isValid = false;
             } else {
                 AppState.formData.email = email.value.trim().toLowerCase();
-                this.clearFieldError(email.id);
+                UI.clearFieldError(email.id);
             }
             
-            if (!this.validatePhone(phone.value)) {
-                this.showFieldError(phone, 'Please enter a valid Kenyan phone number');
+            if (!UI.validatePhone(phone.value)) {
+                UI.showFieldError(phone, 'Please enter a valid Kenyan phone number');
                 isValid = false;
             } else {
-                AppState.formData.phone = this.formatPhone(phone.value);
-                this.clearFieldError(phone.id);
+                AppState.formData.phone = UI.formatPhone(phone.value);
+                UI.clearFieldError(phone.id);
             }
             
-            const passwordCheck = this.validatePassword(password.value);
+            const passwordCheck = UI.validatePassword(password.value);
             if (!passwordCheck.valid) {
-                this.showFieldError(password, 'Password must be 8+ chars with letters and numbers');
+                UI.showFieldError(password, 'Password must be 8+ chars with letters and numbers');
                 isValid = false;
             } else {
                 AppState.formData.password = password.value;
-                this.clearFieldError(password.id);
+                UI.clearFieldError(password.id);
             }
             
             if (password.value !== confirm.value) {
-                this.showFieldError(confirm, 'Passwords do not match');
+                UI.showFieldError(confirm, 'Passwords do not match');
                 isValid = false;
             } else if (confirm.value) {
-                this.clearFieldError(confirm.id);
+                UI.clearFieldError(confirm.id);
             }
             
+            console.log(' Step 1 validation result:', isValid, 'Form data:', AppState.formData);
             return isValid;
         },
 
         validateStep2() {
+            console.log('🔍 Validating step 2');
             let isValid = true;
             
             if (!AppState.formData.occupation) {
@@ -536,13 +559,13 @@
             const incomeSelect = document.querySelector('select');
             if (!incomeSelect || !incomeSelect.value) {
                 if (incomeSelect) {
-                    this.showFieldError(incomeSelect, 'Please select your income range');
+                    UI.showFieldError(incomeSelect, 'Please select your income range');
                 }
                 isValid = false;
             } else {
                 const selectedOption = incomeSelect.options[incomeSelect.selectedIndex];
                 AppState.formData.incomeRange = selectedOption.text;
-                this.clearFieldError('income-group');
+                UI.clearFieldError('income-group');
             }
             
             const goals = document.querySelectorAll('input[type="checkbox"]:checked');
@@ -563,10 +586,12 @@
                 if (errorEl) errorEl.remove();
             }
             
+            console.log(' Step 2 validation result:', isValid, 'Form data:', AppState.formData);
             return isValid;
         },
 
         validateStep3() {
+            console.log('🔍 Validating step 3');
             const terms = document.getElementById('terms');
             if (!terms.checked) {
                 const container = terms.closest('.mb-6');
@@ -579,6 +604,7 @@
                     }
                     errorEl.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i>You must agree to the Terms & Conditions';
                 }
+                console.log(' Terms not checked');
                 return false;
             } else {
                 AppState.formData.terms = true;
@@ -587,37 +613,39 @@
                     const errorEl = container.querySelector('.field-feedback.error');
                     if (errorEl) errorEl.remove();
                 }
+                console.log(' Terms accepted');
                 return true;
             }
         },
 
         setupStepNavigation() {
-            // Next from step 1 to step 2
+            console.log(' Setting up step navigation');
+            
             const nextToStep2 = document.querySelector('label[for="step-2"]');
             if (nextToStep2) {
                 nextToStep2.addEventListener('click', (e) => {
-                    if (!this.validateStep1()) {
+                    console.log(' Attempting to go to step 2');
+                    if (!UI.validateStep1()) {
                         e.preventDefault();
-                        this.showNotification('Please fix the errors in Step 1', 'error');
+                        UI.showNotification('Please fix the errors in Step 1', 'error');
                     }
                 });
             }
 
-            // Next from step 2 to step 3
             const nextToStep3 = document.querySelector('label[for="step-3"]');
             if (nextToStep3) {
                 nextToStep3.addEventListener('click', (e) => {
-                    if (!this.validateStep2()) {
+                    console.log(' Attempting to go to step 3');
+                    if (!UI.validateStep2()) {
                         e.preventDefault();
-                        this.showNotification('Please complete your financial profile', 'error');
+                        UI.showNotification('Please complete your financial profile', 'error');
                     }
                 });
             }
-
-            // Back buttons (these just work via the label for attributes)
         },
 
         setupInviteCodeValidation() {
+            console.log(' Setting up invite code validation');
             const inviteInput = document.getElementById('inviteCode');
             if (!inviteInput) return;
 
@@ -628,12 +656,13 @@
                     const code = inviteInput.value.trim().toUpperCase();
                     if (code.length > 3) {
                         const isValid = INVITE_CODES[code] && !INVITE_CODES[code].used;
-                        const messageDiv = document.getElementById('inviteMessage') || this.createInviteMessage();
+                        const messageDiv = document.getElementById('inviteMessage') || UI.createInviteMessage();
                         
                         if (isValid) {
                             messageDiv.className = 'text-green-600 text-sm mt-1';
                             messageDiv.innerHTML = '<i class="fas fa-check-circle mr-1"></i>Valid invite code! You\'ll get Ksh ' + INVITE_CODES[code].bonus + ' bonus';
                             AppState.formData.inviteCode = code;
+                            console.log(' Valid invite code:', code);
                         } else if (INVITE_CODES[code]?.used) {
                             messageDiv.className = 'text-red-600 text-sm mt-1';
                             messageDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i>This invite code has already been used';
@@ -698,67 +727,81 @@
                     if (INVITE_CODES[k].used) usedCodes[k] = true;
                 });
                 localStorage.setItem(STORAGE_KEYS.INVITES, JSON.stringify(usedCodes));
-                
+                console.log(' Invite code processed:', upperCode);
                 return { bonus: INVITE_CODES[upperCode].bonus };
             }
             return { bonus: 0 };
         },
 
         async loadUsers() {
+            console.log(' Loading users...');
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.USERS);
                 if (cached) {
+                    console.log(' Users loaded from cache');
                     return JSON.parse(cached);
                 }
                 
+                console.log('📡 Fetching users from JSON file...');
                 const response = await fetch('data/users.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const data = await response.json();
                 const users = data.users || [];
+                console.log(` Loaded ${users.length} users from JSON`);
                 localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
                 return users;
             } catch (error) {
-                console.error('Failed to load users:', error);
+                console.error(' Failed to load users:', error);
                 return [];
             }
         },
 
         async saveUsers(users) {
+            console.log(' Saving users...');
             try {
                 localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+                console.log(' Users saved successfully');
                 return true;
             } catch (error) {
-                console.error('Failed to save users:', error);
+                console.error(' Failed to save users:', error);
                 return false;
             }
         },
 
         async saveProgress(progress) {
+            console.log(' Saving progress...');
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.PROGRESS);
                 let progressList = cached ? JSON.parse(cached) : [];
                 progressList.push(progress);
                 localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progressList));
+                console.log(' Progress saved successfully');
                 return true;
             } catch (error) {
-                console.error('Failed to save progress:', error);
+                console.error(' Failed to save progress:', error);
                 return false;
             }
         },
 
         async saveGoals(goal) {
+            console.log(' Saving goal...');
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.GOALS);
                 let goalsList = cached ? JSON.parse(cached) : [];
                 goalsList.push(goal);
                 localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goalsList));
+                console.log(' Goal saved successfully');
                 return true;
             } catch (error) {
-                console.error('Failed to save goals:', error);
+                console.error(' Failed to save goal:', error);
                 return false;
             }
         },
 
         createSession(user) {
+            console.log(' Creating session for user:', user.id);
             const sessionData = {
                 userId: user.id,
                 email: user.email,
@@ -766,17 +809,21 @@
                 expires: Date.now() + 24 * 60 * 60 * 1000
             };
             localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(sessionData));
+            console.log(' Session created');
         },
 
         async handleSubmit(event) {
             event.preventDefault();
+            console.log(' Form submission started');
+            console.log(' Current form data:', AppState.formData);
 
-            if (!this.validateStep1() || !this.validateStep2() || !this.validateStep3()) {
-                this.showNotification('Please complete all steps correctly', 'error');
+            if (!UI.validateStep1() || !UI.validateStep2() || !UI.validateStep3()) {
+                console.log(' Validation failed');
+                UI.showNotification('Please complete all steps correctly', 'error');
                 return;
             }
 
-            this.showLoading();
+            UI.showLoading();
 
             try {
                 // Get invite code if any
@@ -786,21 +833,27 @@
                 }
 
                 // Load existing users
-                const users = await this.loadUsers();
+                console.log(' Step 1: Loading existing users');
+                const users = await UI.loadUsers();
+                console.log(` Found ${users.length} existing users`);
 
                 // Check for duplicate email
                 if (users.some(u => u.email === AppState.formData.email)) {
-                    this.showFieldError(document.getElementById('email'), 'This email is already registered');
-                    this.showNotification('Email already exists', 'error');
-                    this.hideLoading();
+                    console.log(' Email already exists:', AppState.formData.email);
+                    UI.showFieldError(document.getElementById('email'), 'This email is already registered');
+                    UI.showNotification('Email already exists', 'error');
+                    UI.hideLoading();
                     return;
                 }
 
                 // Generate user ID
-                const userId = this.generateUserId(users);
+                const userId = UI.generateUserId(users);
+                console.log(' Generated user ID:', userId);
 
                 // Process invite code
-                const inviteResult = await this.processInviteCode(AppState.formData.inviteCode, userId);
+                console.log(' Processing invite code:', AppState.formData.invateCode);
+                const inviteResult = await UI.processInviteCode(AppState.formData.inviteCode, userId);
+                console.log(' Invite result:', inviteResult);
 
                 // Create user object
                 const newUser = {
@@ -809,7 +862,7 @@
                     lastName: AppState.formData.lastName,
                     email: AppState.formData.email,
                     phone: AppState.formData.phone,
-                    password: this.hashPassword(AppState.formData.password),
+                    password: UI.hashPassword(AppState.formData.password),
                     profile: {
                         occupation: AppState.formData.occupation.toLowerCase().replace(/\s+/g, ''),
                         incomeRange: AppState.formData.incomeRange,
@@ -819,20 +872,27 @@
                         gender: ''
                     },
                     goals: AppState.formData.goals,
-                    financialScore: this.calculateFinancialScore(),
+                    financialScore: UI.calculateFinancialScore(),
                     preferences: {
                         language: 'en',
                         notifications: true
                     },
                     kycStatus: 'pending',
                     createdAt: new Date().toISOString(),
-                    lastLogin: null,
-                    ...(inviteResult.bonus > 0 && { inviteBonus: inviteResult.bonus, inviteCodeUsed: AppState.formData.inviteCode })
+                    lastLogin: null
                 };
+
+                if (inviteResult.bonus > 0) {
+                    newUser.inviteBonus = inviteResult.bonus;
+                    newUser.inviteCodeUsed = AppState.formData.inviteCode;
+                }
+
+                console.log('New user object:', newUser);
 
                 // Save user
                 users.push(newUser);
-                await this.saveUsers(users);
+                const userSaved = await UI.saveUsers(users);
+                if (!userSaved) throw new Error('Failed to save user');
 
                 // Create progress entry
                 const newProgress = {
@@ -846,7 +906,8 @@
                     currentStreak: 1,
                     longestStreak: 1
                 };
-                await this.saveProgress(newProgress);
+                const progressSaved = await UI.saveProgress(newProgress);
+                if (!progressSaved) throw new Error('Failed to save progress');
 
                 // Create default goal
                 const defaultGoal = {
@@ -861,17 +922,20 @@
                     status: 'active',
                     createdAt: new Date().toISOString()
                 };
-                await this.saveGoals(defaultGoal);
+                const goalSaved = await UI.saveGoals(defaultGoal);
+                if (!goalSaved) throw new Error('Failed to save goal');
 
                 // Create session
-                this.createSession(newUser);
+                UI.createSession(newUser);
 
                 // Show success message
                 if (inviteResult.bonus > 0) {
-                    this.showNotification(`🎉 Welcome! You've received Ksh ${inviteResult.bonus} bonus!`, 'success');
+                    UI.showNotification(`🎉 Welcome! You've received Ksh ${inviteResult.bonus} bonus!`, 'success');
                 } else {
-                    this.showNotification('Account created successfully!', 'success');
+                    UI.showNotification('Account created successfully!', 'success');
                 }
+
+                console.log('Registration complete! Redirecting...');
 
                 // Redirect to home page
                 setTimeout(() => {
@@ -880,22 +944,26 @@
 
             } catch (error) {
                 console.error('Registration error:', error);
-                this.showNotification('Registration failed. Please try again.', 'error');
-                this.hideLoading();
+                console.error('Error details:', error.message);
+                UI.showNotification('Registration failed. Please try again.', 'error');
+                UI.hideLoading();
             }
         },
 
         handleUrlParams() {
+            console.log('🔗 Checking URL parameters');
             const urlParams = new URLSearchParams(window.location.search);
             
             const email = urlParams.get('email');
             if (email) {
                 document.getElementById('email').value = email;
+                console.log('Email pre-filled from URL:', email);
             }
             
             const phone = urlParams.get('phone');
             if (phone) {
                 document.getElementById('phone').value = phone.replace(/[^0-9]/g, '');
+                console.log('Phone pre-filled from URL:', phone);
             }
             
             const invite = urlParams.get('invite') || urlParams.get('ref');
@@ -907,6 +975,7 @@
                         const event = new Event('input', { bubbles: true });
                         inviteInput.dispatchEvent(event);
                     }, 500);
+                    console.log('Invite code pre-filled from URL:', invite);
                 }
             }
         }
@@ -917,6 +986,7 @@
     //==============================================================================
 
     function initialize() {
+        console.log('🚀 Register page initializing...');
         AppState.initialize();
 
         UI.setupPasswordToggles();
@@ -933,6 +1003,8 @@
 
         // Handle form submission
         document.getElementById('registrationForm').addEventListener('submit', (e) => UI.handleSubmit(e));
+
+        console.log(' Register page initialized');
 
         // Add CSS animations
         const style = document.createElement('style');

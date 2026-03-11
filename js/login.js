@@ -1,18 +1,3 @@
-/**
- * PESASMART - PROFESSIONAL LOGIN PAGE (login.js)
- * ===============================================
- * Enterprise-grade authentication system with:
- * - Email/password authentication
- * - Session management with expiry
- * - Remember me functionality
- * - Real-time validation
- * - Forgot password flow
- * - Google login simulation
- * - Return URL handling
- * - Security logging
- * - Rate limiting simulation
- */
-
 (function() {
     'use strict';
 
