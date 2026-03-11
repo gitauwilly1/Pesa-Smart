@@ -5,6 +5,7 @@
 
     const APP_VERSION = '2.0.0';
     const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+    const NOTIFICATION_SOUND = false; // Toggle for production
 
     const STORAGE_KEYS = {
         SESSION: 'pesasmart_session',
@@ -250,8 +251,10 @@
             }
         },
 
-            // UPDATED: Consistent user loading function
-            async loadUsers() {
+        /**
+         * Load users with cache
+         */
+        async loadUsers() {
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.USERS);
                 if (cached) {
@@ -285,8 +288,7 @@
             }
         },
 
-            // NEW: Consistent user saving function
-            async saveUsers(users) {
+        async saveUsers(users) {
             try {
                 const usersArray = Array.isArray(users) ? users : [];
                 localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(usersArray));
@@ -320,6 +322,7 @@
                 }));
                 
                 return goals;
+
             } catch (error) {
                 console.error('Failed to load goals:', error);
                 return [];
@@ -349,6 +352,7 @@
                 }));
                 
                 return transactions;
+
             } catch (error) {
                 console.error('Failed to load transactions:', error);
                 return [];
@@ -378,6 +382,7 @@
                 }));
                 
                 return progress;
+
             } catch (error) {
                 console.error('Failed to load progress:', error);
                 return [];
@@ -464,6 +469,7 @@
                 }));
                 
                 return true;
+
             } catch (error) {
                 console.error('Failed to save goals:', error);
                 return false;
@@ -473,14 +479,17 @@
         /**
          * Save profile back to storage (for index page sync)
          */
-        async saveProfile(profileData) {
+        saveProfile(profileData) {
             try {
-                const allUsers = await this.loadUsers();
-                const otherUsers = allUsers.filter(u => u.id !== AppState.user.userId);
+                const allUsers = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '{"users":[]}');
+                const otherUsers = allUsers.users.filter(u => u.id !== AppState.user.userId);
                 
-                const updated = [...otherUsers, profileData];
+                const updated = {
+                    users: [...otherUsers, profileData],
+                    _timestamp: Date.now()
+                };
                 
-                await this.saveUsers(updated);
+                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(updated));
                 AppState.profile = profileData;
                 
                 // Trigger sync for index page
@@ -489,6 +498,7 @@
                 }));
                 
                 return true;
+
             } catch (error) {
                 console.error('Failed to save profile:', error);
                 return false;
@@ -496,7 +506,7 @@
         },
 
         /**
-         * Sync with index page (bidirectional)
+         * Sync with index page 
          */
         syncWithIndex() {
             // Listen for updates from index page
@@ -506,8 +516,8 @@
                 if (e.detail.type === 'goal-update') {
                     // Refresh goals
                     this.loadGoals().then(() => {
-                        const goalsData = JSON.parse(localStorage.getItem(STORAGE_KEYS.GOALS) || '{"goals":[]}');
-                        AppState.goals = goalsData.goals.filter(g => g.userId === AppState.user.userId);
+                        AppState.goals = JSON.parse(localStorage.getItem(STORAGE_KEYS.GOALS) || '{"goals":[]}')
+                            .goals.filter(g => g.userId === AppState.user.userId);
                         UI.updateAllSections();
                     });
                 }
@@ -1944,29 +1954,35 @@
         /**
          * Delete account permanently
          */
-        async deleteAccountPermanently() {
+        deleteAccountPermanently() {
             this.showLoading('Deleting account...');
 
             try {
                 // Remove user data from all storage
-                const users = await DataLayer.loadUsers();
-                const filteredUsers = users.filter(u => u.id !== AppState.user.userId);
-                await DataLayer.saveUsers(filteredUsers);
+                const storages = [
+                    STORAGE_KEYS.USERS,
+                    STORAGE_KEYS.GOALS,
+                    STORAGE_KEYS.TRANSACTIONS,
+                    STORAGE_KEYS.PROGRESS,
+                    STORAGE_KEYS.NOTIFICATIONS
+                ];
 
-                // Remove goals
-                const goalsData = JSON.parse(localStorage.getItem(STORAGE_KEYS.GOALS) || '{"goals":[]}');
-                goalsData.goals = goalsData.goals.filter(g => g.userId !== AppState.user.userId);
-                localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goalsData));
-
-                // Remove transactions
-                const transData = JSON.parse(localStorage.getItem(STORAGE_KEYS.TRANSACTIONS) || '{"transactions":[]}');
-                transData.transactions = transData.transactions.filter(t => t.userId !== AppState.user.userId);
-                localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(transData));
-
-                // Remove progress
-                const progData = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROGRESS) || '{"progress":[]}');
-                progData.progress = progData.progress.filter(p => p.userId !== AppState.user.userId);
-                localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progData));
+                storages.forEach(key => {
+                    const data = JSON.parse(localStorage.getItem(key) || '{}');
+                    if (data.users) {
+                        data.users = data.users.filter(u => u.id !== AppState.user.userId);
+                    }
+                    if (data.goals) {
+                        data.goals = data.goals.filter(g => g.userId !== AppState.user.userId);
+                    }
+                    if (data.transactions) {
+                        data.transactions = data.transactions.filter(t => t.userId !== AppState.user.userId);
+                    }
+                    if (data.progress) {
+                        data.progress = data.progress.filter(p => p.userId !== AppState.user.userId);
+                    }
+                    localStorage.setItem(key, JSON.stringify(data));
+                });
 
                 // Clear session
                 localStorage.removeItem(STORAGE_KEYS.SESSION);
@@ -2061,7 +2077,7 @@
                 profile.profile.dateOfBirth = document.getElementById('edit-dob').value;
                 profile.profile.county = document.getElementById('edit-county').value;
 
-                await DataLayer.saveProfile(profile);
+                DataLayer.saveProfile(profile);
                 this.updateProfileHeader();
                 this.updateSettingsForm();
                 this.showNotification('Profile updated successfully!', 'success');
@@ -2345,9 +2361,7 @@
             chart.draw(data, options);
         },
 
-        //------------------------------------------------------------------------------
         // UTILITY FUNCTIONS
-        //------------------------------------------------------------------------------
 
         /**
          * Format currency
@@ -2454,7 +2468,7 @@
      * Initialize the page
      */
     async function initializePage() {
-        // Check authentication
+        // Validate session
         if (!Security.validateSession()) return;
 
         // Load all user data
