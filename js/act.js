@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    // CONFIGURATION & CONSTANTS
+    // CONFIGURATION
 
     const STORAGE_KEYS = {
         SESSION: 'pesasmart_session',
@@ -10,11 +10,8 @@
         TRANSACTIONS: 'pesasmart_transactions',
         PROGRESS: 'pesasmart_progress',
         PRODUCTS: 'pesasmart_products',
-        INSURANCE: 'pesasmart_insurance',
-        CART: 'pesasmart_cart'
+        INSURANCE: 'pesasmart_insurance'
     };
-
-    const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
     // STATE MANAGEMENT
 
@@ -26,10 +23,8 @@
         goals: [],
         transactions: [],
         progress: null,
-        cart: [],
         currentFilter: 'all',
         isLoading: false,
-        networkStatus: navigator.onLine,
 
         async initialize() {
             this.user = this.getCurrentUser();
@@ -43,9 +38,6 @@
             await this.loadGoals();
             await this.loadTransactions();
             await this.loadProgress();
-            await this.loadCart();
-            this.setupNetworkListeners();
-            this.listenForUpdates();
             return true;
         },
 
@@ -60,46 +52,13 @@
             }
         },
 
-        setupNetworkListeners() {
-            window.addEventListener('online', () => {
-                this.networkStatus = true;
-                UI.showNotification('Network restored. Syncing data...', 'success');
-                this.syncData();
-            });
-            
-            window.addEventListener('offline', () => {
-                this.networkStatus = false;
-                UI.showNotification('You are offline. Using cached data.', 'warning');
-            });
-        },
-
-        listenForUpdates() {
-            window.addEventListener('pesasmart-goals-update', (e) => {
-                console.log('Goals update received:', e.detail);
-                this.loadGoals();
-            });
-
-            window.addEventListener('pesasmart-transaction-update', (e) => {
-                console.log('Transaction update received:', e.detail);
-                this.loadTransactions();
-            });
-        },
-
-        async syncData() {
-            if (this.networkStatus) {
-                // Could sync with server here
-            }
-        },
-
         async loadProducts() {
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
                 if (cached) {
                     const data = JSON.parse(cached);
-                    if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
-                        this.products = data.products || [];
-                        return;
-                    }
+                    this.products = data.products || [];
+                    return;
                 }
 
                 const response = await fetch('data/products.json');
@@ -127,8 +86,7 @@
                     minInvestment: 100,
                     expectedReturn: { min: 8, max: 12 },
                     risk: "medium",
-                    sector: "Telecommunications",
-                    description: "Kenya's largest telecommunications company"
+                    sector: "Telecommunications"
                 },
                 {
                     id: "PRD002",
@@ -139,8 +97,7 @@
                     minInvestment: 100,
                     expectedReturn: { min: 7, max: 10 },
                     risk: "medium",
-                    sector: "Banking",
-                    description: "Leading financial services provider"
+                    sector: "Banking"
                 },
                 {
                     id: "PRD003",
@@ -151,8 +108,7 @@
                     minInvestment: 500,
                     expectedReturn: { fixed: 12.5 },
                     risk: "low",
-                    issuer: "Central Bank of Kenya",
-                    description: "Government of Kenya infrastructure bond"
+                    issuer: "Central Bank of Kenya"
                 }
             ];
         },
@@ -162,10 +118,8 @@
                 const cached = localStorage.getItem(STORAGE_KEYS.INSURANCE);
                 if (cached) {
                     const data = JSON.parse(cached);
-                    if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
-                        this.insurance = data.products || [];
-                        return;
-                    }
+                    this.insurance = data.products || [];
+                    return;
                 }
 
                 const response = await fetch('data/insurance.json');
@@ -182,13 +136,13 @@
             }
         },
 
-        async loadGoals() {
+            // UPDATED: Consistent goal loading
+            async loadGoals() {
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.GOALS);
                 if (cached) {
                     const data = JSON.parse(cached);
-                    const goals = Array.isArray(data) ? data : (data.goals || []);
-                    this.goals = goals.filter(g => g.userId === this.user.userId);
+                    this.goals = data.goals?.filter(g => g.userId === this.user.userId) || [];
                     return;
                 }
 
@@ -212,8 +166,7 @@
                 const cached = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
                 if (cached) {
                     const data = JSON.parse(cached);
-                    const transactions = Array.isArray(data) ? data : (data.transactions || []);
-                    this.transactions = transactions.filter(t => t.userId === this.user.userId);
+                    this.transactions = data.transactions?.filter(t => t.userId === this.user.userId) || [];
                     return;
                 }
 
@@ -237,8 +190,7 @@
                 const cached = localStorage.getItem(STORAGE_KEYS.PROGRESS);
                 if (cached) {
                     const data = JSON.parse(cached);
-                    const progress = Array.isArray(data) ? data : (data.progress || []);
-                    this.progress = progress.find(p => p.userId === this.user.userId) || null;
+                    this.progress = data.progress?.find(p => p.userId === this.user.userId) || null;
                     return;
                 }
 
@@ -257,46 +209,18 @@
             }
         },
 
-        async loadCart() {
-            try {
-                const cached = localStorage.getItem(STORAGE_KEYS.CART);
-                if (cached) {
-                    const data = JSON.parse(cached);
-                    this.cart = data[this.user.userId] || [];
-                }
-            } catch (error) {
-                console.error('Failed to load cart:', error);
-                this.cart = [];
-            }
-        },
-
-        async saveCart() {
-            try {
-                const cached = localStorage.getItem(STORAGE_KEYS.CART);
-                const carts = cached ? JSON.parse(cached) : {};
-                carts[this.user.userId] = this.cart;
-                localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(carts));
-            } catch (error) {
-                console.error('Failed to save cart:', error);
-            }
-        },
-
         async saveTransaction(transaction) {
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
-                let data = cached ? JSON.parse(cached) : { transactions: [] };
-                let transactions = Array.isArray(data) ? data : (data.transactions || []);
+                const data = cached ? JSON.parse(cached) : { transactions: [] };
                 
-                transactions.push(transaction);
+                data.transactions.push(transaction);
+                data._timestamp = Date.now();
                 
-                localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify({
-                    transactions: transactions,
-                    _timestamp: Date.now()
-                }));
-                
+                localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(data));
                 this.transactions.push(transaction);
                 
-                // Notify other pages
+                // Notify profile and index pages
                 window.dispatchEvent(new CustomEvent('pesasmart-transaction-update', {
                     detail: { transaction, userId: this.user.userId }
                 }));
@@ -314,23 +238,20 @@
                 if (!cached) return false;
 
                 const data = JSON.parse(cached);
-                let goals = Array.isArray(data) ? data : (data.goals || []);
+                const goalIndex = data.goals.findIndex(g => g.id === goalId);
                 
-                const goalIndex = goals.findIndex(g => g.id === goalId);
                 if (goalIndex >= 0) {
-                    goals[goalIndex].savedAmount = (goals[goalIndex].savedAmount || 0) + amount;
+                    data.goals[goalIndex].savedAmount += amount;
+                    data._timestamp = Date.now();
                     
-                    localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify({
-                        goals: goals,
-                        _timestamp: Date.now()
-                    }));
+                    localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(data));
                     
                     // Update local goals array
                     const localGoal = this.goals.find(g => g.id === goalId);
                     if (localGoal) localGoal.savedAmount += amount;
                     
-                    // Notify other pages
-                    window.dispatchEvent(new CustomEvent('pesasmart-goals-update', {
+                    // Notify profile and index pages
+                    window.dispatchEvent(new CustomEvent('pesasmart-goal-update', {
                         detail: { goalId, amount, userId: this.user.userId }
                     }));
                     
@@ -340,49 +261,14 @@
                 console.error('Failed to update goal:', error);
             }
             return false;
-        },
-
-        addToCart(item) {
-            this.cart.push(item);
-            this.saveCart();
-        },
-
-        removeFromCart(itemId) {
-            this.cart = this.cart.filter(item => item.id !== itemId);
-            this.saveCart();
-        },
-
-        clearCart() {
-            this.cart = [];
-            this.saveCart();
-        },
-
-        calculateInvestmentReadiness() {
-            return Math.min(85, 60 + (this.progress?.completedModules?.length * 5 || 0));
-        },
-
-        calculateInsuranceKnowledge() {
-            const insurancePurchases = this.transactions.filter(t => t.type === 'insurance').length;
-            return Math.min(70, 40 + (insurancePurchases * 10));
-        },
-
-        calculateLoanUnderstanding() {
-            return Math.min(90, 70 + (this.progress?.completedModules?.length * 2 || 0));
-        },
-
-        isBronzeCompleted() {
-            return this.progress?.completedModules?.includes('MOD003') || false;
         }
     };
 
-    // UI COMPONENTS - FULLY RESPONSIVE
+    // UI COMPONENTS (Remains the same - no changes needed)
 
     const UI = {
-        // LOADING STATES
-
         showLoading(message = 'Loading marketplace...') {
             AppState.isLoading = true;
-            
             const loader = document.getElementById('global-loader');
             if (loader) {
                 loader.classList.remove('hidden');
@@ -392,16 +278,11 @@
 
             const newLoader = document.createElement('div');
             newLoader.id = 'global-loader';
-            newLoader.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
-            newLoader.setAttribute('role', 'alert');
-            newLoader.setAttribute('aria-live', 'polite');
+            newLoader.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             newLoader.innerHTML = `
-                <div class="bg-white rounded-xl p-6 text-center shadow-2xl max-w-sm mx-4">
-                    <svg class="animate-spin h-12 w-12 text-green-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p class="text-gray-700 font-medium">${message}</p>
+                <div class="bg-white rounded-lg p-6 text-center">
+                    <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4 mx-auto"></div>
+                    <p class="text-gray-700">${message}</p>
                 </div>
             `;
             document.body.appendChild(newLoader);
@@ -411,76 +292,47 @@
             AppState.isLoading = false;
             const loader = document.getElementById('global-loader');
             if (loader) {
-                loader.classList.add('animate-fade-out');
+                loader.classList.add('hidden');
                 setTimeout(() => loader.remove(), 300);
             }
         },
 
-        // NOTIFICATION SYSTEM
-
         showNotification(message, type = 'info', duration = 3000) {
-            const colors = {
-                success: 'bg-green-500',
-                error: 'bg-red-500',
-                warning: 'bg-yellow-500',
-                info: 'bg-blue-500'
-            };
-
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle'
-            };
-
             const toast = document.createElement('div');
-            toast.setAttribute('role', 'alert');
-            toast.setAttribute('aria-live', 'assertive');
-            toast.className = `fixed top-4 right-4 left-4 md:left-auto md:w-96 px-6 py-4 rounded-lg shadow-2xl z-50 transform transition-all duration-300 translate-x-0 ${colors[type]} text-white`;
-            toast.innerHTML = `
-                <div class="flex items-start">
-                    <i class="fas ${icons[type]} text-xl mr-3 mt-0.5"></i>
-                    <div class="flex-1">
-                        <p class="font-medium">${message}</p>
-                    </div>
-                    <button class="ml-4 text-white hover:text-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-white rounded-lg p-1" onclick="this.closest('[role=alert]').remove()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `;
-
+            toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-2xl z-50 animate-slide-in ${
+                type === 'success' ? 'bg-green-500' :
+                type === 'error' ? 'bg-red-500' :
+                type === 'warning' ? 'bg-yellow-500' :
+                'bg-blue-500'
+            } text-white font-medium`;
+            toast.textContent = message;
             document.body.appendChild(toast);
 
             setTimeout(() => {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
+                toast.classList.add('animate-slide-out');
+                setTimeout(() => toast.remove(), 500);
             }, duration);
         },
-
-        // CONFIRMATION MODAL
 
         confirmAction(options) {
             return new Promise((resolve) => {
                 const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
-                modal.setAttribute('role', 'dialog');
-                modal.setAttribute('aria-modal', 'true');
-                modal.setAttribute('aria-labelledby', 'confirm-title');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
                 modal.innerHTML = `
-                    <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6">
+                    <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 animate-fade-in">
                         <div class="text-center mb-6">
-                            <div class="w-20 h-20 ${options.type === 'danger' ? 'bg-red-100' : 'bg-yellow-100'} rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fas ${options.type === 'danger' ? 'fa-exclamation-triangle text-red-600' : 'fa-question-circle text-yellow-600'} text-3xl"></i>
+                            <div class="w-16 h-16 ${options.type === 'danger' ? 'bg-red-100' : 'bg-yellow-100'} rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas ${options.type === 'danger' ? 'fa-exclamation-triangle text-red-600' : 'fa-question-circle text-yellow-600'} text-2xl"></i>
                             </div>
-                            <h3 id="confirm-title" class="text-xl font-bold text-gray-800 mb-2">${options.title}</h3>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">${options.title}</h3>
                             <p class="text-gray-600">${options.message}</p>
                         </div>
                         
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-gray-500 min-h-[44px]" id="modal-cancel">
+                        <div class="flex space-x-3">
+                            <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium" id="modal-cancel">
                                 ${options.cancelText || 'Cancel'}
                             </button>
-                            <button class="flex-1 px-6 py-3 ${options.type === 'danger' ? 'bg-red-500 hover:bg-red-600' : 'bg-yellow-500 hover:bg-yellow-600'} text-white rounded-lg transition focus:outline-none focus:ring-2 focus:ring-offset-2 min-h-[44px]" id="modal-confirm">
+                            <button class="flex-1 px-6 py-3 ${options.type === 'danger' ? 'bg-red-500 hover:bg-red-600' : 'bg-yellow-500 hover:bg-yellow-600'} text-white rounded-lg transition font-medium" id="modal-confirm">
                                 ${options.confirmText || 'Confirm'}
                             </button>
                         </div>
@@ -508,43 +360,43 @@
             });
         },
 
-        // NAVBAR MANAGEMENT
-
         updateNavbar() {
             const navbar = document.querySelector('nav .flex.items-center.space-x-4');
-            if (!navbar || !AppState.user) return;
+            if (!navbar) return;
 
             const userName = AppState.user?.name || 'User';
 
             navbar.innerHTML = `
                 <div class="hidden md:flex items-center space-x-4">
-                    <button class="relative text-gray-600 hover:text-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2 min-h-[44px] min-w-[44px]" id="notification-bell" aria-label="Notifications">
-                        <i class="fas fa-bell text-xl"></i>
+                    <div class="relative">
+                        <i class="fas fa-bell text-gray-600 text-xl hover:text-green-600 cursor-pointer" id="notification-bell"></i>
                         <span class="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs rounded-full flex items-center justify-center notification-count">${this.getNotificationCount()}</span>
-                    </button>
-                    <button class="relative text-gray-600 hover:text-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2 min-h-[44px] min-w-[44px]" id="cart-button" aria-label="Shopping Cart">
-                        <i class="fas fa-shopping-cart text-xl"></i>
-                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs rounded-full flex items-center justify-center cart-count">${AppState.cart.length}</span>
-                    </button>
+                    </div>
                     <div class="relative" id="user-menu-container">
-                        <button class="flex items-center space-x-2 text-gray-700 hover:text-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2 min-h-[44px]" id="user-menu-button">
+                        <button class="flex items-center space-x-2 text-gray-700 hover:text-green-600 transition" id="user-menu-button">
                             <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                                 <i class="fas fa-user text-green-600"></i>
                             </div>
-                            <span class="font-medium hidden lg:inline">${userName}</span>
+                            <span class="font-medium">${userName}</span>
                             <i class="fas fa-chevron-down text-xs ml-1"></i>
                         </button>
                         
                         <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden z-50" id="user-dropdown">
-                            <a href="profile.html" class="block px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition focus:outline-none focus:bg-green-50" tabindex="0">My Profile</a>
-                            <a href="profile.html#goals" class="block px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition focus:outline-none focus:bg-green-50" tabindex="0">My Goals</a>
+                            <a href="profile.html" class="block px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600">
+                                <i class="fas fa-user mr-2"></i> My Profile
+                            </a>
+                            <a href="profile.html#goals" class="block px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600">
+                                <i class="fas fa-bullseye mr-2"></i> My Goals
+                            </a>
                             <hr class="my-2 border-gray-200">
-                            <button class="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition focus:outline-none focus:bg-red-50" id="logout-button">Logout</button>
+                            <button class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50" id="logout-button">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </button>
                         </div>
                     </div>
                 </div>
                 
-                <button class="md:hidden text-gray-700 hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2 min-h-[44px] min-w-[44px]" id="mobile-menu-button" aria-label="Menu">
+                <button class="md:hidden text-gray-700 hover:text-green-600 focus:outline-none" id="mobile-menu-button">
                     <i class="fas fa-bars text-2xl"></i>
                 </button>
             `;
@@ -554,7 +406,6 @@
             
             document.getElementById('logout-button')?.addEventListener('click', () => this.handleLogout());
             document.getElementById('notification-bell')?.addEventListener('click', () => this.showNotifications());
-            document.getElementById('cart-button')?.addEventListener('click', () => this.showCart());
         },
 
         setupUserDropdown() {
@@ -571,21 +422,6 @@
                     if (!menuButton.contains(e.target) && !dropdown.contains(e.target)) {
                         dropdown.classList.add('hidden');
                     }
-                });
-
-                const links = dropdown.querySelectorAll('a, button');
-                links.forEach((link, index) => {
-                    link.addEventListener('keydown', (e) => {
-                        if (e.key === 'Tab') {
-                            if (e.shiftKey && index === 0) {
-                                e.preventDefault();
-                                menuButton.focus();
-                            } else if (!e.shiftKey && index === links.length - 1) {
-                                e.preventDefault();
-                                menuButton.focus();
-                            }
-                        }
-                    });
                 });
             }
         },
@@ -605,13 +441,25 @@
 
             mobileContainer.innerHTML = `
                 <div class="px-4 py-2 space-y-2">
-                    <a href="index.html" class="block py-3 px-4 text-gray-700 hover:bg-green-50 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-green-500">Home</a>
-                    <a href="learn.html" class="block py-3 px-4 text-gray-700 hover:bg-green-50 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-green-500">Learn</a>
-                    <a href="practice.html" class="block py-3 px-4 text-gray-700 hover:bg-green-50 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-green-500">Practice</a>
-                    <a href="act.html" class="block py-3 px-4 text-green-600 font-medium hover:bg-green-50 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-green-500">Act</a>
+                    <a href="index.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="learn.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-book mr-2"></i>Learn
+                    </a>
+                    <a href="practice.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-gamepad mr-2"></i>Practice
+                    </a>
+                    <a href="act.html" class="block py-2 text-green-600 font-medium">
+                        <i class="fas fa-briefcase mr-2"></i>Act
+                    </a>
                     <hr class="my-2">
-                    <a href="profile.html" class="block py-3 px-4 text-gray-700 hover:bg-green-50 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-green-500">Profile</a>
-                    <button id="mobile-logout" class="w-full text-left py-3 px-4 text-red-600 hover:bg-red-50 rounded-lg transition focus:outline-none focus:ring-2 focus:ring-red-500">Logout</button>
+                    <a href="profile.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-user mr-2"></i>Profile
+                    </a>
+                    <button id="mobile-logout" class="w-full text-left py-2 text-red-600 hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
                 </div>
             `;
 
@@ -625,7 +473,7 @@
         getNotificationCount() {
             let count = 0;
             if (AppState.goals?.some(g => this.isGoalNearing(g))) count++;
-            if (AppState.cart.length > 0) count++;
+            if (AppState.progress?.completedModules?.length < 3) count++;
             return Math.min(count, 9);
         },
 
@@ -653,16 +501,6 @@
                 });
             }
 
-            if (AppState.cart.length > 0) {
-                notifications.push({
-                    title: 'Items in Cart',
-                    message: `You have ${AppState.cart.length} item${AppState.cart.length > 1 ? 's' : ''} in your cart.`,
-                    type: 'info',
-                    icon: 'fa-shopping-cart',
-                    time: 'Now'
-                });
-            }
-
             if (notifications.length === 0) {
                 notifications.push({
                     title: 'Welcome to Marketplace',
@@ -674,24 +512,24 @@
             }
 
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             modal.innerHTML = `
-                <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6 max-h-[80vh] overflow-y-auto">
-                    <div class="flex justify-between items-center mb-4 sticky top-0 bg-white pb-2">
+                <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6">
+                    <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold">Notifications</h3>
-                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2" id="close-notifications">
-                            <i class="fas fa-times text-xl"></i>
+                        <button class="text-gray-500 hover:text-gray-700" id="close-modal">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
                     <div class="space-y-3">
                         ${notifications.map(n => `
-                            <div class="p-4 ${n.type === 'warning' ? 'bg-yellow-50' : 'bg-blue-50'} rounded-lg animate-fade-in">
+                            <div class="p-4 ${n.type === 'warning' ? 'bg-yellow-50' : 'bg-blue-50'} rounded-lg">
                                 <div class="flex items-start">
-                                    <div class="w-10 h-10 ${n.type === 'warning' ? 'bg-yellow-100' : 'bg-blue-100'} rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                    <div class="w-8 h-8 ${n.type === 'warning' ? 'bg-yellow-100' : 'bg-blue-100'} rounded-full flex items-center justify-center mr-3">
                                         <i class="fas ${n.icon} ${n.type === 'warning' ? 'text-yellow-600' : 'text-blue-600'}"></i>
                                     </div>
-                                    <div class="flex-1">
+                                    <div>
                                         <h4 class="font-semibold">${n.title}</h4>
                                         <p class="text-sm text-gray-600">${n.message}</p>
                                         <p class="text-xs text-gray-500 mt-1">${n.time}</p>
@@ -704,125 +542,13 @@
             `;
 
             document.body.appendChild(modal);
-            document.getElementById('close-notifications').addEventListener('click', () => modal.remove());
-        },
-
-        showCart() {
-            if (AppState.cart.length === 0) {
-                this.showNotification('Your cart is empty', 'info');
-                return;
-            }
-
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
-            
-            let total = 0;
-            const cartItems = AppState.cart.map(item => {
-                total += item.amount || item.premium || 0;
-                return `
-                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div class="flex-1 min-w-0">
-                            <h4 class="font-medium text-gray-800 truncate">${item.name}</h4>
-                            <p class="text-sm text-gray-600">${item.type === 'investment' ? 'Investment' : 'Insurance'}</p>
-                        </div>
-                        <div class="text-right ml-2">
-                            <p class="font-semibold text-green-600">${this.formatCurrency(item.amount || item.premium || 0)}</p>
-                            <button class="text-red-600 hover:text-red-700 text-sm remove-from-cart" data-id="${item.id}">Remove</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            modal.innerHTML = `
-                <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold">Your Cart (${AppState.cart.length})</h3>
-                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2" id="close-modal">
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="space-y-3 mb-6 max-h-64 overflow-y-auto">
-                        ${cartItems}
-                    </div>
-                    
-                    <div class="border-t pt-4 mb-6">
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold">Total:</span>
-                            <span class="text-2xl font-bold text-green-600">${this.formatCurrency(total)}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-gray-500 min-h-[44px]" id="clear-cart">
-                            Clear Cart
-                        </button>
-                        <button class="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 min-h-[44px]" id="checkout">
-                            Checkout
-                        </button>
-                    </div>
-                </div>
-            `;
-
-            document.body.appendChild(modal);
-
             document.getElementById('close-modal').addEventListener('click', () => modal.remove());
-            
-            document.querySelectorAll('.remove-from-cart').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    AppState.removeFromCart(id);
-                    this.showNotification('Item removed from cart', 'info');
-                    modal.remove();
-                    this.updateNavbar();
-                });
-            });
-
-            document.getElementById('clear-cart').addEventListener('click', () => {
-                AppState.clearCart();
-                this.showNotification('Cart cleared', 'info');
-                modal.remove();
-                this.updateNavbar();
-            });
-
-            document.getElementById('checkout').addEventListener('click', () => {
-                this.processCheckout();
-                modal.remove();
-            });
-
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) modal.remove();
-            });
-        },
-
-        async processCheckout() {
-            this.showLoading('Processing your order...');
-
-            try {
-                for (const item of AppState.cart) {
-                    if (item.type === 'investment') {
-                        await this.processInvestment(item, item.amount);
-                    } else if (item.type === 'insurance') {
-                        await this.processInsurancePurchase(item);
-                    }
-                }
-
-                AppState.clearCart();
-                this.updateNavbar();
-                this.showNotification('Order completed successfully!', 'success');
-
-            } catch (error) {
-                console.error('Checkout error:', error);
-                this.showNotification('Checkout failed. Please try again.', 'error');
-            } finally {
-                this.hideLoading();
-            }
         },
 
         async handleLogout() {
             const confirmed = await this.confirmAction({
                 title: 'Log Out',
-                message: 'Are you sure you want to log out? Your cart will be saved.',
+                message: 'Are you sure you want to log out?',
                 confirmText: 'Log Out',
                 type: 'warning'
             });
@@ -832,9 +558,7 @@
             this.showLoading('Logging out...');
 
             try {
-                await AppState.saveCart();
                 localStorage.removeItem(STORAGE_KEYS.SESSION);
-                
                 this.showNotification('Logged out successfully', 'success');
                 
                 setTimeout(() => {
@@ -847,8 +571,6 @@
                 this.hideLoading();
             }
         },
-
-        // FILTER SYSTEM
 
         setupFilters() {
             const filterBtns = document.querySelectorAll('.flex.flex-wrap.gap-2 button');
@@ -865,20 +587,14 @@
                     AppState.currentFilter = btn.textContent.trim().toLowerCase();
                     this.renderProducts();
                 });
-
-                // Touch optimization
-                btn.classList.add('min-h-[44px]', 'px-4', 'py-2');
             });
         },
-
-        // PRODUCT RENDERING
 
         renderProducts() {
             this.renderInvestments();
             this.renderInsurance();
             this.renderLoans();
             this.updateActionProgress();
-            this.setupSavingsTools();
         },
 
         renderInvestments() {
@@ -896,31 +612,12 @@
 
             container.innerHTML = investmentProducts.map(product => this.renderInvestmentCard(product)).join('');
 
-            document.querySelectorAll('.invest-btn, .add-to-cart-btn').forEach(btn => {
-                if (btn.classList.contains('invest-btn')) {
-                    btn.addEventListener('click', () => {
-                        const productId = btn.dataset.productId;
-                        const product = investmentProducts.find(p => p.id === productId);
-                        if (product) this.openInvestmentModal(product);
-                    });
-                } else {
-                    btn.addEventListener('click', () => {
-                        const productId = btn.dataset.productId;
-                        const product = investmentProducts.find(p => p.id === productId);
-                        if (product) {
-                            const cartItem = {
-                                id: product.id + Date.now(),
-                                type: 'investment',
-                                name: product.name,
-                                amount: product.minInvestment,
-                                productId: product.id
-                            };
-                            AppState.addToCart(cartItem);
-                            this.showNotification('Added to cart', 'success');
-                            this.updateNavbar();
-                        }
-                    });
-                }
+            document.querySelectorAll('.invest-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const productId = btn.dataset.productId;
+                    const product = investmentProducts.find(p => p.id === productId);
+                    if (product) this.openInvestmentModal(product);
+                });
             });
 
             const browseLink = document.querySelector('.mt-6.text-center a');
@@ -949,38 +646,30 @@
             const sharesForMin = (product.minInvestment / product.price).toFixed(1);
 
             return `
-                <div class="border border-gray-200 rounded-xl p-4 hover:shadow-lg transition product-card" data-product-id="${product.id}">
-                    <div class="flex flex-col sm:flex-row sm:items-start justify-between mb-3">
-                        <div class="flex items-center mb-2 sm:mb-0">
-                            <div class="w-12 h-12 ${bgColor} rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <i class="fas ${icon} ${textColor} text-xl"></i>
+                <div class="border border-gray-200 rounded-lg p-4 hover:border-green-300 transition product-card" data-product-id="${product.id}">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 ${bgColor} rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas ${icon} ${textColor}"></i>
                             </div>
-                            <div class="min-w-0">
-                                <h3 class="font-semibold text-gray-800 truncate">${product.name}</h3>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">${product.name}</h3>
                                 <p class="text-gray-600 text-sm">${product.symbol || ''} • Ksh ${product.price.toFixed(2)}</p>
                             </div>
                         </div>
-                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold self-start sm:self-auto">
+                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-semibold">
                             ${expectedReturn}
                         </span>
                     </div>
-                    
-                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">${product.description || ''}</p>
-                    
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <p class="text-gray-600 text-sm mb-3">${product.description || ''}</p>
+                    <div class="flex justify-between items-center">
                         <div>
                             <p class="text-gray-700 font-medium">Min: ${this.formatCurrency(product.minInvestment)}</p>
                             <p class="text-gray-500 text-xs">${sharesForMin} shares for min</p>
                         </div>
-                        <div class="flex gap-2 w-full sm:w-auto">
-                            <button class="flex-1 sm:flex-none bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-green-500 min-h-[44px] invest-btn" data-product-id="${product.id}">
-                                Invest
-                            </button>
-                            <button class="flex-1 sm:flex-none border border-green-500 text-green-600 hover:bg-green-50 px-4 py-2 rounded-lg text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-green-500 min-h-[44px] add-to-cart-btn" data-product-id="${product.id}">
-                                <i class="fas fa-cart-plus"></i>
-                                <span class="hidden sm:inline ml-1">Cart</span>
-                            </button>
-                        </div>
+                        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition invest-btn" data-product-id="${product.id}">
+                            Invest
+                        </button>
                     </div>
                 </div>
             `;
@@ -1003,31 +692,12 @@
 
             container.innerHTML = AppState.insurance.map(product => this.renderInsuranceCard(product)).join('');
 
-            document.querySelectorAll('.insurance-btn, .add-to-cart-btn').forEach(btn => {
-                if (btn.classList.contains('insurance-btn')) {
-                    btn.addEventListener('click', () => {
-                        const productId = btn.dataset.productId;
-                        const product = AppState.insurance.find(p => p.id === productId);
-                        if (product) this.openInsuranceModal(product);
-                    });
-                } else {
-                    btn.addEventListener('click', () => {
-                        const productId = btn.dataset.productId;
-                        const product = AppState.insurance.find(p => p.id === productId);
-                        if (product) {
-                            const cartItem = {
-                                id: product.id + Date.now(),
-                                type: 'insurance',
-                                name: product.name,
-                                premium: product.premium,
-                                productId: product.id
-                            };
-                            AppState.addToCart(cartItem);
-                            this.showNotification('Added to cart', 'success');
-                            this.updateNavbar();
-                        }
-                    });
-                }
+            document.querySelectorAll('.insurance-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const productId = btn.dataset.productId;
+                    const product = AppState.insurance.find(p => p.id === productId);
+                    if (product) this.openInsuranceModal(product);
+                });
             });
 
             const compareLink = document.querySelectorAll('.mt-6.text-center a')[1];
@@ -1048,48 +718,40 @@
             };
             
             const colors = {
-                'INS001': ['bg-cyan-100', 'text-cyan-600'],
-                'INS002': ['bg-orange-100', 'text-orange-600'],
-                'INS003': ['bg-pink-100', 'text-pink-600'],
-                'INS004': ['bg-purple-100', 'text-purple-600']
+                'INS001': 'bg-cyan-100 text-cyan-600',
+                'INS002': 'bg-orange-100 text-orange-600',
+                'INS003': 'bg-pink-100 text-pink-600',
+                'INS004': 'bg-purple-100 text-purple-600'
             };
 
             const icon = icons[product.id] || 'fa-shield-alt';
-            const colorSet = colors[product.id] || ['bg-green-100', 'text-green-600'];
+            const colorClass = colors[product.id] || 'bg-green-100 text-green-600';
 
             return `
-                <div class="border border-gray-200 rounded-xl p-4 hover:shadow-lg transition insurance-card" data-product-id="${product.id}">
-                    <div class="flex flex-col sm:flex-row sm:items-start justify-between mb-3">
-                        <div class="flex items-center mb-2 sm:mb-0">
-                            <div class="w-12 h-12 ${colorSet[0]} rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <i class="fas ${icon} ${colorSet[1]} text-xl"></i>
+                <div class="border border-gray-200 rounded-lg p-4 hover:border-green-300 transition insurance-card" data-product-id="${product.id}">
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 ${colorClass.split(' ')[0]} rounded-lg flex items-center justify-center mr-3">
+                                <i class="fas ${icon} ${colorClass.split(' ')[1]}"></i>
                             </div>
-                            <div class="min-w-0">
-                                <h3 class="font-semibold text-gray-800 truncate">${product.name}</h3>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">${product.name}</h3>
                                 <p class="text-gray-600 text-sm">${product.category}</p>
                             </div>
                         </div>
-                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold self-start sm:self-auto">
+                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-semibold">
                             Ksh ${product.premium}/mo
                         </span>
                     </div>
-                    
-                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">${product.description}</p>
-                    
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <p class="text-gray-600 text-sm mb-3">${product.description}</p>
+                    <div class="flex justify-between items-center">
                         <div>
                             <p class="text-gray-700 font-medium">Cover: ${this.formatCurrency(product.coverage || 0)}</p>
                             <p class="text-gray-500 text-xs">${product.trigger?.type || 'Traditional'}</p>
                         </div>
-                        <div class="flex gap-2 w-full sm:w-auto">
-                            <button class="flex-1 sm:flex-none bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-green-500 min-h-[44px] insurance-btn" data-product-id="${product.id}">
-                                Get Covered
-                            </button>
-                            <button class="flex-1 sm:flex-none border border-green-500 text-green-600 hover:bg-green-50 px-4 py-2 rounded-lg text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-green-500 min-h-[44px] add-to-cart-btn" data-product-id="${product.id}">
-                                <i class="fas fa-cart-plus"></i>
-                                <span class="hidden sm:inline ml-1">Cart</span>
-                            </button>
-                        </div>
+                        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition insurance-btn" data-product-id="${product.id}">
+                            Get Covered
+                        </button>
                     </div>
                 </div>
             `;
@@ -1099,51 +761,51 @@
             const container = document.querySelector('.space-y-4.mb-6');
             if (!container) return;
 
-            const bronzeCompleted = AppState.isBronzeCompleted();
+            const bronzeCompleted = AppState.progress?.completedModules?.includes('MOD003') || false;
 
             container.innerHTML = `
-                <div class="border border-green-200 rounded-xl p-4 bg-green-50 hover:shadow-lg transition loan-card" data-loan-type="graduate">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
-                        <h3 class="font-semibold text-gray-800 mb-1 sm:mb-0">PesaSmart Graduate Rate</h3>
-                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                <div class="border border-green-200 rounded-lg p-4 bg-green-50 loan-card" data-loan-type="graduate">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-semibold text-gray-800">PesaSmart Graduate Rate</h3>
+                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-sm font-semibold">
                             8% interest
                         </span>
                     </div>
                     <p class="text-gray-600 text-sm mb-3">Special rate for completing Bronze learning path</p>
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div class="flex justify-between items-center">
                         <div>
                             <p class="text-gray-700 font-medium">Up to Ksh 20,000</p>
                             <p class="text-gray-500 text-xs">${bronzeCompleted ? 'Eligible ✓' : 'Complete Bronze path to unlock'}</p>
                         </div>
-                        <button class="w-full sm:w-auto px-4 py-2 ${bronzeCompleted ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-300 cursor-not-allowed'} text-white rounded-lg text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-green-500 min-h-[44px] loan-apply-btn" data-loan="graduate" ${bronzeCompleted ? '' : 'disabled'}>
-                            Apply Now
+                        <button class="${bronzeCompleted ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-300 cursor-not-allowed'} text-white px-4 py-2 rounded-lg text-sm font-medium transition loan-apply-btn" data-loan="graduate" ${bronzeCompleted ? '' : 'disabled'}>
+                            Apply
                         </button>
                     </div>
                 </div>
 
-                <div class="border border-green-200 rounded-xl p-4 bg-green-50 hover:shadow-lg transition loan-card" data-loan-type="school">
+                <div class="border border-green-200 rounded-lg p-4 bg-green-50 loan-card" data-loan-type="school">
                     <h3 class="font-semibold text-gray-800 mb-2">School Fees Advance</h3>
                     <p class="text-gray-600 text-sm mb-3">Bridge financing for education expenses</p>
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div class="flex justify-between items-center">
                         <div>
                             <p class="text-gray-700 font-medium">Up to Ksh 50,000</p>
                             <p class="text-gray-500 text-xs">Repay over 6 months</p>
                         </div>
-                        <button class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-green-500 min-h-[44px] loan-details-btn" data-loan="school">
+                        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition loan-details-btn" data-loan="school">
                             Details
                         </button>
                     </div>
                 </div>
 
-                <div class="border border-green-200 rounded-xl p-4 bg-green-50 hover:shadow-lg transition loan-card" data-loan-type="business">
+                <div class="border border-green-200 rounded-lg p-4 bg-green-50 loan-card" data-loan-type="business">
                     <h3 class="font-semibold text-gray-800 mb-2">Business Inventory Loan</h3>
                     <p class="text-gray-600 text-sm mb-3">For small retailers</p>
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div class="flex justify-between items-center">
                         <div>
                             <p class="text-gray-700 font-medium">Up to Ksh 30,000</p>
                             <p class="text-gray-500 text-xs">Daily repayment option</p>
                         </div>
-                        <button class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-green-500 min-h-[44px] loan-details-btn" data-loan="business">
+                        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition loan-details-btn" data-loan="business">
                             Details
                         </button>
                     </div>
@@ -1164,7 +826,6 @@
             const checkRatesBtn = document.querySelector('.text-center .bg-green-500');
             if (checkRatesBtn) {
                 checkRatesBtn.addEventListener('click', () => this.showLoanRates());
-                checkRatesBtn.classList.add('min-h-[44px]');
             }
         },
 
@@ -1192,60 +853,60 @@
             if (!detail) return;
 
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             modal.innerHTML = `
                 <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold">${detail.title}</h3>
-                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2" onclick="this.closest('.fixed').remove()">
-                            <i class="fas fa-times text-xl"></i>
+                        <button class="text-gray-500 hover:text-gray-700" onclick="this.closest('.fixed').remove()">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
                     <div class="space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-3 rounded-lg">
                                 <p class="text-xs text-gray-600">Loan Amount</p>
-                                <p class="font-bold text-lg">${detail.amount}</p>
+                                <p class="font-bold">${detail.amount}</p>
                             </div>
-                            <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="bg-gray-50 p-3 rounded-lg">
                                 <p class="text-xs text-gray-600">Term</p>
-                                <p class="font-bold text-lg">${detail.term}</p>
+                                <p class="font-bold">${detail.term}</p>
                             </div>
-                            <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="bg-gray-50 p-3 rounded-lg">
                                 <p class="text-xs text-gray-600">Interest Rate</p>
-                                <p class="font-bold text-lg">${detail.rate}</p>
+                                <p class="font-bold">${detail.rate}</p>
                             </div>
-                            <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="bg-gray-50 p-3 rounded-lg">
                                 <p class="text-xs text-gray-600">Fees</p>
-                                <p class="font-bold text-lg">${detail.fees}</p>
+                                <p class="font-bold">${detail.fees}</p>
                             </div>
                         </div>
                         
-                        <div class="bg-gray-50 p-4 rounded-lg">
+                        <div>
                             <h4 class="font-bold mb-2">Requirements</h4>
-                            <ul class="space-y-2">
+                            <ul class="space-y-1">
                                 ${detail.requirements.map(r => `
-                                    <li class="text-sm flex items-start">
-                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
-                                        <span>${r}</span>
+                                    <li class="text-sm flex items-center">
+                                        <i class="fas fa-check-circle text-green-500 mr-2"></i>${r}
                                     </li>
                                 `).join('')}
                             </ul>
                         </div>
                         
-                        <button class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 min-h-[44px]" onclick="this.closest('.fixed').remove(); UI.openLoanApplicationModal('${type}')">
+                        <button class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition" onclick="this.closest('.fixed').remove(); UI.openLoanApplicationModal('${type}')">
                             Apply Now
                         </button>
                     </div>
                 </div>
             `;
+
             document.body.appendChild(modal);
         },
 
         openLoanApplicationModal(type) {
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             
             const maxAmount = type === 'graduate' ? 20000 : (type === 'school' ? 50000 : 30000);
             
@@ -1253,20 +914,20 @@
                 <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold">Loan Application</h3>
-                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2" id="close-modal">
-                            <i class="fas fa-times text-xl"></i>
+                        <button class="text-gray-500 hover:text-gray-700" id="close-modal">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
                     <div class="mb-4">
                         <label class="block text-gray-700 font-medium mb-2">Loan Amount (Ksh)</label>
-                        <input type="number" id="loan-amount" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" 
-                               value="${maxAmount}" min="1000" max="${maxAmount}" step="1000">
+                        <input type="number" id="loan-amount" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:border-green-500" 
+                               value="${maxAmount}" min="1000" max="${maxAmount}">
                     </div>
                     
                     <div class="mb-4">
                         <label class="block text-gray-700 font-medium mb-2">Loan Term (Months)</label>
-                        <select id="loan-term" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <select id="loan-term" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:border-green-500">
                             <option value="3">3 months</option>
                             <option value="6" selected>6 months</option>
                             <option value="12">12 months</option>
@@ -1275,24 +936,24 @@
                     
                     <div class="bg-green-50 rounded-lg p-4 mb-6">
                         <div class="flex justify-between mb-2">
-                            <span class="text-gray-700">Monthly Payment:</span>
-                            <span class="font-bold text-green-600" id="monthly-payment">Ksh 0</span>
+                            <span>Monthly Payment:</span>
+                            <span class="font-bold" id="monthly-payment">Ksh 0</span>
                         </div>
                         <div class="flex justify-between mb-2">
-                            <span class="text-gray-700">Total Interest:</span>
+                            <span>Total Interest:</span>
                             <span class="font-bold text-orange-600" id="total-interest">Ksh 0</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-gray-700">Total Repayment:</span>
+                            <span>Total Repayment:</span>
                             <span class="font-bold text-green-600" id="total-repayment">Ksh 0</span>
                         </div>
                     </div>
                     
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-gray-500 min-h-[44px]" id="cancel-loan">
+                    <div class="flex space-x-3">
+                        <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition" id="cancel-loan">
                             Cancel
                         </button>
-                        <button class="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 min-h-[44px]" id="submit-loan">
+                        <button class="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition" id="submit-loan">
                             Submit Application
                         </button>
                     </div>
@@ -1354,13 +1015,13 @@
 
         showLoanRates() {
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             modal.innerHTML = `
                 <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold">Your Personalized Rates</h3>
-                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2" onclick="this.closest('.fixed').remove()">
-                            <i class="fas fa-times text-xl"></i>
+                        <button class="text-gray-500 hover:text-gray-700" onclick="this.closest('.fixed').remove()">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
@@ -1394,37 +1055,28 @@
             document.body.appendChild(modal);
         },
 
-        // ACTION PROGRESS
-
         updateActionProgress() {
             const investmentBar = document.querySelector('.bg-green-500.h-2.rounded-full');
             const insuranceBar = document.querySelector('.bg-success-500.h-2.rounded-full');
             const loanBar = document.querySelectorAll('.bg-green-500.h-2.rounded-full')[1];
 
-            const investmentReadiness = AppState.calculateInvestmentReadiness();
-            const insuranceKnowledge = AppState.calculateInsuranceKnowledge();
-            const loanUnderstanding = AppState.calculateLoanUnderstanding();
+            const investmentReadiness = Math.min(85, 60 + (AppState.progress?.completedModules?.length * 5 || 0));
+            const insuranceKnowledge = Math.min(70, 40 + (AppState.transactions.filter(t => t.type === 'insurance').length * 10));
+            const loanUnderstanding = Math.min(90, 70 + (AppState.progress?.completedModules?.length * 2 || 0));
 
             if (investmentBar) {
                 investmentBar.style.width = investmentReadiness + '%';
-                const percentEl = investmentBar.parentElement.previousElementSibling.querySelector('.font-semibold');
-                if (percentEl) percentEl.textContent = investmentReadiness + '%';
+                investmentBar.parentElement.previousElementSibling.querySelector('.font-semibold').textContent = investmentReadiness + '%';
             }
 
             if (insuranceBar) {
                 insuranceBar.style.width = insuranceKnowledge + '%';
-                const percentEl = insuranceBar.parentElement.previousElementSibling.querySelector('.font-semibold');
-                if (percentEl) percentEl.textContent = insuranceKnowledge + '%';
-                
-                // Fix color
-                insuranceBar.classList.remove('bg-success-500');
-                insuranceBar.classList.add('bg-green-500');
+                insuranceBar.parentElement.previousElementSibling.querySelector('.font-semibold').textContent = insuranceKnowledge + '%';
             }
 
             if (loanBar) {
                 loanBar.style.width = loanUnderstanding + '%';
-                const percentEl = loanBar.parentElement.previousElementSibling.querySelector('.font-semibold');
-                if (percentEl) percentEl.textContent = loanUnderstanding + '%';
+                loanBar.parentElement.previousElementSibling.querySelector('.font-semibold').textContent = loanUnderstanding + '%';
             }
 
             const goToModuleBtn = document.querySelector('.text-green-600.hover\\:text-green-700.text-sm.font-medium.mt-2');
@@ -1432,13 +1084,11 @@
                 goToModuleBtn.addEventListener('click', () => {
                     window.location.href = 'learn.html?module=MOD004';
                 });
-                goToModuleBtn.classList.add('min-h-[44px]', 'inline-flex', 'items-center');
             }
 
             const downloadPlanBtn = document.querySelector('.border-2.border-green-500');
             if (downloadPlanBtn) {
                 downloadPlanBtn.addEventListener('click', () => this.downloadActionPlan());
-                downloadPlanBtn.classList.add('min-h-[44px]');
             }
         },
 
@@ -1446,16 +1096,12 @@
             const plan = {
                 user: AppState.user?.name || 'User',
                 generatedAt: new Date().toISOString(),
-                investmentReadiness: AppState.calculateInvestmentReadiness(),
-                insuranceKnowledge: AppState.calculateInsuranceKnowledge(),
-                loanUnderstanding: AppState.calculateLoanUnderstanding(),
+                investmentReadiness: Math.min(85, 60 + (AppState.progress?.completedModules?.length * 5 || 0)),
+                insuranceKnowledge: Math.min(70, 40 + (AppState.transactions.filter(t => t.type === 'insurance').length * 10)),
+                loanUnderstanding: Math.min(90, 70 + (AppState.progress?.completedModules?.length * 2 || 0)),
                 recommendedActions: [
-                    AppState.isBronzeCompleted() ? 
-                        'Consider applying for PesaSmart Graduate Loan' : 
-                        'Complete Bronze learning path for better loan rates',
-                    AppState.transactions.filter(t => t.type === 'insurance').length === 0 ? 
-                        'Start with rainfall insurance for Ksh 200/month' : 
-                        'Increase insurance coverage',
+                    AppState.progress?.completedModules?.length < 3 ? 'Complete Bronze learning path for better loan rates' : 'Consider applying for PesaSmart Graduate Loan',
+                    AppState.transactions.filter(t => t.type === 'insurance').length === 0 ? 'Start with rainfall insurance for Ksh 200/month' : 'Increase insurance coverage',
                     'Set up automatic savings with M-Pesa round-ups',
                     'Review your investment portfolio monthly'
                 ]
@@ -1472,30 +1118,23 @@
             this.showNotification('Action plan downloaded!', 'success');
         },
 
-        // INVESTMENT MODAL
-
         openInvestmentModal(product) {
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
-            modal.setAttribute('role', 'dialog');
-            modal.setAttribute('aria-modal', 'true');
-            modal.setAttribute('aria-labelledby', 'invest-title');
-            
-            const sharesForMin = (product.minInvestment / product.price).toFixed(2);
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             
             modal.innerHTML = `
-                <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6 max-h-[90vh] overflow-y-auto">
+                <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 id="invest-title" class="text-xl font-bold">Invest in ${product.name}</h3>
-                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2" id="close-modal">
-                            <i class="fas fa-times text-xl"></i>
+                        <h3 class="text-xl font-bold">Invest in ${product.name}</h3>
+                        <button class="text-gray-500 hover:text-gray-700" id="close-modal">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
                     <div class="mb-6">
                         <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                                <i class="fas fa-chart-line text-blue-600 text-2xl"></i>
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-chart-line text-blue-600 text-xl"></i>
                             </div>
                             <div>
                                 <p class="text-gray-600 text-sm">Current Price</p>
@@ -1503,7 +1142,7 @@
                             </div>
                         </div>
                         
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+                        <div class="grid grid-cols-3 gap-2 mb-4">
                             <div class="bg-gray-50 p-3 rounded-lg text-center">
                                 <p class="text-xs text-gray-600">Min Investment</p>
                                 <p class="font-bold">${this.formatCurrency(product.minInvestment)}</p>
@@ -1512,7 +1151,7 @@
                                 <p class="text-xs text-gray-600">Risk Level</p>
                                 <p class="font-bold capitalize">${product.risk}</p>
                             </div>
-                            <div class="bg-gray-50 p-3 rounded-lg text-center col-span-2 sm:col-span-1">
+                            <div class="bg-gray-50 p-3 rounded-lg text-center">
                                 <p class="text-xs text-gray-600">Expected Return</p>
                                 <p class="font-bold">${this.formatReturn(product.expectedReturn)}</p>
                             </div>
@@ -1520,17 +1159,17 @@
                         
                         <div class="mb-4">
                             <label class="block text-gray-700 font-medium mb-2">Investment Amount (Ksh)</label>
-                            <input type="number" id="invest-amount" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+                            <input type="number" id="invest-amount" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:border-green-500" 
                                    min="${product.minInvestment}" value="${product.minInvestment}" step="100">
                         </div>
                         
                         <div class="bg-green-50 rounded-lg p-4 mb-4">
                             <div class="flex justify-between mb-2">
-                                <span class="text-gray-700">Shares to receive:</span>
-                                <span class="font-bold" id="shares-to-receive">${sharesForMin}</span>
+                                <span>Shares to receive:</span>
+                                <span class="font-bold" id="shares-to-receive">${(product.minInvestment / product.price).toFixed(2)}</span>
                             </div>
                             <div class="flex justify-between mb-2">
-                                <span class="text-gray-700">Estimated annual return:</span>
+                                <span>Estimated annual return:</span>
                                 <span class="font-bold text-green-600" id="estimated-return">${this.formatCurrency(product.minInvestment * (this.getReturnRate(product) / 100))}</span>
                             </div>
                         </div>
@@ -1538,21 +1177,21 @@
                         ${AppState.goals.length > 0 ? `
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-medium mb-2">Link to Goal (Optional)</label>
-                                <select id="link-goal" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <select id="link-goal" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:border-green-500">
                                     <option value="">-- Select a goal --</option>
                                     ${AppState.goals.map(g => `<option value="${g.id}">${g.name} (${this.formatCurrency(g.savedAmount)}/${this.formatCurrency(g.targetAmount)})</option>`).join('')}
                                 </select>
                             </div>
                         ` : ''}
-                        
-                        <div class="flex space-x-3">
-                            <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-gray-500 min-h-[44px]" id="add-to-cart">
-                                Add to Cart
-                            </button>
-                            <button class="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 min-h-[44px]" id="buy-now">
-                                Buy Now
-                            </button>
-                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition" id="cancel-invest">
+                            Cancel
+                        </button>
+                        <button class="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition" id="confirm-invest">
+                            Invest Now
+                        </button>
                     </div>
                 </div>
             `;
@@ -1570,26 +1209,14 @@
             });
 
             document.getElementById('close-modal').addEventListener('click', () => modal.remove());
+            document.getElementById('cancel-invest').addEventListener('click', () => modal.remove());
             
-            document.getElementById('add-to-cart').addEventListener('click', () => {
-                const amount = parseFloat(amountInput.value) || product.minInvestment;
-                const cartItem = {
-                    id: product.id + Date.now(),
-                    type: 'investment',
-                    name: product.name,
-                    amount: amount,
-                    productId: product.id,
-                    price: product.price,
-                    shares: amount / product.price
-                };
-                AppState.addToCart(cartItem);
-                this.showNotification('Added to cart', 'success');
-                this.updateNavbar();
-                modal.remove();
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
             });
 
-            document.getElementById('buy-now').addEventListener('click', async () => {
-                const amount = parseFloat(amountInput.value) || product.minInvestment;
+            document.getElementById('confirm-invest').addEventListener('click', async () => {
+                const amount = parseFloat(amountInput.value);
                 const goalId = document.getElementById('link-goal')?.value;
                 
                 if (amount < product.minInvestment) {
@@ -1599,10 +1226,6 @@
 
                 await this.processInvestment(product, amount, goalId);
                 modal.remove();
-            });
-
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) modal.remove();
             });
         },
 
@@ -1624,58 +1247,47 @@
         },
 
         async processInvestment(product, amount, goalId) {
-            this.showLoading('Processing your investment...');
+            const transaction = {
+                id: 'TXN' + Date.now(),
+                userId: AppState.user.userId,
+                type: 'investment',
+                productId: product.id,
+                productName: product.name,
+                amount: amount,
+                shares: amount / product.price,
+                price: product.price,
+                status: 'completed',
+                date: new Date().toISOString(),
+                notes: `Investment in ${product.name}`
+            };
 
-            try {
-                const transaction = {
-                    id: 'TXN' + Date.now(),
-                    userId: AppState.user.userId,
-                    type: 'investment',
-                    productId: product.id,
-                    productName: product.name,
-                    amount: amount,
-                    shares: amount / product.price,
-                    price: product.price,
-                    status: 'completed',
-                    date: new Date().toISOString(),
-                    notes: `Investment in ${product.name}`
-                };
-
-                const saved = await AppState.saveTransaction(transaction);
-                
-                if (saved && goalId) {
-                    await AppState.updateGoalProgress(goalId, amount);
-                }
-
-                this.showNotification(`Successfully invested ${this.formatCurrency(amount)} in ${product.name}!`, 'success');
-                this.updateActionProgress();
-
-            } catch (error) {
-                console.error('Investment error:', error);
-                this.showNotification('Investment failed. Please try again.', 'error');
-            } finally {
-                this.hideLoading();
+            const saved = await AppState.saveTransaction(transaction);
+            
+            if (saved && goalId) {
+                await AppState.updateGoalProgress(goalId, amount);
             }
-        },
 
-        // INSURANCE MODAL
+            this.showNotification(`Successfully invested ${this.formatCurrency(amount)} in ${product.name}!`, 'success');
+            this.updateActionProgress();
+        },
 
         openInsuranceModal(product) {
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            
             modal.innerHTML = `
                 <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold">Get ${product.name}</h3>
-                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2" id="close-modal">
-                            <i class="fas fa-times text-xl"></i>
+                        <button class="text-gray-500 hover:text-gray-700" id="close-modal">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
                     <div class="mb-6">
                         <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                                <i class="fas fa-shield-alt text-cyan-600 text-2xl"></i>
+                            <div class="w-12 h-12 bg-cyan-100 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-shield-alt text-cyan-600 text-xl"></i>
                             </div>
                             <div>
                                 <p class="text-gray-600 text-sm">Monthly Premium</p>
@@ -1686,25 +1298,24 @@
                         <div class="bg-gray-50 rounded-lg p-4 mb-4">
                             <h4 class="font-bold mb-2">Coverage Details</h4>
                             <p class="text-gray-600 mb-2">${product.description}</p>
-                            <div class="grid grid-cols-2 gap-3 mt-3">
-                                <div>
-                                    <p class="text-xs text-gray-600">Coverage</p>
-                                    <p class="font-bold">${this.formatCurrency(product.coverage || 0)}</p>
+                            <div class="grid grid-cols-2 gap-2 mt-3">
+                                <div class="text-sm">
+                                    <span class="text-gray-600">Coverage:</span>
+                                    <span class="font-bold ml-2">${this.formatCurrency(product.coverage || 0)}</span>
                                 </div>
-                                <div>
-                                    <p class="text-xs text-gray-600">Duration</p>
-                                    <p class="font-bold">${product.duration || '30 days'}</p>
+                                <div class="text-sm">
+                                    <span class="text-gray-600">Duration:</span>
+                                    <span class="font-bold ml-2">${product.duration || '30 days'}</span>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="bg-green-50 rounded-lg p-4 mb-4">
                             <h4 class="font-bold mb-2">Features</h4>
-                            <ul class="space-y-2">
+                            <ul class="space-y-1">
                                 ${(product.features || []).map(f => `
-                                    <li class="text-sm flex items-start">
-                                        <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
-                                        <span>${f}</span>
+                                    <li class="text-sm flex items-center">
+                                        <i class="fas fa-check-circle text-green-500 mr-2"></i>${f}
                                     </li>
                                 `).join('')}
                             </ul>
@@ -1712,11 +1323,11 @@
                     </div>
                     
                     <div class="flex space-x-3">
-                        <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-gray-500 min-h-[44px]" id="add-to-cart">
-                            Add to Cart
+                        <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition" id="cancel-insurance">
+                            Cancel
                         </button>
-                        <button class="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 min-h-[44px]" id="buy-now">
-                            Buy Now
+                        <button class="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition" id="confirm-insurance">
+                            Purchase for ${this.formatCurrency(product.premium)}
                         </button>
                     </div>
                 </div>
@@ -1725,103 +1336,76 @@
             document.body.appendChild(modal);
 
             document.getElementById('close-modal').addEventListener('click', () => modal.remove());
+            document.getElementById('cancel-insurance').addEventListener('click', () => modal.remove());
             
-            document.getElementById('add-to-cart').addEventListener('click', () => {
-                const cartItem = {
-                    id: product.id + Date.now(),
-                    type: 'insurance',
-                    name: product.name,
-                    premium: product.premium,
-                    productId: product.id
-                };
-                AppState.addToCart(cartItem);
-                this.showNotification('Added to cart', 'success');
-                this.updateNavbar();
-                modal.remove();
-            });
-
-            document.getElementById('buy-now').addEventListener('click', async () => {
-                await this.processInsurancePurchase(product);
-                modal.remove();
-            });
-
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) modal.remove();
+            });
+
+            document.getElementById('confirm-insurance').addEventListener('click', async () => {
+                await this.processInsurancePurchase(product);
+                modal.remove();
             });
         },
 
         async processInsurancePurchase(product) {
-            this.showLoading('Processing your purchase...');
+            const transaction = {
+                id: 'TXN' + Date.now(),
+                userId: AppState.user.userId,
+                type: 'insurance',
+                productId: product.id,
+                productName: product.name,
+                amount: product.premium,
+                status: 'completed',
+                date: new Date().toISOString(),
+                validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                notes: `${product.name} policy`
+            };
 
-            try {
-                const transaction = {
-                    id: 'TXN' + Date.now(),
-                    userId: AppState.user.userId,
-                    type: 'insurance',
-                    productId: product.id,
-                    productName: product.name,
-                    amount: product.premium,
-                    status: 'completed',
-                    date: new Date().toISOString(),
-                    validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-                    notes: `${product.name} policy`
-                };
-
-                await AppState.saveTransaction(transaction);
-                this.showNotification(`Successfully purchased ${product.name}!`, 'success');
-                this.updateActionProgress();
-
-            } catch (error) {
-                console.error('Insurance purchase error:', error);
-                this.showNotification('Purchase failed. Please try again.', 'error');
-            } finally {
-                this.hideLoading();
-            }
+            await AppState.saveTransaction(transaction);
+            this.showNotification(`Successfully purchased ${product.name}!`, 'success');
+            this.updateActionProgress();
         },
-
-        // INSURANCE COMPARISON
 
         showInsuranceComparison() {
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             
             modal.innerHTML = `
-                <div class="bg-white rounded-xl max-w-4xl w-full mx-4 p-6 max-h-[80vh] overflow-y-auto">
-                    <div class="flex justify-between items-center mb-4 sticky top-0 bg-white pb-2">
+                <div class="bg-white rounded-xl max-w-3xl w-full mx-4 p-6 max-h-[80vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold">Insurance Comparison</h3>
-                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2" id="close-modal">
-                            <i class="fas fa-times text-xl"></i>
+                        <button class="text-gray-500 hover:text-gray-700" id="close-modal">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
-                    <div class="overflow-x-auto">
-                        <table class="w-full min-w-[600px]">
-                            <thead>
-                                <tr class="bg-gray-50">
-                                    <th class="py-3 px-4 text-left">Product</th>
-                                    <th class="py-3 px-4 text-left">Premium</th>
-                                    <th class="py-3 px-4 text-left">Coverage</th>
-                                    <th class="py-3 px-4 text-left">Type</th>
-                                    <th class="py-3 px-4 text-left">Action</th>
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="py-3 px-4 text-left">Product</th>
+                                <th class="py-3 px-4 text-left">Premium</th>
+                                <th class="py-3 px-4 text-left">Coverage</th>
+                                <th class="py-3 px-4 text-left">Type</th>
+                                <th class="py-3 px-4 text-left"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${AppState.insurance.map(p => `
+                                <tr class="border-b">
+                                    <td class="py-3 px-4 font-medium">${p.name}</td>
+                                    <td class="py-3 px-4">${this.formatCurrency(p.premium)}/mo</td>
+                                    <td class="py-3 px-4">${this.formatCurrency(p.coverage || 0)}</td>
+                                    <td class="py-3 px-4 capitalize">${p.category}</td>
+                                    <td class="py-3 px-4">
+                                        <button class="text-green-600 hover:text-green-700 text-sm font-medium compare-select" data-id="${p.id}">
+                                            Select
+                                        </button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                ${AppState.insurance.map(p => `
-                                    <tr class="border-b hover:bg-gray-50 transition">
-                                        <td class="py-3 px-4 font-medium">${p.name}</td>
-                                        <td class="py-3 px-4">${this.formatCurrency(p.premium)}/mo</td>
-                                        <td class="py-3 px-4">${this.formatCurrency(p.coverage || 0)}</td>
-                                        <td class="py-3 px-4 capitalize">${p.category}</td>
-                                        <td class="py-3 px-4">
-                                            <button class="text-green-600 hover:text-green-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg px-3 py-2 min-h-[44px] compare-select" data-id="${p.id}">
-                                                Select
-                                            </button>
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
+                            `).join('')}
+                        </tbody>
+                    </table>
                 </div>
             `;
 
@@ -1845,48 +1429,38 @@
             });
         },
 
-        // ALL INVESTMENTS MODAL
-
         showAllInvestmentsModal(products) {
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             
             modal.innerHTML = `
                 <div class="bg-white rounded-xl max-w-4xl w-full mx-4 p-6 max-h-[80vh] overflow-y-auto">
-                    <div class="flex justify-between items-center mb-4 sticky top-0 bg-white pb-2">
+                    <div class="flex justify-between items-center mb-4">
                         <h3 class="text-xl font-bold">All Investment Options (${products.length})</h3>
-                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2" id="close-modal">
-                            <i class="fas fa-times text-xl"></i>
+                        <button class="text-gray-500 hover:text-gray-700" id="close-modal">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${products.map(p => {
-                            const icon = p.category === 'bond' ? 'fa-landmark' : 
-                                        p.category === 'mutual_fund' ? 'fa-chart-pie' : 'fa-chart-line';
-                            const bgColor = p.category === 'bond' ? 'bg-green-100' :
-                                           p.category === 'mutual_fund' ? 'bg-purple-100' : 'bg-blue-100';
-                            
-                            return `
-                                <div class="border rounded-xl p-4 hover:shadow-lg transition cursor-pointer all-product-card focus:outline-none focus:ring-2 focus:ring-green-500" 
-                                     data-id="${p.id}" tabindex="0" role="button">
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-12 h-12 ${bgColor} rounded-full flex items-center justify-center mr-3 flex-shrink-0">
-                                            <i class="fas ${icon} text-gray-600 text-xl"></i>
-                                        </div>
-                                        <div class="min-w-0">
-                                            <h4 class="font-bold truncate">${p.name}</h4>
-                                            <p class="text-xs text-gray-600">${p.symbol || ''}</p>
-                                        </div>
+                        ${products.map(p => `
+                            <div class="border rounded-lg p-4 hover:shadow-lg transition cursor-pointer all-product-card" data-id="${p.id}">
+                                <div class="flex items-center mb-2">
+                                    <div class="w-10 h-10 ${p.category === 'bond' ? 'bg-green-100' : p.category === 'mutual_fund' ? 'bg-purple-100' : 'bg-blue-100'} rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas ${p.category === 'bond' ? 'fa-landmark' : p.category === 'mutual_fund' ? 'fa-chart-pie' : 'fa-chart-line'} text-gray-600"></i>
                                     </div>
-                                    <p class="text-sm text-gray-600 mb-2 line-clamp-2">${p.description || ''}</p>
-                                    <div class="flex justify-between items-center">
-                                        <span class="font-bold text-green-600">${this.formatCurrency(p.price)}</span>
-                                        <span class="text-xs ${p.risk === 'low' ? 'text-green-600' : p.risk === 'medium' ? 'text-yellow-600' : 'text-red-600'} capitalize">${p.risk} risk</span>
+                                    <div>
+                                        <h4 class="font-bold">${p.name}</h4>
+                                        <p class="text-xs text-gray-600">${p.symbol || ''}</p>
                                     </div>
                                 </div>
-                            `;
-                        }).join('')}
+                                <p class="text-sm text-gray-600 mb-2">${p.description || ''}</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-green-600">${this.formatCurrency(p.price)}</span>
+                                    <span class="text-xs ${p.risk === 'low' ? 'text-green-600' : p.risk === 'medium' ? 'text-yellow-600' : 'text-red-600'} capitalize">${p.risk} risk</span>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             `;
@@ -1904,18 +1478,6 @@
                         this.openInvestmentModal(product);
                     }
                 });
-
-                card.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        const id = card.dataset.id;
-                        const product = products.find(p => p.id === id);
-                        if (product) {
-                            modal.remove();
-                            this.openInvestmentModal(product);
-                        }
-                    }
-                });
             });
 
             modal.addEventListener('click', (e) => {
@@ -1923,144 +1485,33 @@
             });
         },
 
-        // SAVINGS TOOLS
-
-        setupSavingsTools() {
-            const goalBasedBtn = document.querySelector('.bg-blue-50');
-            const roundupBtn = document.querySelector('.bg-green-50');
-            const chamaBtn = document.querySelector('.bg-purple-50');
-            const setupBtn = document.querySelector('.bg-gray-800');
-
-            if (goalBasedBtn) {
-                goalBasedBtn.addEventListener('click', () => {
-                    window.location.href = 'profile.html#goals';
-                });
-                goalBasedBtn.classList.add('cursor-pointer', 'min-h-[44px]');
-            }
-
-            if (roundupBtn) {
-                roundupBtn.addEventListener('click', () => {
-                    this.showRoundUpSetup();
-                });
-                roundupBtn.classList.add('cursor-pointer', 'min-h-[44px]');
-            }
-
-            if (chamaBtn) {
-                chamaBtn.addEventListener('click', () => {
-                    this.showNotification('Chama management tools coming soon!', 'info');
-                });
-                chamaBtn.classList.add('cursor-pointer', 'min-h-[44px]');
-            }
-
-            if (setupBtn) {
-                setupBtn.addEventListener('click', () => {
-                    window.location.href = 'profile.html#goals';
-                });
-                setupBtn.classList.add('min-h-[44px]');
-            }
-        },
-
-        showRoundUpSetup() {
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
-            
-            modal.innerHTML = `
-                <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold">M-Pesa Round-Up Automator</h3>
-                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-2" onclick="this.closest('.fixed').remove()">
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
-                    </div>
-                    
-                    <p class="text-gray-600 mb-4">Save automatically by rounding up your M-Pesa transactions to the nearest Ksh 10, 50, or 100.</p>
-                    
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-medium mb-2">Round up to nearest:</label>
-                        <select id="round-up-amount" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                            <option value="10">Ksh 10</option>
-                            <option value="50" selected>Ksh 50</option>
-                            <option value="100">Ksh 100</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-medium mb-2">Target Goal (Optional)</label>
-                        <select id="round-up-goal" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-                            <option value="">-- No specific goal --</option>
-                            ${AppState.goals.map(g => `<option value="${g.id}">${g.name}</option>`).join('')}
-                        </select>
-                    </div>
-                    
-                    <div class="bg-green-50 rounded-lg p-4 mb-4">
-                        <p class="text-sm text-gray-700">Based on your average 50 transactions per month, you could save approximately:</p>
-                        <p class="text-2xl font-bold text-green-600 text-center mt-2">Ksh 2,500/month</p>
-                    </div>
-                    
-                    <button class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 min-h-[44px]" id="enable-roundup">
-                        Enable Round-Up Savings
-                    </button>
-                </div>
-            `;
-
-            document.body.appendChild(modal);
-
-            document.getElementById('enable-roundup').addEventListener('click', () => {
-                const amount = document.getElementById('round-up-amount').value;
-                const goalId = document.getElementById('round-up-goal').value;
-                
-                localStorage.setItem(`roundup_${AppState.user.userId}`, JSON.stringify({
-                    enabled: true,
-                    amount: parseInt(amount),
-                    goalId: goalId,
-                    createdAt: new Date().toISOString()
-                }));
-                
-                this.showNotification(`Round-up savings enabled! Saving to nearest Ksh ${amount}`, 'success');
-                modal.remove();
-            });
-        },
-
-        // UTILITY FUNCTIONS
-
         formatCurrency(amount) {
             return 'Ksh ' + amount.toLocaleString('en-KE', {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
             });
-        },
-
-        // INITIALIZATION
-
-        async initialize() {
-            this.showLoading();
-
-            const success = await AppState.initialize();
-            if (!success) {
-                this.hideLoading();
-                return;
-            }
-
-            this.updateNavbar();
-            this.setupFilters();
-            this.renderProducts();
-
-            this.hideLoading();
-
-            // Announce for screen readers
-            const announcement = document.createElement('div');
-            announcement.setAttribute('aria-live', 'polite');
-            announcement.className = 'sr-only';
-            announcement.textContent = 'Marketplace loaded. You can browse investment and insurance products.';
-            document.body.appendChild(announcement);
-            setTimeout(() => announcement.remove(), 3000);
-
-            console.log('Marketplace initialized');
         }
     };
 
-    // ADD CSS ANIMATIONS
+    // INITIALIZATION
 
+    async function initialize() {
+        UI.showLoading();
+
+        const success = await AppState.initialize();
+        if (!success) {
+            UI.hideLoading();
+            return;
+        }
+
+        UI.updateNavbar();
+        UI.setupFilters();
+        UI.renderProducts();
+
+        UI.hideLoading();
+    }
+
+    // Add CSS animations
     const style = document.createElement('style');
     style.textContent = `
         @keyframes fadeIn {
@@ -2075,10 +1526,6 @@
             from { transform: translateX(0); }
             to { transform: translateX(100%); }
         }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
         .animate-fade-in {
             animation: fadeIn 0.3s ease-out;
         }
@@ -2088,67 +1535,17 @@
         .animate-slide-out {
             animation: slideOut 0.3s ease-out;
         }
-        .animate-spin {
+        .loader {
+            border-top-color: #00B894;
             animation: spin 1s linear infinite;
         }
-        .product-card, .insurance-card, .loan-card {
-            transition: all 0.2s ease;
-        }
-        .product-card:hover, .insurance-card:hover, .loan-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .product-card:focus-visible, .insurance-card:focus-visible, .loan-card:focus-visible,
-        .all-product-card:focus-visible {
-            outline: 2px solid #00B894;
-            outline-offset: 2px;
-        }
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        @media (max-width: 640px) {
-            h1 {
-                font-size: 1.875rem !important;
-            }
-            h2 {
-                font-size: 1.5rem !important;
-            }
-            .text-3xl {
-                font-size: 1.875rem !important;
-            }
-            button, a, [role="button"], .product-card, .insurance-card, .loan-card {
-                min-height: 44px;
-            }
-            input, select {
-                font-size: 16px !important;
-            }
-            .p-6 {
-                padding: 1rem !important;
-            }
-        }
-        @media (max-width: 768px) {
-            .grid-cols-3 {
-                gap: 0.5rem;
-            }
-            .text-2xl {
-                font-size: 1.25rem !important;
-            }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            *, ::before, ::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     `;
     document.head.appendChild(style);
 
-    // START APPLICATION
-
-    UI.initialize();
+    document.addEventListener('DOMContentLoaded', initialize);
 
 })();

@@ -26,9 +26,9 @@ PesaSmart provides a guided financial journey:
 
 | Phase | Description |
 |-------|-------------|
-| **📚 Learn** | Kenyan-focused financial education modules with badges & certificates |
-| **🎮 Practice** | Risk-free simulators for stocks, loans, insurance claims |
-| **💼 Act** | Real products with lowered barriers (Ksh 100 investments, parametric insurance, better loan rates) |
+| **Learn** | Kenyan-focused financial education modules with badges & certificates |
+| **Practice** | Risk-free simulators for stocks, loans, insurance claims |
+| **Act** | Real products with lowered barriers (Ksh 100 investments, parametric insurance, better loan rates) |
 
 ---
 
@@ -77,6 +77,16 @@ To deploy this project locally, follow these steps:
 2.  **Execution:** Open `index.html` in any modern web browser (Chrome, Firefox, Safari, or Edge). 
 
 ---
+
+## Screenshots
+
+![home screenshot](assets/screenshot-1.png)
+![learn screenshot](assets/screenshot-2.png)
+![practice screenshot](assets/screenshot-3.png)
+![act screenshot](assets/screenshot-4.png)
+
+---
+
 
 ## Known Bugs
 There are no known bugs 

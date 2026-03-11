@@ -1,7 +1,9 @@
 (function() {
     'use strict';
 
-    // CONFIGURATION & CONSTANTS
+    //==============================================================================
+    // CONFIGURATION
+    //==============================================================================
 
     const STORAGE_KEYS = {
         SESSION: 'pesasmart_session',
@@ -19,20 +21,18 @@
     const MAX_LOGIN_ATTEMPTS = 5;
     const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
 
+    //==============================================================================
     // STATE MANAGEMENT
+    //==============================================================================
 
     const AppState = {
         loginAttempts: 0,
         lockoutUntil: null,
         isLoading: false,
-        networkStatus: navigator.onLine,
-        retryCount: 0,
-        maxRetries: 3,
 
         initialize() {
             this.loadLoginAttempts();
             this.checkExistingSession();
-            this.setupNetworkListeners();
         },
 
         loadLoginAttempts() {
@@ -74,9 +74,7 @@
         },
 
         isLockedOut() {
-            if (this.lockoutUntil && Date.now() < this.lockoutUntil) {
-                return true;
-            }
+            if (this.lockoutUntil && Date.now() < this.lockoutUntil) return true;
             if (this.lockoutUntil && Date.now() >= this.lockoutUntil) {
                 this.resetLoginAttempts();
             }
@@ -115,62 +113,25 @@
                 return redirect;
             }
             return null;
-        },
-
-        setupNetworkListeners() {
-            window.addEventListener('online', () => {
-                this.networkStatus = true;
-                UI.showNotification('Network restored', 'success');
-            });
-            window.addEventListener('offline', () => {
-                this.networkStatus = false;
-                UI.showNotification('You are offline. Please check your connection.', 'warning');
-            });
         }
     };
 
-    // UI COMPONENTS - FULLY RESPONSIVE
+    //==============================================================================
+    // UI COMPONENTS
+    //==============================================================================
 
     const UI = {
-        // LOADING STATES
-
         showLoading() {
             AppState.isLoading = true;
-            
-            // Disable all interactive elements
-            document.querySelectorAll('button, input, a').forEach(el => {
-                if (!el.classList.contains('no-disable')) {
-                    el.setAttribute('disabled', 'true');
-                    el.style.opacity = '0.7';
-                    el.style.cursor = 'not-allowed';
-                }
-            });
-
             const loginBtn = document.querySelector('button[type="submit"]');
             if (loginBtn) {
                 loginBtn.disabled = true;
-                loginBtn.innerHTML = `
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span>Logging in...</span>
-                `;
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging in...';
             }
         },
 
         hideLoading() {
             AppState.isLoading = false;
-            
-            // Re-enable all interactive elements
-            document.querySelectorAll('button, input, a').forEach(el => {
-                if (!el.classList.contains('no-disable')) {
-                    el.removeAttribute('disabled');
-                    el.style.opacity = '';
-                    el.style.cursor = '';
-                }
-            });
-
             const loginBtn = document.querySelector('button[type="submit"]');
             if (loginBtn) {
                 loginBtn.disabled = false;
@@ -178,76 +139,39 @@
             }
         },
 
-        // NOTIFICATION SYSTEM
-
         showNotification(message, type = 'info', duration = 3000) {
-            const colors = {
-                success: 'bg-green-500',
-                error: 'bg-red-500',
-                warning: 'bg-yellow-500',
-                info: 'bg-blue-500'
-            };
-
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle'
-            };
-
             const toast = document.createElement('div');
-            toast.setAttribute('role', 'alert');
-            toast.setAttribute('aria-live', 'assertive');
-            toast.className = `fixed top-4 right-4 left-4 md:left-auto md:w-96 px-6 py-4 rounded-lg shadow-2xl z-50 transform transition-all duration-300 translate-x-0 ${colors[type]} text-white`;
-            toast.innerHTML = `
-                <div class="flex items-start">
-                    <i class="fas ${icons[type]} text-xl mr-3 mt-0.5"></i>
-                    <div class="flex-1">
-                        <p class="font-medium">${message}</p>
-                    </div>
-                    <button class="ml-4 text-white hover:text-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-white" onclick="this.closest('[role=alert]').remove()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `;
-
+            toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-2xl z-50 animate-slide-in ${
+                type === 'success' ? 'bg-green-500' :
+                type === 'error' ? 'bg-red-500' :
+                type === 'warning' ? 'bg-yellow-500' :
+                'bg-blue-500'
+            } text-white font-medium`;
+            toast.textContent = message;
             document.body.appendChild(toast);
 
             setTimeout(() => {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
+                toast.classList.add('animate-slide-out');
+                setTimeout(() => toast.remove(), 500);
             }, duration);
         },
 
-        // FIELD VALIDATION
+        showFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            if (!field) return;
 
-        updateFieldValidation(input, isValid, message = '') {
-            const container = input.closest('.mb-6');
+            field.classList.add('border-red-500');
+            
+            const container = field.closest('.mb-6');
             if (!container) return;
 
-            // Update input border
-            if (isValid) {
-                input.classList.remove('border-red-500', 'border-gray-300');
-                input.classList.add('border-green-500');
-            } else {
-                input.classList.remove('border-green-500', 'border-gray-300');
-                input.classList.add('border-red-500');
+            let errorEl = container.querySelector('.field-error');
+            if (!errorEl) {
+                errorEl = document.createElement('p');
+                errorEl.className = 'field-error text-red-600 text-sm mt-1';
+                container.appendChild(errorEl);
             }
-
-            // Update or remove feedback message
-            let feedbackEl = container.querySelector('.field-feedback');
-            
-            if (message) {
-                if (!feedbackEl) {
-                    feedbackEl = document.createElement('p');
-                    feedbackEl.className = 'field-feedback text-sm mt-1 animate-fade-in';
-                    container.appendChild(feedbackEl);
-                }
-                feedbackEl.className = `field-feedback text-sm mt-1 animate-fade-in ${isValid ? 'text-green-600' : 'text-red-600'}`;
-                feedbackEl.innerHTML = `<i class="fas ${isValid ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-1"></i>${message}`;
-            } else if (feedbackEl) {
-                feedbackEl.remove();
-            }
+            errorEl.innerHTML = `<i class="fas fa-exclamation-circle mr-1"></i>${message}`;
         },
 
         clearFieldError(fieldId) {
@@ -256,18 +180,11 @@
                 field.classList.remove('border-red-500');
                 const container = field.closest('.mb-6');
                 if (container) {
-                    const errorEl = container.querySelector('.field-feedback.error');
+                    const errorEl = container.querySelector('.field-error');
                     if (errorEl) errorEl.remove();
                 }
             }
         },
-
-        validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        },
-
-        // PASSWORD TOGGLE
 
         setupPasswordToggle() {
             const toggleBtn = document.querySelector('.relative button');
@@ -282,72 +199,35 @@
                     const icon = toggleBtn.querySelector('i');
                     icon.classList.toggle('fa-eye');
                     icon.classList.toggle('fa-eye-slash');
-                    
-                    // Announce for screen readers
-                    toggleBtn.setAttribute('aria-label', type === 'password' ? 'Show password' : 'Hide password');
-                });
-
-                // Add keyboard support
-                toggleBtn.setAttribute('tabindex', '0');
-                toggleBtn.setAttribute('role', 'button');
-                toggleBtn.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        toggleBtn.click();
-                    }
                 });
             }
         },
-
-        // REAL-TIME VALIDATION
 
         setupRealTimeValidation() {
             const emailInput = document.getElementById('email');
             
             if (emailInput) {
                 emailInput.addEventListener('input', () => {
-                    const isValid = this.validateEmail(emailInput.value);
-                    if (isValid) {
-                        this.updateFieldValidation(emailInput, true, 'Valid email');
-                    } else if (emailInput.value.length > 0) {
-                        this.updateFieldValidation(emailInput, false, 'Please enter a valid email');
+                    if (emailInput.value.length > 0) {
+                        const isValid = this.validateEmail(emailInput.value);
+                        if (isValid) {
+                            emailInput.classList.remove('border-red-500');
+                            emailInput.classList.add('border-green-500');
+                        } else {
+                            emailInput.classList.remove('border-green-500');
+                            emailInput.classList.add('border-red-500');
+                        }
                     } else {
-                        this.updateFieldValidation(emailInput, false, '');
+                        emailInput.classList.remove('border-green-500', 'border-red-500');
                     }
                 });
             }
         },
 
-        // FORM VALIDATION
-
-        validateForm() {
-            const email = document.getElementById('email');
-            const password = document.getElementById('password');
-            let isValid = true;
-            
-            // Email validation
-            if (!email.value.trim()) {
-                this.updateFieldValidation(email, false, 'Please enter your email');
-                isValid = false;
-            } else if (!this.validateEmail(email.value)) {
-                this.updateFieldValidation(email, false, 'Please enter a valid email');
-                isValid = false;
-            } else {
-                this.updateFieldValidation(email, true, 'Valid email');
-            }
-            
-            // Password validation
-            if (!password.value) {
-                this.updateFieldValidation(password, false, 'Please enter your password');
-                isValid = false;
-            } else {
-                this.updateFieldValidation(password, true, 'Valid');
-            }
-            
-            return isValid;
+        validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
         },
-
-        // LOAD REMEMBERED EMAIL
 
         loadRememberedEmail() {
             const rememberedEmail = localStorage.getItem(STORAGE_KEYS.REMEMBER_EMAIL);
@@ -356,40 +236,49 @@
             if (rememberedEmail && rememberCheckbox) {
                 document.getElementById('email').value = rememberedEmail;
                 rememberCheckbox.checked = true;
-                
-                // Trigger validation
-                const event = new Event('input', { bubbles: true });
-                document.getElementById('email').dispatchEvent(event);
             }
         },
 
-        // LOCKOUT MODAL
+        handleUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            const email = urlParams.get('email');
+            if (email) {
+                document.getElementById('email').value = email;
+            }
+            
+            if (urlParams.get('registered') === 'success') {
+                this.showNotification('Registration successful! Please login.', 'success');
+            }
+            
+            if (urlParams.get('expired') === 'true') {
+                this.showNotification('Your session has expired. Please login again.', 'warning');
+            }
+            
+            if (urlParams.get('logout') === 'success') {
+                this.showNotification('You have been logged out successfully.', 'info');
+            }
+        },
 
         showLockoutMessage(remainingMinutes) {
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
-            modal.setAttribute('role', 'dialog');
-            modal.setAttribute('aria-modal', 'true');
-            modal.setAttribute('aria-labelledby', 'lockout-title');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             modal.innerHTML = `
-                <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 transform transition-all scale-100">
+                <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 animate-fade-in">
                     <div class="text-center mb-6">
-                        <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-lock text-red-600 text-3xl"></i>
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-lock text-red-600 text-2xl"></i>
                         </div>
-                        <h3 id="lockout-title" class="text-xl font-bold text-gray-800 mb-2">Account Temporarily Locked</h3>
-                        <p class="text-gray-600">Too many failed login attempts. Please try again in <span class="font-bold text-red-600">${remainingMinutes}</span> minutes.</p>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Account Locked</h3>
+                        <p class="text-gray-600">Too many failed login attempts. Please try again in ${remainingMinutes} minutes.</p>
                     </div>
-                    <button class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" onclick="this.closest('[role=dialog]').remove()">
+                    <button class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition" onclick="this.closest('.fixed').remove()">
                         OK
                     </button>
                 </div>
             `;
-
             document.body.appendChild(modal);
         },
-
-        // FORGOT PASSWORD
 
         setupForgotPassword() {
             const forgotLink = document.querySelector('a[href="#"]');
@@ -398,47 +287,34 @@
                     e.preventDefault();
                     this.showForgotPasswordModal();
                 });
-
-                // Add keyboard support
-                forgotLink.setAttribute('tabindex', '0');
-                forgotLink.setAttribute('role', 'button');
-                forgotLink.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        this.showForgotPasswordModal();
-                    }
-                });
             }
         },
 
         showForgotPasswordModal() {
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-fade-in';
-            modal.setAttribute('role', 'dialog');
-            modal.setAttribute('aria-modal', 'true');
-            modal.setAttribute('aria-labelledby', 'reset-title');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             modal.innerHTML = `
-                <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 transform transition-all scale-100">
+                <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 animate-fade-in">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 id="reset-title" class="text-xl font-bold">Reset Password</h3>
-                        <button class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-lg p-1" id="close-modal" aria-label="Close">
-                            <i class="fas fa-times text-xl"></i>
+                        <h3 class="text-xl font-bold">Reset Password</h3>
+                        <button class="text-gray-500 hover:text-gray-700" id="close-modal">
+                            <i class="fas fa-times"></i>
                         </button>
                     </div>
                     
                     <p class="text-gray-600 mb-4">Enter your email address and we'll send you instructions to reset your password.</p>
                     
                     <div class="mb-4">
-                        <label class="block text-gray-700 font-medium mb-2" for="reset-email">Email Address</label>
-                        <input type="email" id="reset-email" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                        <label class="block text-gray-700 font-medium mb-2">Email Address</label>
+                        <input type="email" id="reset-email" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:border-green-500"
                                placeholder="Enter your email" value="${document.getElementById('email').value}">
                     </div>
                     
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-gray-500" id="cancel-reset">
+                    <div class="flex space-x-3">
+                        <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition" id="cancel-reset">
                             Cancel
                         </button>
-                        <button class="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" id="send-reset">
+                        <button class="flex-1 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition" id="send-reset">
                             Send Reset Link
                         </button>
                     </div>
@@ -475,26 +351,19 @@
                 messageDiv.classList.add('hidden');
 
                 setTimeout(() => {
-                    messageDiv.className = 'mt-4 text-sm text-green-600 animate-fade-in';
-                    messageDiv.innerHTML = '<i class="fas fa-check-circle mr-1"></i>Password reset instructions sent to your email.';
+                    messageDiv.className = 'mt-4 text-sm text-green-600';
+                    messageDiv.textContent = '✅ Password reset instructions sent to your email.';
                     messageDiv.classList.remove('hidden');
                     
-                    setTimeout(() => {
-                        closeModal();
-                    }, 2000);
+                    setTimeout(closeModal, 2000);
                 }, 1500);
             });
         },
-
-        // GOOGLE LOGIN
 
         setupGoogleLogin() {
             const googleBtn = document.querySelector('.border-2.border-green-500');
             if (googleBtn) {
                 googleBtn.addEventListener('click', () => this.handleGoogleLogin());
-                
-                // Add touch-friendly sizing
-                googleBtn.classList.add('min-h-[44px]');
             }
         },
 
@@ -555,13 +424,13 @@
             }
         },
 
-        // DATA PERSISTENCE
-
+        // UPDATED: Consistent user loading function
         async loadUsers() {
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.USERS);
                 if (cached) {
                     const parsed = JSON.parse(cached);
+                    // Handle both array and object with users property
                     if (Array.isArray(parsed)) {
                         return parsed;
                     } else if (parsed && parsed.users && Array.isArray(parsed.users)) {
@@ -571,11 +440,9 @@
                 }
                 
                 const response = await fetch('data/users.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
                 const data = await response.json();
                 
+                // Handle both array and {users: [...]} formats
                 let users = [];
                 if (Array.isArray(data)) {
                     users = data;
@@ -583,6 +450,7 @@
                     users = data.users;
                 }
                 
+                // Cache as array for consistency
                 localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
                 return users;
             } catch (error) {
@@ -591,6 +459,7 @@
             }
         },
 
+        // NEW: Consistent user saving function
         async saveUsers(users) {
             try {
                 const usersArray = Array.isArray(users) ? users : [];
@@ -630,22 +499,10 @@
             } else {
                 localStorage.removeItem(STORAGE_KEYS.REMEMBER_EMAIL);
             }
-            
-            // Notify other pages
-            window.dispatchEvent(new CustomEvent('pesasmart-session-created', {
-                detail: sessionData
-            }));
         },
-
-        // FORM SUBMISSION
 
         async handleSubmit(event) {
             event.preventDefault();
-
-            if (!AppState.networkStatus) {
-                this.showNotification('You are offline. Please check your internet connection.', 'warning');
-                return;
-            }
 
             if (AppState.isLockedOut()) {
                 const remaining = Math.ceil(AppState.getLockoutTimeRemaining() / (60 * 1000));
@@ -653,34 +510,49 @@
                 return;
             }
 
-            if (!this.validateForm()) {
-                return;
-            }
-
             const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
             const rememberMe = document.getElementById('remember').checked;
+
+            let isValid = true;
+
+            if (!email) {
+                this.showFieldError('email', 'Please enter your email');
+                isValid = false;
+            } else if (!this.validateEmail(email)) {
+                this.showFieldError('email', 'Please enter a valid email');
+                isValid = false;
+            } else {
+                this.clearFieldError('email');
+            }
+
+            if (!password) {
+                this.showFieldError('password', 'Please enter your password');
+                isValid = false;
+            } else {
+                this.clearFieldError('password');
+            }
+
+            if (!isValid) return;
 
             this.showLoading();
 
             try {
                 const users = await this.loadUsers();
-                const usersArray = Array.isArray(users) ? users : [];
-                
-                const user = usersArray.find(u => u && u.email === email);
+                const user = users.find(u => u.email?.toLowerCase() === email);
 
                 if (!user) {
-                    this.updateFieldValidation(document.getElementById('email'), false, 'No account found with this email');
-                    this.showNotification('Email not registered', 'error');
+                    this.showFieldError('email', 'No account found with this email');
                     AppState.incrementLoginAttempts();
+                    this.showNotification('Email not registered', 'error');
                     this.hideLoading();
                     return;
                 }
 
                 if (user.password !== this.hashPassword(password)) {
-                    this.updateFieldValidation(document.getElementById('password'), false, 'Incorrect password');
-                    this.showNotification('Invalid password', 'error');
+                    this.showFieldError('password', 'Incorrect password');
                     AppState.incrementLoginAttempts();
+                    this.showNotification('Invalid password', 'error');
                     this.hideLoading();
                     return;
                 }
@@ -699,124 +571,64 @@
                 this.showNotification('Login failed. Please try again.', 'error');
                 this.hideLoading();
             }
-        },
-
-        // URL PARAMETERS
-
-        handleUrlParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            const email = urlParams.get('email');
-            if (email) {
-                document.getElementById('email').value = email;
-            }
-            
-            if (urlParams.get('registered') === 'success') {
-                this.showNotification('Registration successful! Please login.', 'success');
-            }
-            
-            if (urlParams.get('expired') === 'true') {
-                this.showNotification('Your session has expired. Please login again.', 'warning');
-            }
-            
-            if (urlParams.get('logout') === 'success') {
-                this.showNotification('You have been logged out successfully.', 'info');
-            }
-        },
-
-        // INITIALIZATION
-
-        initialize() {
-            // Load remembered email
-            this.loadRememberedEmail();
-
-            // Setup interactive elements
-            this.setupPasswordToggle();
-            this.setupRealTimeValidation();
-            this.setupForgotPassword();
-            this.setupGoogleLogin();
-
-            // Handle form submission
-            const form = document.querySelector('form');
-            if (form) {
-                form.addEventListener('submit', (e) => this.handleSubmit(e));
-            }
-
-            // Handle URL parameters
-            this.handleUrlParams();
-
-            // Announce page for screen readers
-            const announcement = document.createElement('div');
-            announcement.setAttribute('aria-live', 'polite');
-            announcement.className = 'sr-only';
-            announcement.textContent = 'Login page loaded. Please enter your credentials.';
-            document.body.appendChild(announcement);
-            setTimeout(() => announcement.remove(), 3000);
-
-            console.log(' Login page initialized with full responsiveness');
         }
     };
 
-    // ADD CSS ANIMATIONS
+    //==============================================================================
+    // INITIALIZATION
+    //==============================================================================
 
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-        @keyframes slideOut {
-            from { transform: translateX(0); }
-            to { transform: translateX(100%); }
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.3s ease-out;
-        }
-        .animate-slide-in {
-            animation: slideIn 0.3s ease-out;
-        }
-        .animate-slide-out {
-            animation: slideOut 0.3s ease-out;
-        }
-        .animate-spin {
-            animation: spin 1s linear infinite;
-        }
-        .field-feedback {
-            transition: all 0.2s ease;
-        }
-        input:focus, select:focus, button:focus {
-            outline: 2px solid #00B894;
-            outline-offset: 2px;
-        }
-        @media (max-width: 640px) {
-            button {
-                min-height: 44px;
-            }
-            input, select {
-                font-size: 16px !important; /* Prevents zoom on iOS */
-            }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            *, ::before, ::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-    `;
-    document.head.appendChild(style);
+    function initialize() {
+        AppState.initialize();
 
-    // START APPLICATION
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', (e) => UI.handleSubmit(e));
+        }
 
-    AppState.initialize();
-    UI.initialize();
+        UI.setupPasswordToggle();
+        UI.setupRealTimeValidation();
+        UI.setupForgotPassword();
+        UI.setupGoogleLogin();
+        UI.loadRememberedEmail();
+        UI.handleUrlParams();
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes slideIn {
+                from { transform: translateX(100%); }
+                to { transform: translateX(0); }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); }
+                to { transform: translateX(100%); }
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.3s ease-out;
+            }
+            .animate-slide-in {
+                animation: slideIn 0.3s ease-out;
+            }
+            .animate-slide-out {
+                animation: slideOut 0.3s ease-out;
+            }
+            .loader {
+                border-top-color: #00B894;
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    document.addEventListener('DOMContentLoaded', initialize);
 
 })();

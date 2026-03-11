@@ -492,22 +492,42 @@
     // FOOTER FUNCTIONALITY
 
     const Footer = {
-        // Initialize footer functionality
-        init() {
-            this.injectFooter();
-            this.setupBackToTop();
-            this.setupNewsletter();
-            this.setupLanguageSelector();
-            this.setupCurrencySelector();
-            this.setupCookieConsent();
-            this.setupLegalModals();
-            this.setupLiveChat();
-            this.setupSmoothScroll();
-            this.setupAccessibility();
-            this.updateCopyrightYear();
-            this.checkCookieConsent();
-            this.loadUserPreferences();
-        },
+        // update the init() method
+init() {
+    // Remove existing footer if present
+    this.removeExistingFooter();
+    
+    this.injectFooter();
+    this.setupBackToTop();
+    this.setupNewsletter();
+    this.setupLanguageSelector();
+    this.setupCurrencySelector();
+    this.setupCookieConsent();
+    this.setupLegalModals();
+    this.setupLiveChat();
+    this.setupSmoothScroll();
+    this.setupAccessibility();
+    this.updateCopyrightYear();
+    this.checkCookieConsent();
+    this.loadUserPreferences();
+},
+
+// Add this new method
+removeExistingFooter() {
+    // Find and remove any existing footer elements
+    const existingFooters = document.querySelectorAll('footer');
+    existingFooters.forEach(footer => {
+        // Check if it's the old footer (has bg-gray-800 class)
+        if (footer.classList.contains('bg-gray-800')) {
+            footer.remove();
+            console.log('Removed existing footer');
+        }
+    });
+    
+    // Also remove any stray footer containers
+    const footerContainers = document.querySelectorAll('.bg-gray-800.text-white.mt-16');
+    footerContainers.forEach(container => container.remove());
+},
 
         // Inject footer HTML if not present
         injectFooter() {
