@@ -5,7 +5,7 @@
             "firstName": "Ann",
             "lastName": "Muthoni",
             "phone": "+254712345678",
-            "email": "ann.muthoni@email.com",
+            "email": "annmuthoni@gmail.com",
             "password": "hashed_password_123",
             "profile": {
                 "occupation": "student",
@@ -29,7 +29,7 @@
             "firstName": "John",
             "lastName": "Kamau",
             "phone": "+254723456789",
-            "email": "john.kamau@email.com",
+            "email": "johnkamau@gmail.com",
             "password": "hashed_password_456",
             "profile": {
                 "occupation": "juaKali",
@@ -54,7 +54,7 @@
             "firstName": "Mary",
             "lastName": "Wanjiku",
             "phone": "+254734567890",
-            "email": "mary.wanjiku@email.com",
+            "email": "marywanjiku@gmail.com",
             "password": "hashed_password_789",
             "profile": {
                 "occupation": "mamaMboga",

@@ -1,0 +1,58 @@
+{
+  "progress": [
+    {
+      "userId": "USR001",
+      "completedModules": ["MOD001", "MOD002"],
+      "inProgress": {
+        "MOD003": {
+          "startedAt": "2026-03-01T10:30:00Z",
+          "progress": 45,
+          "lastPosition": 2,
+          "timeSpent": 15
+        }
+      },
+      "earnedBadges": ["BDG001", "BDG002"],
+      "certificates": [
+        {
+          "id": "CERT001",
+          "name": "Budget Master Certificate",
+          "issuedAt": "2026-02-15T14:20:00Z",
+          "url": "/certificates/budget-master.pdf"
+        }
+      ],
+      "lastActive": "2026-03-10T09:15:00Z",
+      "totalLearningHours": 24,
+      "currentStreak": 7,
+      "longestStreak": 12
+    },
+    {
+      "userId": "USR002",
+      "completedModules": ["MOD001"],
+      "inProgress": {
+        "MOD002": {
+          "startedAt": "2026-03-05T14:20:00Z",
+          "progress": 30,
+          "lastPosition": 1,
+          "timeSpent": 8
+        }
+      },
+      "earnedBadges": ["BDG001"],
+      "certificates": [],
+      "lastActive": "2026-03-09T16:45:00Z",
+      "totalLearningHours": 8,
+      "currentStreak": 3,
+      "longestStreak": 3
+    },
+    {
+      "userId": "USR003",
+      "completedModules": [],
+      "inProgress": {},
+      "earnedBadges": [],
+      "certificates": [],
+      "lastActive": "2026-03-08T11:30:00Z",
+      "totalLearningHours": 2,
+      "currentStreak": 1,
+      "longestStreak": 1
+    }
+  ]
+}
