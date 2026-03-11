@@ -74,9 +74,7 @@
         },
 
         isLockedOut() {
-            if (this.lockoutUntil && Date.now() < this.lockoutUntil) {
-                return true;
-            }
+            if (this.lockoutUntil && Date.now() < this.lockoutUntil) return true;
             if (this.lockoutUntil && Date.now() >= this.lockoutUntil) {
                 this.resetLoginAttempts();
             }
@@ -357,9 +355,7 @@
                     messageDiv.textContent = '✅ Password reset instructions sent to your email.';
                     messageDiv.classList.remove('hidden');
                     
-                    setTimeout(() => {
-                        closeModal();
-                    }, 2000);
+                    setTimeout(closeModal, 2000);
                 }, 1500);
             });
         },
@@ -409,7 +405,7 @@
                     };
                     
                     users.push(newUser);
-                    localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+                    await this.saveUsers(users);
                     existingUser = newUser;
                 }
 
@@ -428,21 +424,50 @@
             }
         },
 
+        // UPDATED: Consistent user loading function
         async loadUsers() {
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.USERS);
                 if (cached) {
-                    return JSON.parse(cached);
+                    const parsed = JSON.parse(cached);
+                    // Handle both array and object with users property
+                    if (Array.isArray(parsed)) {
+                        return parsed;
+                    } else if (parsed && parsed.users && Array.isArray(parsed.users)) {
+                        return parsed.users;
+                    }
+                    return [];
                 }
                 
                 const response = await fetch('data/users.json');
                 const data = await response.json();
-                const users = data.users || [];
+                
+                // Handle both array and {users: [...]} formats
+                let users = [];
+                if (Array.isArray(data)) {
+                    users = data;
+                } else if (data && data.users && Array.isArray(data.users)) {
+                    users = data.users;
+                }
+                
+                // Cache as array for consistency
                 localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
                 return users;
             } catch (error) {
                 console.error('Failed to load users:', error);
                 return [];
+            }
+        },
+
+        // NEW: Consistent user saving function
+        async saveUsers(users) {
+            try {
+                const usersArray = Array.isArray(users) ? users : [];
+                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(usersArray));
+                return true;
+            } catch (error) {
+                console.error('Failed to save users:', error);
+                return false;
             }
         },
 
@@ -514,7 +539,7 @@
 
             try {
                 const users = await this.loadUsers();
-                const user = users.find(u => u.email.toLowerCase() === email);
+                const user = users.find(u => u.email?.toLowerCase() === email);
 
                 if (!user) {
                     this.showFieldError('email', 'No account found with this email');

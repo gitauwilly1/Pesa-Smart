@@ -1,9 +1,7 @@
 (function() {
     'use strict';
 
-    //==============================================================================
     // CONFIGURATION
-    //==============================================================================
 
     const STORAGE_KEYS = {
         SESSION: 'pesasmart_session',
@@ -21,9 +19,7 @@
         'LEARNER25': { bonus: 25, used: false }
     };
 
-    //==============================================================================
     // STATE MANAGEMENT
-    //==============================================================================
 
     const AppState = {
         currentStep: 1,
@@ -42,7 +38,6 @@
         isLoading: false,
 
         initialize() {
-            console.log(' AppState initializing...');
             this.checkExistingSession();
             this.loadInviteCodes();
         },
@@ -53,11 +48,9 @@
                 try {
                     const sessionData = JSON.parse(session);
                     if (sessionData.expires && sessionData.expires > Date.now()) {
-                        console.log(' Existing session found, redirecting to index');
                         window.location.href = 'index.html';
                     }
                 } catch (e) {
-                    console.warn('Failed to parse session:', e);
                     localStorage.removeItem(STORAGE_KEYS.SESSION);
                 }
             }
@@ -74,20 +67,16 @@
                         }
                     });
                 }
-                console.log(' Invite codes loaded');
             } catch (e) {
                 console.warn('Failed to load invite codes:', e);
             }
         }
     };
 
-    //==============================================================================
     // UI COMPONENTS
-    //==============================================================================
 
     const UI = {
         showLoading() {
-            console.log(' Showing loading state');
             AppState.isLoading = true;
             const submitBtn = document.querySelector('button[type="submit"]');
             if (submitBtn) {
@@ -97,7 +86,6 @@
         },
 
         hideLoading() {
-            console.log(' Hiding loading state');
             AppState.isLoading = false;
             const submitBtn = document.querySelector('button[type="submit"]');
             if (submitBtn) {
@@ -107,7 +95,6 @@
         },
 
         showNotification(message, type = 'info', duration = 3000) {
-            console.log(` Notification [${type}]: ${message}`);
             const toast = document.createElement('div');
             toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-2xl z-50 animate-slide-in ${
                 type === 'success' ? 'bg-green-500' :
@@ -125,19 +112,14 @@
         },
 
         showStep(step) {
-            console.log(` Showing step ${step}`);
             const stepRadio = document.getElementById(`step-${step}`);
             if (stepRadio) {
                 stepRadio.checked = true;
                 AppState.currentStep = step;
-                console.log(` Step ${step} displayed`);
-            } else {
-                console.error(` Step radio for step ${step} not found`);
             }
         },
 
         setupPasswordToggles() {
-            console.log('🔑 Setting up password toggles');
             document.querySelectorAll('.relative button').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -153,9 +135,7 @@
         },
 
         setupProfileButtons() {
-            console.log('Setting up profile buttons');
             const profileBtns = document.querySelectorAll('.profile-btn');
-            console.log(`Found ${profileBtns.length} profile buttons`);
             
             profileBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -169,7 +149,6 @@
                     
                     const occupationText = this.querySelector('p')?.textContent?.trim() || '';
                     AppState.formData.occupation = occupationText;
-                    console.log(' Occupation selected:', occupationText);
                     
                     UI.clearFieldError('occupation-group');
                 });
@@ -177,20 +156,17 @@
         },
 
         setupIncomeSelect() {
-            console.log('Setting up income select');
             const incomeSelect = document.querySelector('select');
             if (incomeSelect) {
                 incomeSelect.addEventListener('change', () => {
                     const selectedOption = incomeSelect.options[incomeSelect.selectedIndex];
                     AppState.formData.incomeRange = selectedOption ? selectedOption.text : '';
-                    console.log(' Income selected:', AppState.formData.incomeRange);
                     UI.clearFieldError('income-group');
                 });
             }
         },
 
         setupGoalCheckboxes() {
-            console.log('Setting up goal checkboxes');
             const goalCheckboxes = [
                 document.getElementById('goal1'),
                 document.getElementById('goal2'),
@@ -205,8 +181,6 @@
                         AppState.formData.goals = goalCheckboxes
                             .filter(cb => cb && cb.checked)
                             .map(cb => UI.getGoalText(cb.id));
-                        
-                        console.log(' Goals selected:', AppState.formData.goals);
                         
                         if (AppState.formData.goals.length > 0) {
                             UI.clearFieldError('goals-group');
@@ -228,7 +202,6 @@
         },
 
         setupRealTimeValidation() {
-            console.log(' Setting up real-time validation');
             const emailInput = document.getElementById('email');
             const phoneInput = document.getElementById('phone');
             const passwordInput = document.getElementById('password');
@@ -472,7 +445,6 @@
         },
 
         validateStep1() {
-            console.log('🔍 Validating step 1');
             const firstName = document.getElementById('firstName');
             const lastName = document.getElementById('lastName');
             const email = document.getElementById('email');
@@ -530,12 +502,10 @@
                 UI.clearFieldError(confirm.id);
             }
             
-            console.log(' Step 1 validation result:', isValid, 'Form data:', AppState.formData);
             return isValid;
         },
 
         validateStep2() {
-            console.log('🔍 Validating step 2');
             let isValid = true;
             
             if (!AppState.formData.occupation) {
@@ -586,12 +556,10 @@
                 if (errorEl) errorEl.remove();
             }
             
-            console.log(' Step 2 validation result:', isValid, 'Form data:', AppState.formData);
             return isValid;
         },
 
         validateStep3() {
-            console.log('🔍 Validating step 3');
             const terms = document.getElementById('terms');
             if (!terms.checked) {
                 const container = terms.closest('.mb-6');
@@ -604,7 +572,6 @@
                     }
                     errorEl.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i>You must agree to the Terms & Conditions';
                 }
-                console.log(' Terms not checked');
                 return false;
             } else {
                 AppState.formData.terms = true;
@@ -613,18 +580,14 @@
                     const errorEl = container.querySelector('.field-feedback.error');
                     if (errorEl) errorEl.remove();
                 }
-                console.log(' Terms accepted');
                 return true;
             }
         },
 
         setupStepNavigation() {
-            console.log(' Setting up step navigation');
-            
             const nextToStep2 = document.querySelector('label[for="step-2"]');
             if (nextToStep2) {
                 nextToStep2.addEventListener('click', (e) => {
-                    console.log(' Attempting to go to step 2');
                     if (!UI.validateStep1()) {
                         e.preventDefault();
                         UI.showNotification('Please fix the errors in Step 1', 'error');
@@ -635,7 +598,6 @@
             const nextToStep3 = document.querySelector('label[for="step-3"]');
             if (nextToStep3) {
                 nextToStep3.addEventListener('click', (e) => {
-                    console.log(' Attempting to go to step 3');
                     if (!UI.validateStep2()) {
                         e.preventDefault();
                         UI.showNotification('Please complete your financial profile', 'error');
@@ -645,7 +607,6 @@
         },
 
         setupInviteCodeValidation() {
-            console.log(' Setting up invite code validation');
             const inviteInput = document.getElementById('inviteCode');
             if (!inviteInput) return;
 
@@ -662,7 +623,6 @@
                             messageDiv.className = 'text-green-600 text-sm mt-1';
                             messageDiv.innerHTML = '<i class="fas fa-check-circle mr-1"></i>Valid invite code! You\'ll get Ksh ' + INVITE_CODES[code].bonus + ' bonus';
                             AppState.formData.inviteCode = code;
-                            console.log(' Valid invite code:', code);
                         } else if (INVITE_CODES[code]?.used) {
                             messageDiv.className = 'text-red-600 text-sm mt-1';
                             messageDiv.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i>This invite code has already been used';
@@ -727,81 +687,87 @@
                     if (INVITE_CODES[k].used) usedCodes[k] = true;
                 });
                 localStorage.setItem(STORAGE_KEYS.INVITES, JSON.stringify(usedCodes));
-                console.log(' Invite code processed:', upperCode);
+                
                 return { bonus: INVITE_CODES[upperCode].bonus };
             }
             return { bonus: 0 };
         },
 
         async loadUsers() {
-            console.log(' Loading users...');
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.USERS);
                 if (cached) {
-                    console.log(' Users loaded from cache');
-                    return JSON.parse(cached);
+                    const parsed = JSON.parse(cached);
+                    // Check if it's an array or an object with users property
+                    if (Array.isArray(parsed)) {
+                        return parsed;
+                    } else if (parsed && parsed.users && Array.isArray(parsed.users)) {
+                        return parsed.users;
+                    }
+                    return [];
                 }
                 
-                console.log('📡 Fetching users from JSON file...');
                 const response = await fetch('data/users.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
                 const data = await response.json();
-                const users = data.users || [];
-                console.log(` Loaded ${users.length} users from JSON`);
+                
+                // Handle both array and {users: [...]} formats
+                let users = [];
+                if (Array.isArray(data)) {
+                    users = data;
+                } else if (data && data.users && Array.isArray(data.users)) {
+                    users = data.users;
+                }
+                
+                // Cache the array directly for consistency
                 localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
                 return users;
             } catch (error) {
-                console.error(' Failed to load users:', error);
+                console.error('Failed to load users:', error);
                 return [];
             }
         },
 
         async saveUsers(users) {
-            console.log(' Saving users...');
             try {
-                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
-                console.log(' Users saved successfully');
+                // Ensure we're saving an array
+                const usersArray = Array.isArray(users) ? users : [];
+                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(usersArray));
                 return true;
             } catch (error) {
-                console.error(' Failed to save users:', error);
+                console.error('Failed to save users:', error);
                 return false;
             }
         },
 
         async saveProgress(progress) {
-            console.log(' Saving progress...');
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.PROGRESS);
                 let progressList = cached ? JSON.parse(cached) : [];
+                if (!Array.isArray(progressList)) progressList = [];
                 progressList.push(progress);
                 localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progressList));
-                console.log(' Progress saved successfully');
                 return true;
             } catch (error) {
-                console.error(' Failed to save progress:', error);
+                console.error('Failed to save progress:', error);
                 return false;
             }
         },
 
         async saveGoals(goal) {
-            console.log(' Saving goal...');
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.GOALS);
                 let goalsList = cached ? JSON.parse(cached) : [];
+                if (!Array.isArray(goalsList)) goalsList = [];
                 goalsList.push(goal);
                 localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goalsList));
-                console.log(' Goal saved successfully');
                 return true;
             } catch (error) {
-                console.error(' Failed to save goal:', error);
+                console.error('Failed to save goals:', error);
                 return false;
             }
         },
 
         createSession(user) {
-            console.log(' Creating session for user:', user.id);
             const sessionData = {
                 userId: user.id,
                 email: user.email,
@@ -809,16 +775,12 @@
                 expires: Date.now() + 24 * 60 * 60 * 1000
             };
             localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(sessionData));
-            console.log(' Session created');
         },
 
         async handleSubmit(event) {
             event.preventDefault();
-            console.log(' Form submission started');
-            console.log(' Current form data:', AppState.formData);
 
             if (!UI.validateStep1() || !UI.validateStep2() || !UI.validateStep3()) {
-                console.log(' Validation failed');
                 UI.showNotification('Please complete all steps correctly', 'error');
                 return;
             }
@@ -833,13 +795,13 @@
                 }
 
                 // Load existing users
-                console.log(' Step 1: Loading existing users');
                 const users = await UI.loadUsers();
-                console.log(` Found ${users.length} existing users`);
+                
+                // Ensure users is an array
+                const usersArray = Array.isArray(users) ? users : [];
 
                 // Check for duplicate email
-                if (users.some(u => u.email === AppState.formData.email)) {
-                    console.log(' Email already exists:', AppState.formData.email);
+                if (usersArray.some(u => u && u.email === AppState.formData.email)) {
                     UI.showFieldError(document.getElementById('email'), 'This email is already registered');
                     UI.showNotification('Email already exists', 'error');
                     UI.hideLoading();
@@ -847,13 +809,10 @@
                 }
 
                 // Generate user ID
-                const userId = UI.generateUserId(users);
-                console.log(' Generated user ID:', userId);
+                const userId = UI.generateUserId(usersArray);
 
                 // Process invite code
-                console.log(' Processing invite code:', AppState.formData.invateCode);
                 const inviteResult = await UI.processInviteCode(AppState.formData.inviteCode, userId);
-                console.log(' Invite result:', inviteResult);
 
                 // Create user object
                 const newUser = {
@@ -887,11 +846,9 @@
                     newUser.inviteCodeUsed = AppState.formData.inviteCode;
                 }
 
-                console.log('New user object:', newUser);
-
                 // Save user
-                users.push(newUser);
-                const userSaved = await UI.saveUsers(users);
+                usersArray.push(newUser);
+                const userSaved = await UI.saveUsers(usersArray);
                 if (!userSaved) throw new Error('Failed to save user');
 
                 // Create progress entry
@@ -935,8 +892,6 @@
                     UI.showNotification('Account created successfully!', 'success');
                 }
 
-                console.log('Registration complete! Redirecting...');
-
                 // Redirect to home page
                 setTimeout(() => {
                     window.location.href = 'index.html';
@@ -944,26 +899,22 @@
 
             } catch (error) {
                 console.error('Registration error:', error);
-                console.error('Error details:', error.message);
                 UI.showNotification('Registration failed. Please try again.', 'error');
                 UI.hideLoading();
             }
         },
 
         handleUrlParams() {
-            console.log('🔗 Checking URL parameters');
             const urlParams = new URLSearchParams(window.location.search);
             
             const email = urlParams.get('email');
             if (email) {
                 document.getElementById('email').value = email;
-                console.log('Email pre-filled from URL:', email);
             }
             
             const phone = urlParams.get('phone');
             if (phone) {
                 document.getElementById('phone').value = phone.replace(/[^0-9]/g, '');
-                console.log('Phone pre-filled from URL:', phone);
             }
             
             const invite = urlParams.get('invite') || urlParams.get('ref');
@@ -975,18 +926,14 @@
                         const event = new Event('input', { bubbles: true });
                         inviteInput.dispatchEvent(event);
                     }, 500);
-                    console.log('Invite code pre-filled from URL:', invite);
                 }
             }
         }
     };
 
-    //==============================================================================
     // INITIALIZATION
-    //==============================================================================
 
     function initialize() {
-        console.log('🚀 Register page initializing...');
         AppState.initialize();
 
         UI.setupPasswordToggles();
@@ -1003,8 +950,6 @@
 
         // Handle form submission
         document.getElementById('registrationForm').addEventListener('submit', (e) => UI.handleSubmit(e));
-
-        console.log(' Register page initialized');
 
         // Add CSS animations
         const style = document.createElement('style');

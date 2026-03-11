@@ -1,13 +1,10 @@
 (function() {
     'use strict';
 
-    //==============================================================================
     // CONFIGURATION & CONSTANTS
-    //==============================================================================
 
     const APP_VERSION = '2.0.0';
     const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-    const NOTIFICATION_SOUND = false; // Toggle for production
 
     const STORAGE_KEYS = {
         SESSION: 'pesasmart_session',
@@ -22,9 +19,7 @@
         VERSION: 'pesasmart_version'
     };
 
-    //==============================================================================
     // STATE MANAGEMENT
-    //==============================================================================
 
     const AppState = {
         user: null,
@@ -80,9 +75,7 @@
         }
     };
 
-    //==============================================================================
     // SECURITY & AUTHENTICATION
-    //==============================================================================
 
     const Security = {
         /**
@@ -208,9 +201,7 @@
         }
     };
 
-    //==============================================================================
     // DATA LAYER (Shared with index.html)
-    //==============================================================================
 
     const DataLayer = {
         /**
@@ -259,35 +250,50 @@
             }
         },
 
-        /**
-         * Load users with cache
-         */
-        async loadUsers() {
+            // UPDATED: Consistent user loading function
+            async loadUsers() {
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.USERS);
                 if (cached) {
-                    const data = JSON.parse(cached);
-                    // Check cache age
-                    if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
-                        return data.users || [];
+                    const parsed = JSON.parse(cached);
+                    // Handle both array and object with users property
+                    if (Array.isArray(parsed)) {
+                        return parsed;
+                    } else if (parsed && parsed.users && Array.isArray(parsed.users)) {
+                        return parsed.users;
                     }
+                    return [];
                 }
-
+                
                 const response = await fetch('data/users.json');
                 const data = await response.json();
-                const users = data.users || [];
                 
-                // Cache with timestamp
-                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify({
-                    users,
-                    _timestamp: Date.now()
-                }));
+                // Handle both array and {users: [...]} formats
+                let users = [];
+                if (Array.isArray(data)) {
+                    users = data;
+                } else if (data && data.users && Array.isArray(data.users)) {
+                    users = data.users;
+                }
                 
+                // Cache as array for consistency
+                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
                 return users;
-
             } catch (error) {
                 console.error('Failed to load users:', error);
                 return [];
+            }
+        },
+
+            // NEW: Consistent user saving function
+            async saveUsers(users) {
+            try {
+                const usersArray = Array.isArray(users) ? users : [];
+                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(usersArray));
+                return true;
+            } catch (error) {
+                console.error('Failed to save users:', error);
+                return false;
             }
         },
 
@@ -314,7 +320,6 @@
                 }));
                 
                 return goals;
-
             } catch (error) {
                 console.error('Failed to load goals:', error);
                 return [];
@@ -344,7 +349,6 @@
                 }));
                 
                 return transactions;
-
             } catch (error) {
                 console.error('Failed to load transactions:', error);
                 return [];
@@ -374,7 +378,6 @@
                 }));
                 
                 return progress;
-
             } catch (error) {
                 console.error('Failed to load progress:', error);
                 return [];
@@ -461,7 +464,6 @@
                 }));
                 
                 return true;
-
             } catch (error) {
                 console.error('Failed to save goals:', error);
                 return false;
@@ -471,17 +473,14 @@
         /**
          * Save profile back to storage (for index page sync)
          */
-        saveProfile(profileData) {
+        async saveProfile(profileData) {
             try {
-                const allUsers = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '{"users":[]}');
-                const otherUsers = allUsers.users.filter(u => u.id !== AppState.user.userId);
+                const allUsers = await this.loadUsers();
+                const otherUsers = allUsers.filter(u => u.id !== AppState.user.userId);
                 
-                const updated = {
-                    users: [...otherUsers, profileData],
-                    _timestamp: Date.now()
-                };
+                const updated = [...otherUsers, profileData];
                 
-                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(updated));
+                await this.saveUsers(updated);
                 AppState.profile = profileData;
                 
                 // Trigger sync for index page
@@ -490,7 +489,6 @@
                 }));
                 
                 return true;
-
             } catch (error) {
                 console.error('Failed to save profile:', error);
                 return false;
@@ -508,8 +506,8 @@
                 if (e.detail.type === 'goal-update') {
                     // Refresh goals
                     this.loadGoals().then(() => {
-                        AppState.goals = JSON.parse(localStorage.getItem(STORAGE_KEYS.GOALS) || '{"goals":[]}')
-                            .goals.filter(g => g.userId === AppState.user.userId);
+                        const goalsData = JSON.parse(localStorage.getItem(STORAGE_KEYS.GOALS) || '{"goals":[]}');
+                        AppState.goals = goalsData.goals.filter(g => g.userId === AppState.user.userId);
                         UI.updateAllSections();
                     });
                 }
@@ -517,9 +515,7 @@
         }
     };
 
-    //==============================================================================
     // UI COMPONENTS
-    //==============================================================================
 
     const UI = {
         /**
@@ -1948,35 +1944,29 @@
         /**
          * Delete account permanently
          */
-        deleteAccountPermanently() {
+        async deleteAccountPermanently() {
             this.showLoading('Deleting account...');
 
             try {
                 // Remove user data from all storage
-                const storages = [
-                    STORAGE_KEYS.USERS,
-                    STORAGE_KEYS.GOALS,
-                    STORAGE_KEYS.TRANSACTIONS,
-                    STORAGE_KEYS.PROGRESS,
-                    STORAGE_KEYS.NOTIFICATIONS
-                ];
+                const users = await DataLayer.loadUsers();
+                const filteredUsers = users.filter(u => u.id !== AppState.user.userId);
+                await DataLayer.saveUsers(filteredUsers);
 
-                storages.forEach(key => {
-                    const data = JSON.parse(localStorage.getItem(key) || '{}');
-                    if (data.users) {
-                        data.users = data.users.filter(u => u.id !== AppState.user.userId);
-                    }
-                    if (data.goals) {
-                        data.goals = data.goals.filter(g => g.userId !== AppState.user.userId);
-                    }
-                    if (data.transactions) {
-                        data.transactions = data.transactions.filter(t => t.userId !== AppState.user.userId);
-                    }
-                    if (data.progress) {
-                        data.progress = data.progress.filter(p => p.userId !== AppState.user.userId);
-                    }
-                    localStorage.setItem(key, JSON.stringify(data));
-                });
+                // Remove goals
+                const goalsData = JSON.parse(localStorage.getItem(STORAGE_KEYS.GOALS) || '{"goals":[]}');
+                goalsData.goals = goalsData.goals.filter(g => g.userId !== AppState.user.userId);
+                localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goalsData));
+
+                // Remove transactions
+                const transData = JSON.parse(localStorage.getItem(STORAGE_KEYS.TRANSACTIONS) || '{"transactions":[]}');
+                transData.transactions = transData.transactions.filter(t => t.userId !== AppState.user.userId);
+                localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(transData));
+
+                // Remove progress
+                const progData = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROGRESS) || '{"progress":[]}');
+                progData.progress = progData.progress.filter(p => p.userId !== AppState.user.userId);
+                localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progData));
 
                 // Clear session
                 localStorage.removeItem(STORAGE_KEYS.SESSION);
@@ -2071,7 +2061,7 @@
                 profile.profile.dateOfBirth = document.getElementById('edit-dob').value;
                 profile.profile.county = document.getElementById('edit-county').value;
 
-                DataLayer.saveProfile(profile);
+                await DataLayer.saveProfile(profile);
                 this.updateProfileHeader();
                 this.updateSettingsForm();
                 this.showNotification('Profile updated successfully!', 'success');
@@ -2408,9 +2398,7 @@
         }
     };
 
-    //==============================================================================
     // SCROLL SPY FOR NAVIGATION
-    //==============================================================================
 
     const ScrollSpy = {
         sections: ['overview', 'achievements', 'accounts', 'goals', 'documents', 'security', 'settings'],
@@ -2460,15 +2448,13 @@
         }
     };
 
-    //==============================================================================
     // INITIALIZATION
-    //==============================================================================
 
     /**
      * Initialize the page
      */
     async function initializePage() {
-        // Validate session
+        // Check authentication
         if (!Security.validateSession()) return;
 
         // Load all user data

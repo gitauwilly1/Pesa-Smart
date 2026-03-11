@@ -1,9 +1,7 @@
 (function() {
     'use strict';
 
-    //==============================================================================
     // CONFIGURATION
-    //==============================================================================
 
     const STORAGE_KEYS = {
         SESSION: 'pesasmart_session',
@@ -15,9 +13,7 @@
         INSURANCE: 'pesasmart_insurance'
     };
 
-    //==============================================================================
     // STATE MANAGEMENT
-    //==============================================================================
 
     const AppState = {
         user: null,
@@ -140,7 +136,8 @@
             }
         },
 
-        async loadGoals() {
+            // UPDATED: Consistent goal loading
+            async loadGoals() {
             try {
                 const cached = localStorage.getItem(STORAGE_KEYS.GOALS);
                 if (cached) {
@@ -267,9 +264,7 @@
         }
     };
 
-    //==============================================================================
-    // UI COMPONENTS
-    //==============================================================================
+    // UI COMPONENTS (Remains the same - no changes needed)
 
     const UI = {
         showLoading(message = 'Loading marketplace...') {
@@ -317,6 +312,52 @@
                 toast.classList.add('animate-slide-out');
                 setTimeout(() => toast.remove(), 500);
             }, duration);
+        },
+
+        confirmAction(options) {
+            return new Promise((resolve) => {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 animate-fade-in">
+                        <div class="text-center mb-6">
+                            <div class="w-16 h-16 ${options.type === 'danger' ? 'bg-red-100' : 'bg-yellow-100'} rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas ${options.type === 'danger' ? 'fa-exclamation-triangle text-red-600' : 'fa-question-circle text-yellow-600'} text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">${options.title}</h3>
+                            <p class="text-gray-600">${options.message}</p>
+                        </div>
+                        
+                        <div class="flex space-x-3">
+                            <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium" id="modal-cancel">
+                                ${options.cancelText || 'Cancel'}
+                            </button>
+                            <button class="flex-1 px-6 py-3 ${options.type === 'danger' ? 'bg-red-500 hover:bg-red-600' : 'bg-yellow-500 hover:bg-yellow-600'} text-white rounded-lg transition font-medium" id="modal-confirm">
+                                ${options.confirmText || 'Confirm'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                document.getElementById('modal-cancel').addEventListener('click', () => {
+                    modal.remove();
+                    resolve(false);
+                });
+
+                document.getElementById('modal-confirm').addEventListener('click', () => {
+                    modal.remove();
+                    resolve(true);
+                });
+
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.remove();
+                        resolve(false);
+                    }
+                });
+            });
         },
 
         updateNavbar() {
@@ -529,52 +570,6 @@
                 this.showNotification('Logout failed', 'error');
                 this.hideLoading();
             }
-        },
-
-        confirmAction(options) {
-            return new Promise((resolve) => {
-                const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-                modal.innerHTML = `
-                    <div class="bg-white rounded-xl max-w-md w-full mx-4 p-6 animate-fade-in">
-                        <div class="text-center mb-6">
-                            <div class="w-16 h-16 ${options.type === 'danger' ? 'bg-red-100' : 'bg-yellow-100'} rounded-full flex items-center justify-center mx-auto mb-4">
-                                <i class="fas ${options.type === 'danger' ? 'fa-exclamation-triangle text-red-600' : 'fa-question-circle text-yellow-600'} text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2">${options.title}</h3>
-                            <p class="text-gray-600">${options.message}</p>
-                        </div>
-                        
-                        <div class="flex space-x-3">
-                            <button class="flex-1 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium" id="modal-cancel">
-                                ${options.cancelText || 'Cancel'}
-                            </button>
-                            <button class="flex-1 px-6 py-3 ${options.type === 'danger' ? 'bg-red-500 hover:bg-red-600' : 'bg-yellow-500 hover:bg-yellow-600'} text-white rounded-lg transition font-medium" id="modal-confirm">
-                                ${options.confirmText || 'Confirm'}
-                            </button>
-                        </div>
-                    </div>
-                `;
-
-                document.body.appendChild(modal);
-
-                document.getElementById('modal-cancel').addEventListener('click', () => {
-                    modal.remove();
-                    resolve(false);
-                });
-
-                document.getElementById('modal-confirm').addEventListener('click', () => {
-                    modal.remove();
-                    resolve(true);
-                });
-
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.remove();
-                        resolve(false);
-                    }
-                });
-            });
         },
 
         setupFilters() {
@@ -1498,9 +1493,7 @@
         }
     };
 
-    //==============================================================================
     // INITIALIZATION
-    //==============================================================================
 
     async function initialize() {
         UI.showLoading();

@@ -1,9 +1,7 @@
-(function () {
+(function() {
     'use strict';
 
-    //==============================================================================
     // CONFIGURATION
-    //==============================================================================
 
     const APP_VERSION = '2.0.0';
     const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
@@ -20,9 +18,7 @@
         CACHE_PREFIX: 'cache_'
     };
 
-    //==============================================================================
     // STATE MANAGEMENT
-    //==============================================================================
 
     const AppState = {
         user: null,
@@ -41,7 +37,7 @@
             this[key] = value;
             this.lastSync = Date.now();
             this.persist();
-
+            
             // Notify profile page of changes
             window.dispatchEvent(new CustomEvent('pesasmart-index-update', {
                 detail: { key, value, timestamp: this.lastSync }
@@ -60,9 +56,7 @@
         }
     };
 
-    //==============================================================================
     // AUTHENTICATION
-    //==============================================================================
 
     const Auth = {
         checkSession() {
@@ -107,9 +101,9 @@
                 localStorage.removeItem(STORAGE_KEYS.SESSION);
                 sessionStorage.clear();
                 AppState.isLoggedIn = false;
-
+                
                 UI.showNotification('Logged out successfully', 'success');
-
+                
                 setTimeout(() => {
                     window.location.reload();
                 }, 1500);
@@ -122,9 +116,7 @@
         }
     };
 
-    //==============================================================================
     // DATA LAYER
-    //==============================================================================
 
     const Data = {
         async loadAllData() {
@@ -150,7 +142,7 @@
                 AppState.marketData = market;
 
                 await this.loadAchievements();
-
+                
                 UI.hideLoading();
                 return true;
 
@@ -162,129 +154,168 @@
             }
         },
 
-        async loadUsers() {
-            const cached = localStorage.getItem(STORAGE_KEYS.USERS);
-            if (cached) {
-                const data = JSON.parse(cached);
-                if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
-                    return data.users || [];
+            // UPDATED: Consistent user loading function
+            async loadUsers() {
+            try {
+                const cached = localStorage.getItem(STORAGE_KEYS.USERS);
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    // Handle both array and object with users property
+                    if (Array.isArray(parsed)) {
+                        return parsed;
+                    } else if (parsed && parsed.users && Array.isArray(parsed.users)) {
+                        return parsed.users;
+                    }
+                    return [];
                 }
+                
+                const response = await fetch('data/users.json');
+                const data = await response.json();
+                
+                // Handle both array and {users: [...]} formats
+                let users = [];
+                if (Array.isArray(data)) {
+                    users = data;
+                } else if (data && data.users && Array.isArray(data.users)) {
+                    users = data.users;
+                }
+                
+                // Cache as array for consistency
+                localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
+                return users;
+            } catch (error) {
+                console.error('Failed to load users:', error);
+                return [];
             }
-
-            const response = await fetch('data/users.json');
-            const data = await response.json();
-            const users = data.users || [];
-
-            localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify({
-                users,
-                _timestamp: Date.now()
-            }));
-
-            return users;
         },
 
         async loadGoals() {
-            const cached = localStorage.getItem(STORAGE_KEYS.GOALS);
-            if (cached) {
-                const data = JSON.parse(cached);
-                if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
-                    return data.goals || [];
+            try {
+                const cached = localStorage.getItem(STORAGE_KEYS.GOALS);
+                if (cached) {
+                    const data = JSON.parse(cached);
+                    if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
+                        return data.goals || [];
+                    }
                 }
+
+                const response = await fetch('data/goals.json');
+                const data = await response.json();
+                const goals = data.goals || [];
+                
+                localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify({
+                    goals,
+                    _timestamp: Date.now()
+                }));
+                
+                return goals;
+            } catch (error) {
+                console.error('Failed to load goals:', error);
+                return [];
             }
-
-            const response = await fetch('data/goals.json');
-            const data = await response.json();
-            const goals = data.goals || [];
-
-            localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify({
-                goals,
-                _timestamp: Date.now()
-            }));
-
-            return goals;
         },
 
         async loadTransactions() {
-            const cached = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
-            if (cached) {
-                const data = JSON.parse(cached);
-                if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
-                    return data.transactions || [];
+            try {
+                const cached = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
+                if (cached) {
+                    const data = JSON.parse(cached);
+                    if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
+                        return data.transactions || [];
+                    }
                 }
+
+                const response = await fetch('data/transactions.json');
+                const data = await response.json();
+                const transactions = data.transactions || [];
+                
+                localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify({
+                    transactions,
+                    _timestamp: Date.now()
+                }));
+                
+                return transactions;
+            } catch (error) {
+                console.error('Failed to load transactions:', error);
+                return [];
             }
-
-            const response = await fetch('data/transactions.json');
-            const data = await response.json();
-            const transactions = data.transactions || [];
-
-            localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify({
-                transactions,
-                _timestamp: Date.now()
-            }));
-
-            return transactions;
         },
 
         async loadProgress() {
-            const cached = localStorage.getItem(STORAGE_KEYS.PROGRESS);
-            if (cached) {
-                const data = JSON.parse(cached);
-                if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
-                    return data.progress || [];
+            try {
+                const cached = localStorage.getItem(STORAGE_KEYS.PROGRESS);
+                if (cached) {
+                    const data = JSON.parse(cached);
+                    if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
+                        return data.progress || [];
+                    }
                 }
+
+                const response = await fetch('data/progress.json');
+                const data = await response.json();
+                const progress = data.progress || [];
+                
+                localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify({
+                    progress,
+                    _timestamp: Date.now()
+                }));
+                
+                return progress;
+            } catch (error) {
+                console.error('Failed to load progress:', error);
+                return [];
             }
-
-            const response = await fetch('data/progress.json');
-            const data = await response.json();
-            const progress = data.progress || [];
-
-            localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify({
-                progress,
-                _timestamp: Date.now()
-            }));
-
-            return progress;
         },
 
         async loadProducts() {
-            const cached = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
-            if (cached) {
-                const data = JSON.parse(cached);
-                if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
-                    return data.products || [];
+            try {
+                const cached = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
+                if (cached) {
+                    const data = JSON.parse(cached);
+                    if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
+                        return data.products || [];
+                    }
                 }
+
+                const response = await fetch('data/products.json');
+                const data = await response.json();
+                const products = data.products || [];
+                
+                localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify({
+                    products,
+                    _timestamp: Date.now()
+                }));
+                
+                return products;
+            } catch (error) {
+                console.error('Failed to load products:', error);
+                return [];
             }
-
-            const response = await fetch('data/products.json');
-            const data = await response.json();
-            const products = data.products || [];
-
-            localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify({
-                products,
-                _timestamp: Date.now()
-            }));
-
-            return products;
         },
 
         async loadMarketData() {
-            const cached = localStorage.getItem(STORAGE_KEYS.MARKET);
-            if (cached) {
-                const data = JSON.parse(cached);
-                if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
-                    return data;
+            try {
+                const cached = localStorage.getItem(STORAGE_KEYS.MARKET);
+                if (cached) {
+                    const data = JSON.parse(cached);
+                    if (data._timestamp && Date.now() - data._timestamp < CACHE_TTL) {
+                        return data;
+                    }
                 }
+
+                const response = await fetch('data/market.json');
+                const data = await response.json();
+                
+                localStorage.setItem(STORAGE_KEYS.MARKET, JSON.stringify({
+                    ...data,
+                    _timestamp: Date.now()
+                }));
+                
+                return data;
+            } catch (error) {
+                console.error('Failed to load market data:', error);
+                return null;
             }
-
-            const response = await fetch('data/market.json');
-            const data = await response.json();
-
-            localStorage.setItem(STORAGE_KEYS.MARKET, JSON.stringify({
-                ...data,
-                _timestamp: Date.now()
-            }));
-
-            return data;
         },
 
         async loadAchievements() {
@@ -317,17 +348,17 @@
         listenForProfileUpdates() {
             window.addEventListener('pesasmart-profile-update', (e) => {
                 console.log('Received update from profile:', e.detail);
-
+                
                 if (e.detail.key === 'goals') {
                     this.loadGoals().then(() => {
-                        AppState.goals = JSON.parse(localStorage.getItem(STORAGE_KEYS.GOALS) || '{"goals":[]}')
-                            .goals.filter(g => g.userId === AppState.user.userId);
+                        const goalsData = JSON.parse(localStorage.getItem(STORAGE_KEYS.GOALS) || '{"goals":[]}');
+                        AppState.goals = goalsData.goals.filter(g => g.userId === AppState.user.userId);
                         UI.updateAllSections();
                     });
                 } else if (e.detail.key === 'profile') {
                     this.loadUsers().then(() => {
-                        AppState.profile = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '{"users":[]}')
-                            .users.find(u => u.id === AppState.user.userId);
+                        const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]');
+                        AppState.profile = users.find(u => u.id === AppState.user.userId);
                         UI.updateAllSections();
                     });
                 }
@@ -335,9 +366,7 @@
         }
     };
 
-    //==============================================================================
     // UI COMPONENTS
-    //==============================================================================
 
     const UI = {
         showLoading(message = 'Loading...') {
@@ -370,11 +399,12 @@
 
         showNotification(message, type = 'info', duration = 3000) {
             const toast = document.createElement('div');
-            toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-2xl z-50 animate-slide-in ${type === 'success' ? 'bg-green-500' :
-                    type === 'error' ? 'bg-red-500' :
-                        type === 'warning' ? 'bg-yellow-500' :
-                            'bg-blue-500'
-                } text-white font-medium`;
+            toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-2xl z-50 animate-slide-in ${
+                type === 'success' ? 'bg-green-500' :
+                type === 'error' ? 'bg-red-500' :
+                type === 'warning' ? 'bg-yellow-500' :
+                'bg-blue-500'
+            } text-white font-medium`;
             toast.textContent = message;
             document.body.appendChild(toast);
 
@@ -471,8 +501,8 @@
                 return;
             }
 
-            const userName = AppState.profile ?
-                `${AppState.profile.firstName || ''}`.trim() :
+            const userName = AppState.profile ? 
+                `${AppState.profile.firstName || ''}`.trim() : 
                 AppState.user?.name || 'User';
 
             navbar.innerHTML = `
@@ -512,7 +542,7 @@
 
             this.setupUserDropdown();
             this.setupMobileMenu();
-
+            
             document.getElementById('logout-button')?.addEventListener('click', () => Auth.logout());
             document.getElementById('notification-bell')?.addEventListener('click', () => this.showNotifications());
         },
@@ -520,7 +550,7 @@
         setupUserDropdown() {
             const menuButton = document.getElementById('user-menu-button');
             const dropdown = document.getElementById('user-dropdown');
-
+            
             if (menuButton && dropdown) {
                 menuButton.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -538,7 +568,7 @@
         setupMobileMenu() {
             const menuButton = document.getElementById('mobile-menu-button');
             const mobileContainer = document.getElementById('mobile-menu-container');
-
+            
             if (!mobileContainer) {
                 const container = document.createElement('div');
                 container.id = 'mobile-menu-container';
@@ -608,7 +638,7 @@
 
         getNotificationCount() {
             let count = 0;
-
+            
             if (AppState.goals) {
                 const now = new Date();
                 const nearingGoals = AppState.goals.filter(goal => {
@@ -619,9 +649,9 @@
                 });
                 count += nearingGoals.length;
             }
-
+            
             if (AppState.progress?.kycStatus === 'pending') count += 1;
-
+            
             return Math.min(count, 9);
         },
 
@@ -635,7 +665,7 @@
                     if (goal.deadline && goal.status !== 'completed') {
                         const deadline = new Date(goal.deadline);
                         const daysLeft = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
-
+                        
                         if (daysLeft > 0 && daysLeft < 30) {
                             notifications.push({
                                 title: 'Goal Nearing Deadline',
@@ -882,9 +912,7 @@
         }
     };
 
-    //==============================================================================
     // GOOGLE CHARTS
-    //==============================================================================
 
     google.charts.load('current', { packages: ['corechart', 'line', 'bar'] });
     google.charts.setOnLoadCallback(() => {
@@ -977,9 +1005,7 @@
         chart.draw(data, options);
     }
 
-    //==============================================================================
     // INITIALIZATION
-    //==============================================================================
 
     async function initialize() {
         // Check authentication
