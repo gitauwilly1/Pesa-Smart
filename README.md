@@ -80,10 +80,10 @@ To deploy this project locally, follow these steps:
 
 ## Screenshots
 
-![home screenshot](assets/screenshot-1.png)
-![learn screenshot](assets/screenshot-2.png)
-![practice screenshot](assets/screenshot-3.png)
-![act screenshot](assets/screenshot-4.png)
+![home screenshot](assets/Screenshot-1.png)
+![learn screenshot](assets/Screenshot-2.png)
+![practice screenshot](assets/Screenshot-3.png)
+![act screenshot](assets/Screenshot-4.png)
 
 ---
 
