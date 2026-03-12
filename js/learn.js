@@ -386,57 +386,113 @@ async function updateCurrentUserProgress(updates) {
 
     // SECTION 3: GOOGLE CHARTS INITIALIZATION
 
-    google.charts.load('current', { packages: ['corechart', 'bar', 'line'] });
-    google.charts.setOnLoadCallback(() => {
-        console.log('✅ Google Charts loaded for learning page');
-        // Charts will be drawn when data is available
-    });
+// Store chart drawing functions to call when ready
+let chartsReady = false;
+let pendingChartDraws = [];
 
-    /**
-     * Draw learning progress chart
-     */
-    function drawLearningProgressChart() {
-        const chartContainer = document.getElementById('learning-progress-chart');
-        if (!chartContainer) return;
+google.charts.load('current', { packages: ['corechart', 'bar', 'line'] });
+google.charts.setOnLoadCallback(() => {
+    console.log('✅ Google Charts loaded for learning page');
+    chartsReady = true;
+    // Draw any pending charts
+    pendingChartDraws.forEach(fn => fn());
+    pendingChartDraws = [];
+});
 
-        // Calculate module completion data
-        const bronzeTotal = courses.bronze?.length || 0;
-        const silverTotal = courses.silver?.length || 0;
-        const goldTotal = courses.gold?.length || 0;
-        
-        const bronzeCompleted = userProgress.completedModules.filter(id => 
-            courses.bronze?.some(m => m.id === id)
-        ).length || 0;
-        
-        const silverCompleted = userProgress.completedModules.filter(id => 
-            courses.silver?.some(m => m.id === id)
-        ).length || 0;
-        
-        const goldCompleted = userProgress.completedModules.filter(id => 
-            courses.gold?.some(m => m.id === id)
-        ).length || 0;
-
-        const data = google.visualization.arrayToDataTable([
-            ['Path', 'Completed', 'Total'],
-            ['Bronze', bronzeCompleted, bronzeTotal],
-            ['Silver', silverCompleted, silverTotal],
-            ['Gold', goldCompleted, goldTotal]
-        ]);
-
-        const options = {
-            title: 'Learning Progress by Path',
-            legend: { position: 'top' },
-            colors: ['#00B894', '#FD9644'],
-            isStacked: true,
-            hAxis: { title: 'Learning Path' },
-            vAxis: { title: 'Modules', minValue: 0 },
-            chartArea: { width: '70%', height: '70%' },
-            animation: { startup: true, duration: 1000 }
-        };
-
-        const chart = new google.visualization.ColumnChart(chartContainer);
-        chart.draw(data, options);
+/**
+ * Safe chart drawing function that waits for Google Charts to load
+ */
+function safeDrawChart(chartFn) {
+    if (chartsReady && google && google.visualization) {
+        chartFn();
+    } else {
+        pendingChartDraws.push(chartFn);
     }
+}
+
+/**
+ * Draw learning progress chart
+ */
+function drawLearningProgressChart() {
+    const chartContainer = document.getElementById('learning-progress-chart');
+    if (!chartContainer) return;
+
+    // Calculate module completion data
+    const bronzeTotal = courses.bronze?.length || 0;
+    const silverTotal = courses.silver?.length || 0;
+    const goldTotal = courses.gold?.length || 0;
+    
+    const bronzeCompleted = userProgress.completedModules.filter(id => 
+        courses.bronze?.some(m => m.id === id)
+    ).length || 0;
+    
+    const silverCompleted = userProgress.completedModules.filter(id => 
+        courses.silver?.some(m => m.id === id)
+    ).length || 0;
+    
+    const goldCompleted = userProgress.completedModules.filter(id => 
+        courses.gold?.some(m => m.id === id)
+    ).length || 0;
+
+    // Create data table safely
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Path');
+    data.addColumn('number', 'Completed');
+    data.addColumn('number', 'Total');
+    data.addRows([
+        ['Bronze', bronzeCompleted, bronzeTotal],
+        ['Silver', silverCompleted, silverTotal],
+        ['Gold', goldCompleted, goldTotal]
+    ]);
+
+    const options = {
+        title: 'Learning Progress by Path',
+        legend: { position: 'top' },
+        colors: ['#00B894', '#FD9644'],
+        isStacked: true,
+        hAxis: { title: 'Learning Path' },
+        vAxis: { title: 'Modules', minValue: 0 },
+        chartArea: { width: '70%', height: '70%' },
+        animation: { startup: true, duration: 1000 }
+    };
+
+    const chart = new google.visualization.ColumnChart(chartContainer);
+    chart.draw(data, options);
+}
+
+/**
+ * Draw time distribution chart
+ */
+function drawTimeDistributionChart() {
+    const chartContainer = document.getElementById('time-distribution-chart');
+    if (!chartContainer) return;
+
+    // Calculate time spent per path
+    const timeData = [
+        ['Path', 'Hours Spent'],
+        ['Bronze', Math.min(12, userProgress.totalLearningHours * 0.6)],
+        ['Silver', Math.min(8, userProgress.totalLearningHours * 0.3)],
+        ['Gold', Math.min(4, userProgress.totalLearningHours * 0.1)]
+    ];
+
+    // Create data table safely
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Path');
+    data.addColumn('number', 'Hours Spent');
+    timeData.slice(1).forEach(row => data.addRow(row));
+
+    const options = {
+        title: 'Time Spent by Path',
+        pieHole: 0.4,
+        colors: ['#00B894', '#74B9FF', '#6C5CE7'],
+        legend: { position: 'bottom' },
+        chartArea: { width: '100%', height: '80%' },
+        animation: { startup: true, duration: 1000 }
+    };
+
+    const chart = new google.visualization.PieChart(chartContainer);
+    chart.draw(data, options);
+}
 
     /**
      * Draw time distribution chart
@@ -817,65 +873,81 @@ async function updateCurrentUserProgress(updates) {
     }
 
     /**
-     * Render learning stats
-     */
-    function renderLearningStats() {
-        const statsContainer = document.querySelector('.bg-gradient-to-br.from-green-500.to-green-600');
-        if (!statsContainer) return;
+ * Render learning stats
+ */
+function renderLearningStats() {
+    const statsContainer = document.querySelector('.bg-gradient-to-br.from-green-500.to-green-600');
+    if (!statsContainer) return;
 
-        const totalHours = userProgress.totalLearningHours || 0;
-        const completedCount = userProgress.completedModules?.length || 0;
-        const totalModules = (courses.bronze?.length || 0) + (courses.silver?.length || 0) + (courses.gold?.length || 0);
-        const streak = userProgress.currentStreak || 0;
+    const totalHours = userProgress.totalLearningHours || 0;
+    const completedCount = userProgress.completedModules?.length || 0;
+    const totalModules = (courses.bronze?.length || 0) + (courses.silver?.length || 0) + (courses.gold?.length || 0);
+    const streak = userProgress.currentStreak || 0;
 
-        statsContainer.innerHTML = `
-            <h2 class="text-xl font-bold mb-4">Learning Stats</h2>
-            <div class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-green-100">Total Learning Time</p>
-                        <p class="text-2xl font-bold">${totalHours} hours</p>
-                    </div>
-                    <i class="far fa-clock text-2xl opacity-80"></i>
+    statsContainer.innerHTML = `
+        <h2 class="text-xl font-bold mb-4">Learning Stats</h2>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-green-100">Total Learning Time</p>
+                    <p class="text-2xl font-bold">${totalHours} hours</p>
                 </div>
+                <i class="far fa-clock text-2xl opacity-80"></i>
+            </div>
 
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-green-100">Modules Completed</p>
-                        <p class="text-2xl font-bold">${completedCount}/${totalModules}</p>
-                    </div>
-                    <i class="fas fa-check-circle text-2xl opacity-80"></i>
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-green-100">Modules Completed</p>
+                    <p class="text-2xl font-bold">${completedCount}/${totalModules}</p>
                 </div>
+                <i class="fas fa-check-circle text-2xl opacity-80"></i>
+            </div>
 
-                <div class="flex justify-between items-center">
-                    <div>
-                        <p class="text-green-100">Current Streak</p>
-                        <p class="text-2xl font-bold">${streak} days</p>
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-green-100">Current Streak</p>
+                    <p class="text-2xl font-bold">${streak} days</p>
+                </div>
+                <i class="fas fa-fire text-2xl opacity-80"></i>
+            </div>
+        </div>
+        
+        <!-- Charts container with loading indicators -->
+        <div class="mt-4">
+            <div id="learning-progress-chart" class="w-full h-48">
+                <div class="flex items-center justify-center h-full">
+                    <div class="text-center">
+                        <i class="fas fa-spinner fa-spin text-white text-2xl"></i>
+                        <p class="text-white text-sm mt-2">Loading chart...</p>
                     </div>
-                    <i class="fas fa-fire text-2xl opacity-80"></i>
                 </div>
             </div>
-            
-            <!-- Charts container -->
-            <div id="learning-progress-chart" class="w-full h-48 mt-4"></div>
-            <div id="time-distribution-chart" class="w-full h-40 mt-2"></div>
-
-            <div class="mt-6 text-center">
-                <button class="bg-white text-green-600 hover:bg-gray-100 px-6 py-2 rounded-lg font-semibold transition" id="share-progress-btn">
-                    Share Progress
-                </button>
+            <div id="time-distribution-chart" class="w-full h-40 mt-2">
+                <div class="flex items-center justify-center h-full">
+                    <div class="text-center">
+                        <i class="fas fa-spinner fa-spin text-white text-2xl"></i>
+                        <p class="text-white text-sm mt-2">Loading chart...</p>
+                    </div>
+                </div>
             </div>
-        `;
+        </div>
 
-        // Draw charts
-        setTimeout(() => {
-            drawLearningProgressChart();
-            drawTimeDistributionChart();
-        }, 500);
+        <div class="mt-6 text-center">
+            <button class="bg-white text-green-600 hover:bg-gray-100 px-6 py-2 rounded-lg font-semibold transition" id="share-progress-btn">
+                Share Progress
+            </button>
+        </div>
+    `;
 
-        // Setup share button
-        document.getElementById('share-progress-btn')?.addEventListener('click', shareProgress);
-    }
+    // Draw charts safely after a short delay to ensure DOM is ready
+    setTimeout(() => {
+        safeDrawChart(drawLearningProgressChart);
+        safeDrawChart(drawTimeDistributionChart);
+    }, 500);
+
+    // Setup share button
+    document.getElementById('share-progress-btn')?.addEventListener('click', shareProgress);
+}
 
     // SECTION 5: MODULE PLAYER
 
