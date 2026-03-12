@@ -64,48 +64,35 @@
     }
 
     /**
-     * Load user progress from JSON
-     */
-    async function loadProgressFromJSON() {
-        try {
-            const cached = localStorage.getItem('pesasmart_progress');
-            let progressList = [];
-            
-            if (cached) {
-                progressList = JSON.parse(cached);
-            } else {
-                const response = await fetch('data/progress.json');
-                const data = await response.json();
-                progressList = data.progress || [];
-                localStorage.setItem('pesasmart_progress', JSON.stringify(progressList));
-            }
+ * Load user progress from JSON
+ */
+async function loadProgressFromJSON() {
+    try {
+        const cached = localStorage.getItem('pesasmart_progress');
+        let progressList = [];
+        
+        if (cached) {
+            progressList = JSON.parse(cached);
+        } else {
+            const response = await fetch('data/progress.json');
+            const data = await response.json();
+            // Check if data has a progress property (array) or is itself an array
+            progressList = data.progress || data || [];
+            localStorage.setItem('pesasmart_progress', JSON.stringify(progressList));
+        }
 
-            // Find progress for current user
-            let progress = progressList.find(p => p.userId === currentUser.userId);
-            
-            // Create default progress if not found
-            if (!progress) {
-                progress = {
-                    userId: currentUser.userId,
-                    completedModules: [],
-                    inProgress: {},
-                    earnedBadges: [],
-                    certificates: [],
-                    lastActive: new Date().toISOString(),
-                    totalLearningHours: 0,
-                    currentStreak: 1,
-                    longestStreak: 1
-                };
-                progressList.push(progress);
-                await saveProgressToJSON(progressList);
-            }
-            
-            userProgress = progress;
-            return progress;
-        } catch (error) {
-            console.error('Failed to load progress:', error);
-            // Create default in-memory progress
-            userProgress = {
+        // Ensure progressList is an array
+        if (!Array.isArray(progressList)) {
+            console.warn('Progress data is not an array, converting to array');
+            progressList = progressList.progress ? [progressList.progress] : [progressList];
+        }
+
+        // Find progress for current user
+        let progress = progressList.find(p => p && p.userId === currentUser.userId);
+        
+        // Create default progress if not found
+        if (!progress) {
+            progress = {
                 userId: currentUser.userId,
                 completedModules: [],
                 inProgress: {},
@@ -116,59 +103,89 @@
                 currentStreak: 1,
                 longestStreak: 1
             };
-            return userProgress;
-        }
-    }
-
-    /**
-     * Save progress to JSON
-     */
-    async function saveProgressToJSON(progressList) {
-        try {
-            localStorage.setItem('pesasmart_progress', JSON.stringify(progressList));
-            
-            // Update userProgress if it's the current user
-            if (userProgress) {
-                const updated = progressList.find(p => p.userId === currentUser.userId);
-                if (updated) userProgress = updated;
-            }
-            
-            return true;
-        } catch (error) {
-            console.error('Failed to save progress:', error);
-            return false;
-        }
-    }
-
-    /**
-     * Update progress for current user
-     */
-    async function updateCurrentUserProgress(updates) {
-        try {
-            const cached = localStorage.getItem('pesasmart_progress');
-            let progressList = cached ? JSON.parse(cached) : [];
-            
-            const index = progressList.findIndex(p => p.userId === currentUser.userId);
-            if (index >= 0) {
-                progressList[index] = { ...progressList[index], ...updates, lastActive: new Date().toISOString() };
-                userProgress = progressList[index];
-            } else {
-                const newProgress = {
-                    userId: currentUser.userId,
-                    ...updates,
-                    lastActive: new Date().toISOString()
-                };
-                progressList.push(newProgress);
-                userProgress = newProgress;
-            }
-            
+            progressList.push(progress);
             await saveProgressToJSON(progressList);
-            return true;
-        } catch (error) {
-            console.error('Failed to update progress:', error);
-            return false;
         }
+        
+        userProgress = progress;
+        return progress;
+    } catch (error) {
+        console.error('Failed to load progress:', error);
+        // Create default in-memory progress
+        userProgress = {
+            userId: currentUser.userId,
+            completedModules: [],
+            inProgress: {},
+            earnedBadges: [],
+            certificates: [],
+            lastActive: new Date().toISOString(),
+            totalLearningHours: 0,
+            currentStreak: 1,
+            longestStreak: 1
+        };
+        return userProgress;
     }
+}
+
+    /**
+ * Save progress to JSON
+ */
+async function saveProgressToJSON(progressList) {
+    try {
+        // Ensure progressList is an array
+        if (!Array.isArray(progressList)) {
+            progressList = progressList.progress ? [progressList.progress] : [progressList];
+        }
+        
+        localStorage.setItem('pesasmart_progress', JSON.stringify(progressList));
+        
+        // Update userProgress if it's the current user
+        if (userProgress) {
+            const updated = progressList.find(p => p && p.userId === currentUser.userId);
+            if (updated) userProgress = updated;
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Failed to save progress:', error);
+        return false;
+    }
+}
+
+    /**
+ * Update progress for current user
+ */
+async function updateCurrentUserProgress(updates) {
+    try {
+        const cached = localStorage.getItem('pesasmart_progress');
+        let progressList = cached ? JSON.parse(cached) : [];
+        
+        // Ensure progressList is an array
+        if (!Array.isArray(progressList)) {
+            progressList = progressList.progress ? [progressList.progress] : [progressList];
+        }
+        
+        const index = progressList.findIndex(p => p && p.userId === currentUser.userId);
+        if (index >= 0) {
+            progressList[index] = { ...progressList[index], ...updates, lastActive: new Date().toISOString() };
+            userProgress = progressList[index];
+        } else {
+            const newProgress = {
+                userId: currentUser.userId,
+                ...updates,
+                lastActive: new Date().toISOString()
+            };
+            progressList.push(newProgress);
+            userProgress = newProgress;
+        }
+        
+        await saveProgressToJSON(progressList);
+        return true;
+    } catch (error) {
+        console.error('Failed to update progress:', error);
+        return false;
+    }
+}
 
     // SECTION 2: NAVBAR MANAGEMENT (with logout and mobile menu)
 
