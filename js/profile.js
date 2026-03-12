@@ -19,6 +19,229 @@
         VERSION: 'pesasmart_version'
     };
 
+    // NAVBAR MANAGEMENT (extracted from dashboard code)
+
+const NavbarManager = {
+    /**
+     * Update navbar based on auth state
+     */
+    updateNavbar() {
+        const navbar = document.querySelector('nav .flex.items-center.space-x-4');
+        if (!navbar) return;
+
+        const isLoggedIn = AppState.isLoggedIn || AppState.user !== null;
+        const userName = AppState.profile ? 
+            `${AppState.profile.firstName || ''}`.trim() : 
+            AppState.user?.name || (AppState.user?.email ? AppState.user.email.split('@')[0] : 'User');
+
+        if (!isLoggedIn) {
+            navbar.innerHTML = `
+                <a href="login.html" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                    Login
+                </a>
+                <button class="md:hidden text-gray-700 hover:text-green-600 focus:outline-none" id="mobile-menu-button">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            `;
+            this.setupMobileMenu();
+            return;
+        }
+
+        // Ensure mobile menu container exists
+        this.ensureMobileMenu();
+
+        navbar.innerHTML = `
+            <div class="hidden md:flex items-center space-x-4">
+                <div class="relative">
+                    <i class="fas fa-bell text-gray-600 text-xl hover:text-green-600 cursor-pointer" id="notification-bell"></i>
+                    <span class="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs rounded-full flex items-center justify-center notification-count hidden">${this.getNotificationCount()}</span>
+                </div>
+                <div class="relative" id="user-menu-container">
+                    <button class="flex items-center space-x-2 text-gray-700 hover:text-green-600 transition" id="user-menu-button">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-green-600"></i>
+                        </div>
+                        <span class="font-medium">${userName}</span>
+                        <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    </button>
+                    
+                    <!-- Dropdown menu -->
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 hidden z-50" id="user-dropdown">
+                        <a href="profile.html" class="block px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600">
+                            <i class="fas fa-user mr-2"></i> My Profile
+                        </a>
+                        <a href="profile.html#goals" class="block px-4 py-2 text-gray-700 hover:bg-green-50 hover:text-green-600">
+                            <i class="fas fa-bullseye mr-2"></i> My Goals
+                        </a>
+                        <hr class="my-2 border-gray-200">
+                        <button class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50" id="logout-button">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile menu button -->
+            <button class="md:hidden text-gray-700 hover:text-green-600 focus:outline-none" id="mobile-menu-button">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        `;
+
+        // Setup dropdown toggle
+        this.setupUserDropdown();
+        
+        // Setup logout button
+        const logoutBtn = document.getElementById('logout-button');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => Security.logout());
+        }
+        
+        // Setup notification bell
+        const notificationBell = document.getElementById('notification-bell');
+        if (notificationBell) {
+            notificationBell.addEventListener('click', () => UI.showNotifications());
+        }
+        
+        // Setup mobile menu
+        this.setupMobileMenu();
+    },
+
+    /**
+     * Ensure mobile menu container exists
+     */
+    ensureMobileMenu() {
+        if (!document.getElementById('mobile-menu-container')) {
+            const mobileContainer = document.createElement('div');
+            mobileContainer.id = 'mobile-menu-container';
+            mobileContainer.className = 'hidden md:hidden bg-white border-t mt-2';
+            const navContainer = document.querySelector('nav .container');
+            if (navContainer) {
+                navContainer.appendChild(mobileContainer);
+            }
+        }
+    },
+
+    /**
+     * Setup user dropdown menu
+     */
+    setupUserDropdown() {
+        const menuButton = document.getElementById('user-menu-button');
+        const dropdown = document.getElementById('user-dropdown');
+        
+        if (menuButton && dropdown) {
+            menuButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!menuButton.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        }
+    },
+
+    /**
+     * Setup mobile menu
+     */
+    setupMobileMenu() {
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileContainer = document.getElementById('mobile-menu-container');
+        
+        if (!menuButton || !mobileContainer) return;
+
+        const isLoggedIn = AppState.isLoggedIn || AppState.user !== null;
+
+        if (!isLoggedIn) {
+            mobileContainer.innerHTML = `
+                <div class="px-4 py-2 space-y-2">
+                    <a href="index.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="learn.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-book mr-2"></i>Learn
+                    </a>
+                    <a href="practice.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-gamepad mr-2"></i>Practice
+                    </a>
+                    <a href="act.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-briefcase mr-2"></i>Act
+                    </a>
+                    <hr class="my-2">
+                    <a href="login.html" class="block py-2 text-green-600">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </a>
+                    <a href="register.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-user-plus mr-2"></i>Register
+                    </a>
+                </div>
+            `;
+        } else {
+            mobileContainer.innerHTML = `
+                <div class="px-4 py-2 space-y-2">
+                    <a href="index.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="learn.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-book mr-2"></i>Learn
+                    </a>
+                    <a href="practice.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-gamepad mr-2"></i>Practice
+                    </a>
+                    <a href="act.html" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-briefcase mr-2"></i>Act
+                    </a>
+                    <hr class="my-2">
+                    <a href="profile.html" class="block py-2 text-green-600 font-medium">
+                        <i class="fas fa-user mr-2"></i>Profile
+                    </a>
+                    <a href="profile.html#goals" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-bullseye mr-2"></i>Goals
+                    </a>
+                    <a href="profile.html#settings" class="block py-2 text-gray-700 hover:text-green-600">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </a>
+                    <hr class="my-2">
+                    <button id="mobile-logout" class="w-full text-left py-2 text-red-600 hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            `;
+        }
+
+        // Toggle mobile menu
+        menuButton.addEventListener('click', () => {
+            mobileContainer.classList.toggle('hidden');
+        });
+
+        // Mobile logout
+        document.getElementById('mobile-logout')?.addEventListener('click', () => Security.logout());
+    },
+
+    /**
+     * Get notification count
+     */
+    getNotificationCount() {
+        let count = 0;
+        
+        if (AppState.goals) {
+            const now = new Date();
+            const nearingGoals = AppState.goals.filter(goal => {
+                if (!goal.deadline || goal.status === 'completed') return false;
+                const deadline = new Date(goal.deadline);
+                const daysLeft = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
+                return daysLeft > 0 && daysLeft < 30;
+            });
+            count += nearingGoals.length;
+        }
+        
+        if (AppState.achievements?.length > 0) count += 1;
+        
+        return Math.min(count, 9);
+    }
+};
+
     // STATE MANAGEMENT
 
     const AppState = {
@@ -2465,6 +2688,10 @@
             return;
         }
 
+        // UPDATE NAVBAR 
+    NavbarManager.updateNavbar();
+
+
         // Update all UI sections
         UI.updateAllSections();
 
@@ -2488,6 +2715,7 @@
             if (e.detail.type === 'goal-update' || e.detail.type === 'transaction-update') {
                 DataLayer.loadUserData().then(() => {
                     UI.updateAllSections();
+                     NavbarManager.updateNavbar();
                 });
             }
         });
