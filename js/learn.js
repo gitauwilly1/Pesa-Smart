@@ -384,15 +384,16 @@ async function updateCurrentUserProgress(updates) {
         });
     }
 
-    // SECTION 3: GOOGLE CHARTS INITIALIZATION
+// SECTION 3: GOOGLE CHARTS INITIALIZATION
 
 // Store chart drawing functions to call when ready
 let chartsReady = false;
 let pendingChartDraws = [];
 
+// Load Google Charts
 google.charts.load('current', { packages: ['corechart', 'bar', 'line'] });
 google.charts.setOnLoadCallback(() => {
-    console.log('✅ Google Charts loaded for learning page');
+    console.log(' Google Charts loaded for learning page');
     chartsReady = true;
     // Draw any pending charts
     pendingChartDraws.forEach(fn => fn());
@@ -403,8 +404,17 @@ google.charts.setOnLoadCallback(() => {
  * Safe chart drawing function that waits for Google Charts to load
  */
 function safeDrawChart(chartFn) {
-    if (chartsReady && google && google.visualization) {
+    if (chartsReady && google && google.visualization && google.visualization.DataTable) {
         chartFn();
+    } else if (google && google.visualization) {
+        // Charts are loaded but maybe not fully initialized
+        setTimeout(() => {
+            if (google.visualization.DataTable) {
+                chartFn();
+            } else {
+                pendingChartDraws.push(chartFn);
+            }
+        }, 100);
     } else {
         pendingChartDraws.push(chartFn);
     }
@@ -416,6 +426,9 @@ function safeDrawChart(chartFn) {
 function drawLearningProgressChart() {
     const chartContainer = document.getElementById('learning-progress-chart');
     if (!chartContainer) return;
+
+    // Clear loading indicator
+    chartContainer.innerHTML = '';
 
     // Calculate module completion data
     const bronzeTotal = courses.bronze?.length || 0;
@@ -434,30 +447,56 @@ function drawLearningProgressChart() {
         courses.gold?.some(m => m.id === id)
     ).length || 0;
 
-    // Create data table safely
-    const data = new google.visualization.DataTable();
-    data.addColumn('string', 'Path');
-    data.addColumn('number', 'Completed');
-    data.addColumn('number', 'Total');
-    data.addRows([
-        ['Bronze', bronzeCompleted, bronzeTotal],
-        ['Silver', silverCompleted, silverTotal],
-        ['Gold', goldCompleted, goldTotal]
-    ]);
+    try {
+        // Create data table
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Path');
+        data.addColumn('number', 'Completed');
+        data.addColumn('number', 'Total');
+        data.addRows([
+            ['Bronze', bronzeCompleted, bronzeTotal],
+            ['Silver', silverCompleted, silverTotal],
+            ['Gold', goldCompleted, goldTotal]
+        ]);
 
-    const options = {
-        title: 'Learning Progress by Path',
-        legend: { position: 'top' },
-        colors: ['#00B894', '#FD9644'],
-        isStacked: true,
-        hAxis: { title: 'Learning Path' },
-        vAxis: { title: 'Modules', minValue: 0 },
-        chartArea: { width: '70%', height: '70%' },
-        animation: { startup: true, duration: 1000 }
-    };
+        const options = {
+            title: 'Learning Progress by Path',
+            legend: { position: 'top' },
+            colors: ['#00B894', '#FD9644'],
+            isStacked: true,
+            hAxis: { title: 'Learning Path' },
+            vAxis: { title: 'Modules', minValue: 0 },
+            chartArea: { width: '70%', height: '70%' },
+            animation: { startup: true, duration: 1000 },
+            backgroundColor: { fill: 'transparent' },
+            titleTextStyle: { color: '#fff' },
+            legendTextStyle: { color: '#fff' },
+            hAxis: { 
+                title: 'Learning Path',
+                titleTextStyle: { color: '#fff' },
+                textStyle: { color: '#fff' }
+            },
+            vAxis: { 
+                title: 'Modules', 
+                minValue: 0,
+                titleTextStyle: { color: '#fff' },
+                textStyle: { color: '#fff' }
+            }
+        };
 
-    const chart = new google.visualization.ColumnChart(chartContainer);
-    chart.draw(data, options);
+        const chart = new google.visualization.ColumnChart(chartContainer);
+        chart.draw(data, options);
+    } catch (error) {
+        console.error('Error drawing progress chart:', error);
+        chartContainer.innerHTML = `
+            <div class="flex items-center justify-center h-full">
+                <div class="text-center text-white">
+                    <i class="fas fa-chart-line text-3xl mb-2"></i>
+                    <p>Chart unavailable</p>
+                </div>
+            </div>
+        `;
+    }
 }
 
 /**
@@ -467,62 +506,75 @@ function drawTimeDistributionChart() {
     const chartContainer = document.getElementById('time-distribution-chart');
     if (!chartContainer) return;
 
+    // Clear loading indicator
+    chartContainer.innerHTML = '';
+
     // Calculate time spent per path
-    const timeData = [
-        ['Path', 'Hours Spent'],
-        ['Bronze', Math.min(12, userProgress.totalLearningHours * 0.6)],
-        ['Silver', Math.min(8, userProgress.totalLearningHours * 0.3)],
-        ['Gold', Math.min(4, userProgress.totalLearningHours * 0.1)]
-    ];
+    const bronzeTime = Math.min(12, (userProgress.totalLearningHours || 0) * 0.6);
+    const silverTime = Math.min(8, (userProgress.totalLearningHours || 0) * 0.3);
+    const goldTime = Math.min(4, (userProgress.totalLearningHours || 0) * 0.1);
 
-    // Create data table safely
-    const data = new google.visualization.DataTable();
-    data.addColumn('string', 'Path');
-    data.addColumn('number', 'Hours Spent');
-    timeData.slice(1).forEach(row => data.addRow(row));
-
-    const options = {
-        title: 'Time Spent by Path',
-        pieHole: 0.4,
-        colors: ['#00B894', '#74B9FF', '#6C5CE7'],
-        legend: { position: 'bottom' },
-        chartArea: { width: '100%', height: '80%' },
-        animation: { startup: true, duration: 1000 }
-    };
-
-    const chart = new google.visualization.PieChart(chartContainer);
-    chart.draw(data, options);
-}
-
-    /**
-     * Draw time distribution chart
-     */
-    function drawTimeDistributionChart() {
-        const chartContainer = document.getElementById('time-distribution-chart');
-        if (!chartContainer) return;
-
-        // Calculate time spent per path
-        const timeData = [
-            ['Path', 'Hours Spent'],
-            ['Bronze', Math.min(12, userProgress.totalLearningHours * 0.6)],
-            ['Silver', Math.min(8, userProgress.totalLearningHours * 0.3)],
-            ['Gold', Math.min(4, userProgress.totalLearningHours * 0.1)]
-        ];
-
-        const data = google.visualization.arrayToDataTable(timeData);
+    try {
+        // Create data table
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Path');
+        data.addColumn('number', 'Hours Spent');
+        data.addRows([
+            ['Bronze', bronzeTime],
+            ['Silver', silverTime],
+            ['Gold', goldTime]
+        ]);
 
         const options = {
             title: 'Time Spent by Path',
             pieHole: 0.4,
             colors: ['#00B894', '#74B9FF', '#6C5CE7'],
-            legend: { position: 'bottom' },
+            legend: { position: 'bottom', textStyle: { color: '#fff' } },
             chartArea: { width: '100%', height: '80%' },
-            animation: { startup: true, duration: 1000 }
+            animation: { startup: true, duration: 1000 },
+            backgroundColor: { fill: 'transparent' },
+            titleTextStyle: { color: '#fff' },
+            pieSliceTextStyle: { color: '#fff' }
         };
 
         const chart = new google.visualization.PieChart(chartContainer);
         chart.draw(data, options);
+    } catch (error) {
+        console.error('Error drawing time chart:', error);
+        chartContainer.innerHTML = `
+            <div class="flex items-center justify-center h-full">
+                <div class="text-center text-white">
+                    <i class="fas fa-chart-pie text-3xl mb-2"></i>
+                    <p>Chart unavailable</p>
+                </div>
+            </div>
+        `;
     }
+}
+
+// Add fallback for Google Charts loading error
+window.addEventListener('error', function(e) {
+    if (e.target.tagName === 'SCRIPT' && e.target.src && e.target.src.includes('google.com/jsapi')) {
+        console.error('Google Charts failed to load');
+        chartsReady = false;
+        
+        // Show fallback UI for all chart containers
+        const chartContainers = document.querySelectorAll('#learning-progress-chart, #time-distribution-chart');
+        chartContainers.forEach(container => {
+            if (container) {
+                container.innerHTML = `
+                    <div class="flex items-center justify-center h-full bg-white bg-opacity-10 rounded-lg">
+                        <div class="text-center p-4">
+                            <i class="fas fa-chart-bar text-white text-3xl mb-2"></i>
+                            <p class="text-white">Progress: ${userProgress?.completedModules?.length || 0} modules</p>
+                            <p class="text-white text-sm">Time: ${userProgress?.totalLearningHours || 0} hours</p>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    }
+}, true);
 
     // SECTION 4: RENDER FUNCTIONS
 
@@ -872,7 +924,7 @@ function drawTimeDistributionChart() {
         }
     }
 
-    /**
+/**
  * Render learning stats
  */
 function renderLearningStats() {
@@ -913,8 +965,8 @@ function renderLearningStats() {
         </div>
         
         <!-- Charts container with loading indicators -->
-        <div class="mt-4">
-            <div id="learning-progress-chart" class="w-full h-48">
+        <div class="mt-4 space-y-4">
+            <div id="learning-progress-chart" class="w-full h-48 bg-white bg-opacity-10 rounded-lg p-2">
                 <div class="flex items-center justify-center h-full">
                     <div class="text-center">
                         <i class="fas fa-spinner fa-spin text-white text-2xl"></i>
@@ -922,7 +974,7 @@ function renderLearningStats() {
                     </div>
                 </div>
             </div>
-            <div id="time-distribution-chart" class="w-full h-40 mt-2">
+            <div id="time-distribution-chart" class="w-full h-40 bg-white bg-opacity-10 rounded-lg p-2">
                 <div class="flex items-center justify-center h-full">
                     <div class="text-center">
                         <i class="fas fa-spinner fa-spin text-white text-2xl"></i>
