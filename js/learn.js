@@ -1356,7 +1356,7 @@ function renderLearningStats() {
         // Award badge
         if (module.badge && !userProgress.earnedBadges.includes(module.badge.id)) {
             userProgress.earnedBadges.push(module.badge.id);
-            showNotification(`🏆 Badge earned: ${module.badge.name}!`, 'success');
+            showNotification(`Badge earned: ${module.badge.name}!`, 'success');
         }
 
         // Update learning hours
@@ -1370,7 +1370,7 @@ function renderLearningStats() {
             lastActive: new Date().toISOString()
         });
 
-        showNotification(`🎉 Module completed: ${module.title}!`, 'success');
+        showNotification(`Module completed: ${module.title}!`, 'success');
 
         // Refresh UI
         renderContinueLearning();
