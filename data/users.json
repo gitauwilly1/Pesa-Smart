@@ -6,7 +6,7 @@
             "lastName": "Muthoni",
             "phone": "+254712345678",
             "email": "annmuthoni@gmail.com",
-            "password": "hashed_password_123",
+            "password": "password123",
             "profile": {
                 "occupation": "student",
                 "incomeRange": "10000-30000",
@@ -30,7 +30,7 @@
             "lastName": "Kamau",
             "phone": "+254723456789",
             "email": "johnkamau@gmail.com",
-            "password": "hashed_password_456",
+            "password": "password456",
             "profile": {
                 "occupation": "juaKali",
                 "incomeRange": "30000-70000",
@@ -55,7 +55,7 @@
             "lastName": "Wanjiku",
             "phone": "+254734567890",
             "email": "marywanjiku@gmail.com",
-            "password": "hashed_password_789",
+            "password": "password789",
             "profile": {
                 "occupation": "mamaMboga",
                 "incomeRange": "5000-10000",
